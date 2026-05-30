@@ -91,7 +91,7 @@ A plataforma segue uma arquitetura de **serviços stateless em Golang** assentes
 - **OpenAI API:** geração de embeddings e respostas conversacionais (GPT).
 - **Evolution API V2:** gateway de mensagens WhatsApp.
 
-```
+```txt
                          ┌──────────────────────────────────────────────┐
                          │              CLIENTES / CANAIS                 │
                          │   WhatsApp (Evolution API V2)   Instagram (Meta)│
@@ -174,7 +174,7 @@ O desenho de concorrência é central ao desempenho. Princípios:
 
 ### 2.6 Fluxo de Dados — Mensagem Recebida (Inbound)
 
-```
+```txt
 1.  Contacto envia mensagem no WhatsApp.
 2.  Evolution API V2 dispara webhook MESSAGES_UPSERT → Ingestion Service.
 3.  Ingestion valida origem (apikey/header), extrai `instance` do payload.
@@ -201,7 +201,7 @@ O desenho de concorrência é central ao desempenho. Princípios:
 
 ### 2.7 Fluxo de Dados — Ingestão de Conhecimento (RAG)
 
-```
+```txt
 1.  Gestor faz upload de ficheiro/texto no painel → Admin API.
 2.  Ficheiro guardado em storage (prefixo tenant/<company_id>/).
 3.  Cria registo em `documents` (status = "pending").
@@ -220,7 +220,7 @@ O desenho de concorrência é central ao desempenho. Princípios:
 
 ### 3.1 Diagrama de Entidades (textual)
 
-```
+```txt
 companies ──1:N── users
 companies ──1:N── company_domains
 companies ──1:1── company_branding
@@ -721,7 +721,7 @@ O Tenant Admin pode definir logótipo, favicon, cores e nome do remetente.
 
 Todas as chamadas autenticam com o header:
 
-```
+```txt
 apikey: <API_KEY_GLOBAL_OU_DA_INSTANCIA>
 Content-Type: application/json
 ```
