@@ -9,6 +9,15 @@ import (
 )
 
 // UploadFile handles POST /knowledge-bases/:id/documents (multipart).
+// @Summary  Upload document (file)
+// @Tags     knowledge
+// @Security BearerAuth
+// @Accept   multipart/form-data
+// @Produce  json
+// @Param    id   path     string true "Knowledge base ID"
+// @Param    file formData file   true "File (PDF, DOCX, TXT, etc.)"
+// @Success  201 {object} dto.DocumentResponse
+// @Router   /knowledge-bases/{id}/documents [post]
 func (h *Handler) UploadFile(c *gin.Context) {
 	kbID, ok := parseID(c, "id")
 	if !ok {
@@ -43,6 +52,15 @@ func (h *Handler) UploadFile(c *gin.Context) {
 }
 
 // UploadText handles POST /knowledge-bases/:id/documents/text.
+// @Summary  Upload document (text)
+// @Tags     knowledge
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    id   path string                  true "Knowledge base ID"
+// @Param    body body dto.UploadTextRequest   true "Text content"
+// @Success  201 {object} dto.DocumentResponse
+// @Router   /knowledge-bases/{id}/documents/text [post]
 func (h *Handler) UploadText(c *gin.Context) {
 	kbID, ok := parseID(c, "id")
 	if !ok {
@@ -61,6 +79,13 @@ func (h *Handler) UploadText(c *gin.Context) {
 }
 
 // ListDocuments handles GET /knowledge-bases/:id/documents.
+// @Summary  List documents
+// @Tags     knowledge
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Knowledge base ID"
+// @Success  200 {object} map[string][]dto.DocumentResponse
+// @Router   /knowledge-bases/{id}/documents [get]
 func (h *Handler) ListDocuments(c *gin.Context) {
 	kbID, ok := parseID(c, "id")
 	if !ok {
@@ -79,6 +104,12 @@ func (h *Handler) ListDocuments(c *gin.Context) {
 }
 
 // DeleteDocument handles DELETE /documents/:docId.
+// @Summary  Delete document
+// @Tags     knowledge
+// @Security BearerAuth
+// @Param    docId path string true "Document ID"
+// @Success  204
+// @Router   /documents/{docId} [delete]
 func (h *Handler) DeleteDocument(c *gin.Context) {
 	id, ok := parseID(c, "docId")
 	if !ok {

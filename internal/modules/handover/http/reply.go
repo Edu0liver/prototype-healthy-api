@@ -7,6 +7,14 @@ import (
 )
 
 // Reply handles POST /conversations/:id/handover/reply.
+// @Summary  Reply as operator
+// @Tags     handover
+// @Security BearerAuth
+// @Accept   json
+// @Param    id   path string          true "Conversation ID"
+// @Param    body body dto.ReplyRequest true "Message"
+// @Success  204
+// @Router   /conversations/{id}/handover/reply [post]
 func (h *Handler) Reply(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

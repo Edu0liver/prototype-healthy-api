@@ -7,6 +7,14 @@ import (
 )
 
 // Create handles POST /channels.
+// @Summary  Create channel
+// @Tags     channels
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.CreateChannelRequest true "Channel"
+// @Success  201 {object} dto.ChannelResponse
+// @Router   /channels [post]
 func (h *Handler) Create(c *gin.Context) {
 	var in dto.CreateChannelRequest
 	if !httputil.BindJSON(c, &in) {

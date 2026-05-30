@@ -11,6 +11,15 @@ import (
 )
 
 // List handles GET /conversations with optional filters (RF-LOG-03).
+// @Summary  List conversations
+// @Tags     conversations
+// @Security BearerAuth
+// @Produce  json
+// @Param    state      query string false "Filter by state (open/closed/human)"
+// @Param    channel_id query string false "Filter by channel UUID"
+// @Param    since      query string false "Filter by opened_at >= RFC3339 timestamp"
+// @Success  200 {object} map[string][]dto.ConversationResponse
+// @Router   /conversations [get]
 func (h *Handler) List(c *gin.Context) {
 	f := repository.ConversationFilter{State: c.Query("state")}
 	if v := c.Query("channel_id"); v != "" {
@@ -36,6 +45,13 @@ func (h *Handler) List(c *gin.Context) {
 }
 
 // Get handles GET /conversations/:id.
+// @Summary  Get conversation
+// @Tags     conversations
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Conversation ID"
+// @Success  200 {object} dto.ConversationResponse
+// @Router   /conversations/{id} [get]
 func (h *Handler) Get(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {
@@ -50,6 +66,13 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 // Messages handles GET /conversations/:id/messages (RF-LOG-02 full audit).
+// @Summary  List messages
+// @Tags     conversations
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Conversation ID"
+// @Success  200 {object} map[string][]dto.MessageResponse
+// @Router   /conversations/{id}/messages [get]
 func (h *Handler) Messages(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

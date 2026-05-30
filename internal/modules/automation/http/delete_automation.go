@@ -6,6 +6,12 @@ import (
 )
 
 // Delete handles DELETE /automations/:id.
+// @Summary  Delete automation
+// @Tags     automations
+// @Security BearerAuth
+// @Param    id path string true "Automation ID"
+// @Success  204
+// @Router   /automations/{id} [delete]
 func (h *Handler) Delete(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

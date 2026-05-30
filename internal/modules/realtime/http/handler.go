@@ -38,6 +38,11 @@ func RegisterRoutes(e *gin.Engine, h *Handler) {
 }
 
 // WS upgrades the connection and streams the tenant's realtime events.
+// @Summary  Realtime WebSocket
+// @Tags     realtime
+// @Param    token query string true "Access token (JWT)"
+// @Success  101
+// @Router   /ws [get]
 func (h *Handler) WS(c *gin.Context) {
 	claims, err := h.tokens.Parse(c.Query("token"))
 	if err != nil || claims.Type != token.TypeAccess {

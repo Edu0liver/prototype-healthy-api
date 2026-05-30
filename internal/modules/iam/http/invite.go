@@ -7,6 +7,14 @@ import (
 )
 
 // Invite creates an invited user (admin).
+// @Summary  Invite user
+// @Tags     users
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.InviteRequest true "Invite"
+// @Success  201 {object} dto.UserResponse
+// @Router   /users [post]
 func (h *Handler) Invite(c *gin.Context) {
 	var in dto.InviteRequest
 	if !httputil.BindJSON(c, &in) {
@@ -21,6 +29,13 @@ func (h *Handler) Invite(c *gin.Context) {
 }
 
 // AcceptInvite sets the password for an invited user (public).
+// @Summary  Accept invite
+// @Tags     auth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.AcceptInviteRequest true "Token and password"
+// @Success  204
+// @Router   /auth/accept-invite [post]
 func (h *Handler) AcceptInvite(c *gin.Context) {
 	var in dto.AcceptInviteRequest
 	if !httputil.BindJSON(c, &in) {

@@ -7,6 +7,14 @@ import (
 )
 
 // CreateKB handles POST /knowledge-bases.
+// @Summary  Create knowledge base
+// @Tags     knowledge
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.CreateKBRequest true "Knowledge base"
+// @Success  201 {object} dto.KBResponse
+// @Router   /knowledge-bases [post]
 func (h *Handler) CreateKB(c *gin.Context) {
 	var in dto.CreateKBRequest
 	if !httputil.BindJSON(c, &in) {
@@ -21,6 +29,12 @@ func (h *Handler) CreateKB(c *gin.Context) {
 }
 
 // ListKB handles GET /knowledge-bases.
+// @Summary  List knowledge bases
+// @Tags     knowledge
+// @Security BearerAuth
+// @Produce  json
+// @Success  200 {object} map[string][]dto.KBResponse
+// @Router   /knowledge-bases [get]
 func (h *Handler) ListKB(c *gin.Context) {
 	kbs, err := h.svc.ListKB(c.Request.Context())
 	if err != nil {
@@ -35,6 +49,13 @@ func (h *Handler) ListKB(c *gin.Context) {
 }
 
 // GetKB handles GET /knowledge-bases/:id.
+// @Summary  Get knowledge base
+// @Tags     knowledge
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Knowledge base ID"
+// @Success  200 {object} dto.KBResponse
+// @Router   /knowledge-bases/{id} [get]
 func (h *Handler) GetKB(c *gin.Context) {
 	id, ok := parseID(c, "id")
 	if !ok {
@@ -49,6 +70,12 @@ func (h *Handler) GetKB(c *gin.Context) {
 }
 
 // DeleteKB handles DELETE /knowledge-bases/:id.
+// @Summary  Delete knowledge base
+// @Tags     knowledge
+// @Security BearerAuth
+// @Param    id path string true "Knowledge base ID"
+// @Success  204
+// @Router   /knowledge-bases/{id} [delete]
 func (h *Handler) DeleteKB(c *gin.Context) {
 	id, ok := parseID(c, "id")
 	if !ok {

@@ -80,6 +80,184 @@ definitions:
         minimum: 0
         type: number
     type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse:
+    properties:
+      agent_id:
+        type: string
+      channel_id:
+        type: string
+      debounce_seconds:
+        type: integer
+      fallback_message:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.CreateAutomationRequest:
+    properties:
+      agent_id:
+        type: string
+      business_hours:
+        additionalProperties: {}
+        type: object
+      channel_id:
+        type: string
+      debounce_seconds:
+        maximum: 60
+        minimum: 0
+        type: integer
+      fallback_message:
+        type: string
+      is_active:
+        type: boolean
+    required:
+    - agent_id
+    - channel_id
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.UpdateAutomationRequest:
+    properties:
+      agent_id:
+        type: string
+      business_hours:
+        additionalProperties: {}
+        type: object
+      debounce_seconds:
+        maximum: 60
+        minimum: 0
+        type: integer
+      fallback_message:
+        type: string
+      is_active:
+        type: boolean
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse:
+    properties:
+      active_agent_id:
+        type: string
+      external_account_id:
+        type: string
+      id:
+        type: string
+      instance_name:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest:
+    properties:
+      method:
+        enum:
+        - qr
+        - pairing
+        type: string
+      number:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse:
+    properties:
+      pairing_code:
+        type: string
+      qr_code:
+        type: string
+      state:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.CreateChannelRequest:
+    properties:
+      name:
+        type: string
+      number:
+        description: external account / phone (E.164)
+        type: string
+      type:
+        enum:
+        - whatsapp
+        - instagram
+        type: string
+    required:
+    - type
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse:
+    properties:
+      agent_id:
+        type: string
+      assigned_user_id:
+        type: string
+      channel_id:
+        type: string
+      closed_at:
+        type: string
+      contact_id:
+        type: string
+      id:
+        type: string
+      last_message_at:
+        type: string
+      opened_at:
+        type: string
+      state:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.MessageResponse:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      direction:
+        type: string
+      external_message_id:
+        type: string
+      id:
+        type: string
+      media:
+        additionalProperties: {}
+        type: object
+      sender_type:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_handover_dto.ReplyRequest:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.AcceptInviteRequest:
+    properties:
+      password:
+        minLength: 8
+        type: string
+      token:
+        type: string
+    required:
+    - password
+    - token
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.InviteRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      role:
+        enum:
+        - admin
+        - operator
+        - knowledge_manager
+        type: string
+    required:
+    - email
+    - role
+    type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest:
     properties:
       company_slug:
@@ -140,11 +318,148 @@ definitions:
       status:
         type: string
     type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.CreateKBRequest:
+    properties:
+      chunk_overlap:
+        minimum: 0
+        type: integer
+      chunk_size:
+        type: integer
+      description:
+        type: string
+      embedding_model:
+        type: string
+      name:
+        minLength: 2
+        type: string
+    required:
+    - name
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse:
+    properties:
+      created_at:
+        type: string
+      error:
+        type: string
+      filename:
+        type: string
+      id:
+        type: string
+      source_type:
+        type: string
+      status:
+        type: string
+      token_count:
+        type: integer
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse:
+    properties:
+      chunk_overlap:
+        type: integer
+      chunk_size:
+        type: integer
+      description:
+        type: string
+      embedding_model:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.UploadTextRequest:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.AddDomainRequest:
+    properties:
+      domain:
+        type: string
+      is_primary:
+        type: boolean
+    required:
+    - domain
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse:
+    properties:
+      company_id:
+        type: string
+      email_sender_name:
+        type: string
+      favicon_url:
+        type: string
+      logo_url:
+        type: string
+      primary_color:
+        type: string
+      secondary_color:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      plan:
+        type: string
+      slug:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CreateCompanyRequest:
+    properties:
+      email:
+        type: string
+      name:
+        minLength: 2
+        type: string
+      plan:
+        type: string
+      slug:
+        minLength: 2
+        type: string
+    required:
+    - name
+    - slug
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse:
+    properties:
+      domain:
+        type: string
+      id:
+        type: string
+      is_primary:
+        type: boolean
+      verified_at:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.UpdateBrandingRequest:
+    properties:
+      email_sender_name:
+        type: string
+      favicon_url:
+        type: string
+      logo_url:
+        type: string
+      primary_color:
+        type: string
+      secondary_color:
+        type: string
+    type: object
 info:
   contact: {}
-  description: SaaS multi-tenant white-label de atendimento automatizado e omnicanal
+  description: SaaS multi-tenant white-label de atendimento automatizado e omnichannel
     (WhatsApp/Instagram) com IA + RAG.
-  title: Lumia API
+  title: API
   version: "1.0"
 paths:
   /agents:
@@ -247,6 +562,66 @@ paths:
       summary: Update agent
       tags:
       - agents
+  /agents/{id}/knowledge-bases/{kbId}:
+    delete:
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Knowledge base ID
+        in: path
+        name: kbId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Unlink knowledge base from agent
+      tags:
+      - knowledge
+    post:
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Knowledge base ID
+        in: path
+        name: kbId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Link knowledge base to agent
+      tags:
+      - knowledge
+  /auth/accept-invite:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Token and password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.AcceptInviteRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Accept invite
+      tags:
+      - auth
   /auth/login:
     post:
       consumes:
@@ -324,6 +699,680 @@ paths:
       summary: Register first admin
       tags:
       - auth
+  /automations:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List automations
+      tags:
+      - automations
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Automation
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.CreateAutomationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+      security:
+      - BearerAuth: []
+      summary: Create automation
+      tags:
+      - automations
+  /automations/{id}:
+    delete:
+      parameters:
+      - description: Automation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete automation
+      tags:
+      - automations
+    get:
+      parameters:
+      - description: Automation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+      security:
+      - BearerAuth: []
+      summary: Get automation
+      tags:
+      - automations
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Automation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Automation
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.UpdateAutomationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+      security:
+      - BearerAuth: []
+      summary: Update automation
+      tags:
+      - automations
+  /branding:
+    get:
+      parameters:
+      - description: Hostname (defaults to request Host header)
+        in: query
+        name: host
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse'
+      summary: Get branding
+      tags:
+      - tenant
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Branding
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.UpdateBrandingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse'
+      security:
+      - BearerAuth: []
+      summary: Update branding
+      tags:
+      - tenant
+  /channels:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List channels
+      tags:
+      - channels
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Channel
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.CreateChannelRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
+      security:
+      - BearerAuth: []
+      summary: Create channel
+      tags:
+      - channels
+  /channels/{id}:
+    delete:
+      parameters:
+      - description: Channel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Disconnect channel
+      tags:
+      - channels
+    get:
+      parameters:
+      - description: Channel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
+      security:
+      - BearerAuth: []
+      summary: Get channel
+      tags:
+      - channels
+  /channels/{id}/connect:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Channel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Connect options (method: qr|pairing)'
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse'
+      security:
+      - BearerAuth: []
+      summary: Connect channel
+      tags:
+      - channels
+  /channels/{id}/connection-state:
+    get:
+      parameters:
+      - description: Channel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get connection state
+      tags:
+      - channels
+  /companies:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Company
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CreateCompanyRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse'
+      summary: Create company
+      tags:
+      - tenant
+  /company:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse'
+      security:
+      - BearerAuth: []
+      summary: Get company
+      tags:
+      - tenant
+  /conversations:
+    get:
+      parameters:
+      - description: Filter by state (open/closed/human)
+        in: query
+        name: state
+        type: string
+      - description: Filter by channel UUID
+        in: query
+        name: channel_id
+        type: string
+      - description: Filter by opened_at >= RFC3339 timestamp
+        in: query
+        name: since
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List conversations
+      tags:
+      - conversations
+  /conversations/{id}:
+    get:
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse'
+      security:
+      - BearerAuth: []
+      summary: Get conversation
+      tags:
+      - conversations
+  /conversations/{id}/handover/close:
+    post:
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Close conversation
+      tags:
+      - handover
+  /conversations/{id}/handover/reply:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Message
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_handover_dto.ReplyRequest'
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Reply as operator
+      tags:
+      - handover
+  /conversations/{id}/handover/return:
+    post:
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Return conversation to AI
+      tags:
+      - handover
+  /conversations/{id}/handover/take:
+    post:
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Take conversation (human)
+      tags:
+      - handover
+  /conversations/{id}/messages:
+    get:
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.MessageResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List messages
+      tags:
+      - conversations
+  /documents/{docId}:
+    delete:
+      parameters:
+      - description: Document ID
+        in: path
+        name: docId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete document
+      tags:
+      - knowledge
+  /domains:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List domains
+      tags:
+      - tenant
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Domain
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.AddDomainRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse'
+      security:
+      - BearerAuth: []
+      summary: Add domain
+      tags:
+      - tenant
+  /knowledge-bases:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List knowledge bases
+      tags:
+      - knowledge
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Knowledge base
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.CreateKBRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
+      security:
+      - BearerAuth: []
+      summary: Create knowledge base
+      tags:
+      - knowledge
+  /knowledge-bases/{id}:
+    delete:
+      parameters:
+      - description: Knowledge base ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete knowledge base
+      tags:
+      - knowledge
+    get:
+      parameters:
+      - description: Knowledge base ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
+      security:
+      - BearerAuth: []
+      summary: Get knowledge base
+      tags:
+      - knowledge
+  /knowledge-bases/{id}/documents:
+    get:
+      parameters:
+      - description: Knowledge base ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List documents
+      tags:
+      - knowledge
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Knowledge base ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: File (PDF, DOCX, TXT, etc.)
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload document (file)
+      tags:
+      - knowledge
+  /knowledge-bases/{id}/documents/text:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Knowledge base ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Text content
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.UploadTextRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload document (text)
+      tags:
+      - knowledge
   /users:
     get:
       produces:
@@ -342,6 +1391,63 @@ paths:
       summary: List users
       tags:
       - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Invite
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.InviteRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+      security:
+      - BearerAuth: []
+      summary: Invite user
+      tags:
+      - users
+  /webhooks/evolution:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer <webhook-token>
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Evolution webhook receiver
+      tags:
+      - webhooks
+  /ws:
+    get:
+      parameters:
+      - description: Access token (JWT)
+        in: query
+        name: token
+        required: true
+        type: string
+      responses:
+        "101":
+          description: Switching Protocols
+      summary: Realtime WebSocket
+      tags:
+      - realtime
 securityDefinitions:
   BearerAuth:
     in: header

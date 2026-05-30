@@ -35,7 +35,7 @@ services:
     environment:
       SERVER_URL: http://localhost:8081
       DATABASE_PROVIDER: postgresql
-      DATABASE_CONNECTION_URI: postgres://lumia:lumia@postgres:5432/lumia?sslmode=disable&search_path=evolution,public
+      DATABASE_CONNECTION_URI: postgres://lumia:lumia@postgres:5432/lumia?sslmode=disable&schema=evolution
       DATABASE_CONNECTION_CLIENT_NAME: evolution_api
       REDIS_URI: redis://redis:6379
       AUTHENTICATION_API_KEY: changeme
@@ -57,7 +57,7 @@ services:
       - "8080:8080"
     env_file: .env
     environment:
-      DATABASE_URL: postgres://app_user:app_pw@postgres:5432/lumia?sslmode=disable
+      DATABASE_URL: postgres://lumia:lumia@postgres:5432/lumia?sslmode=disable
       REDIS_URL: redis://redis:6379
       EVOLUTION_BASE_URL: http://evolution:8080
       # Evolution must reach the api by its service name inside the compose network.

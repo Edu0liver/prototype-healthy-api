@@ -6,6 +6,13 @@ import (
 )
 
 // LinkAgent handles POST /agents/:id/knowledge-bases/:kbId.
+// @Summary  Link knowledge base to agent
+// @Tags     knowledge
+// @Security BearerAuth
+// @Param    id   path string true "Agent ID"
+// @Param    kbId path string true "Knowledge base ID"
+// @Success  204
+// @Router   /agents/{id}/knowledge-bases/{kbId} [post]
 func (h *Handler) LinkAgent(c *gin.Context) {
 	agentID, ok := parseID(c, "id")
 	if !ok {
@@ -23,6 +30,13 @@ func (h *Handler) LinkAgent(c *gin.Context) {
 }
 
 // UnlinkAgent handles DELETE /agents/:id/knowledge-bases/:kbId.
+// @Summary  Unlink knowledge base from agent
+// @Tags     knowledge
+// @Security BearerAuth
+// @Param    id   path string true "Agent ID"
+// @Param    kbId path string true "Knowledge base ID"
+// @Success  204
+// @Router   /agents/{id}/knowledge-bases/{kbId} [delete]
 func (h *Handler) UnlinkAgent(c *gin.Context) {
 	agentID, ok := parseID(c, "id")
 	if !ok {

@@ -179,6 +179,102 @@ const docTemplate = `{
                 }
             }
         },
+        "/agents/{id}/knowledge-bases/{kbId}": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Link knowledge base to agent",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Agent ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "kbId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Unlink knowledge base from agent",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Agent ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "kbId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/auth/accept-invite": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Accept invite",
+                "parameters": [
+                    {
+                        "description": "Token and password",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.AcceptInviteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "consumes": [
@@ -302,6 +398,1108 @@ const docTemplate = `{
                 }
             }
         },
+        "/automations": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "automations"
+                ],
+                "summary": "List automations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "automations"
+                ],
+                "summary": "Create automation",
+                "parameters": [
+                    {
+                        "description": "Automation",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.CreateAutomationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/automations/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "automations"
+                ],
+                "summary": "Get automation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Automation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "automations"
+                ],
+                "summary": "Update automation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Automation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Automation",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.UpdateAutomationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "automations"
+                ],
+                "summary": "Delete automation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Automation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/branding": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Get branding",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hostname (defaults to request Host header)",
+                        "name": "host",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Update branding",
+                "parameters": [
+                    {
+                        "description": "Branding",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.UpdateBrandingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/channels": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "List channels",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "Create channel",
+                "parameters": [
+                    {
+                        "description": "Channel",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.CreateChannelRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/channels/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "Get channel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Channel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "Disconnect channel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Channel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/channels/{id}/connect": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "Connect channel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Channel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Connect options (method: qr|pairing)",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/channels/{id}/connection-state": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "channels"
+                ],
+                "summary": "Get connection state",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Channel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Create company",
+                "parameters": [
+                    {
+                        "description": "Company",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CreateCompanyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/company": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Get company",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conversations"
+                ],
+                "summary": "List conversations",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by state (open/closed/human)",
+                        "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by channel UUID",
+                        "name": "channel_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by opened_at \u003e= RFC3339 timestamp",
+                        "name": "since",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conversations"
+                ],
+                "summary": "Get conversation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations/{id}/handover/close": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "handover"
+                ],
+                "summary": "Close conversation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations/{id}/handover/reply": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "handover"
+                ],
+                "summary": "Reply as operator",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Message",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_handover_dto.ReplyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/conversations/{id}/handover/return": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "handover"
+                ],
+                "summary": "Return conversation to AI",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations/{id}/handover/take": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "handover"
+                ],
+                "summary": "Take conversation (human)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conversations/{id}/messages": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conversations"
+                ],
+                "summary": "List messages",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Conversation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.MessageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/{docId}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Delete document",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Document ID",
+                        "name": "docId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/domains": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "List domains",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Add domain",
+                "parameters": [
+                    {
+                        "description": "Domain",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.AddDomainRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/knowledge-bases": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "List knowledge bases",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Create knowledge base",
+                "parameters": [
+                    {
+                        "description": "Knowledge base",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.CreateKBRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/knowledge-bases/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Get knowledge base",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Delete knowledge base",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/knowledge-bases/{id}/documents": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "List documents",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Upload document (file)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File (PDF, DOCX, TXT, etc.)",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/knowledge-bases/{id}/documents/text": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "knowledge"
+                ],
+                "summary": "Upload document (text)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Knowledge base ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Text content",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.UploadTextRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -328,6 +1526,97 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Invite user",
+                "parameters": [
+                    {
+                        "description": "Invite",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.InviteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhooks/evolution": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhooks"
+                ],
+                "summary": "Evolution webhook receiver",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003cwebhook-token\u003e",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ws": {
+            "get": {
+                "tags": [
+                    "realtime"
+                ],
+                "summary": "Realtime WebSocket",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (JWT)",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "Switching Protocols"
                     }
                 }
             }
@@ -451,6 +1740,271 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse": {
+            "type": "object",
+            "properties": {
+                "agent_id": {
+                    "type": "string"
+                },
+                "channel_id": {
+                    "type": "string"
+                },
+                "debounce_seconds": {
+                    "type": "integer"
+                },
+                "fallback_message": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.CreateAutomationRequest": {
+            "type": "object",
+            "required": [
+                "agent_id",
+                "channel_id"
+            ],
+            "properties": {
+                "agent_id": {
+                    "type": "string"
+                },
+                "business_hours": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "channel_id": {
+                    "type": "string"
+                },
+                "debounce_seconds": {
+                    "type": "integer",
+                    "maximum": 60,
+                    "minimum": 0
+                },
+                "fallback_message": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.UpdateAutomationRequest": {
+            "type": "object",
+            "properties": {
+                "agent_id": {
+                    "type": "string"
+                },
+                "business_hours": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "debounce_seconds": {
+                    "type": "integer",
+                    "maximum": 60,
+                    "minimum": 0
+                },
+                "fallback_message": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse": {
+            "type": "object",
+            "properties": {
+                "active_agent_id": {
+                    "type": "string"
+                },
+                "external_account_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "instance_name": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": "string",
+                    "enum": [
+                        "qr",
+                        "pairing"
+                    ]
+                },
+                "number": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse": {
+            "type": "object",
+            "properties": {
+                "pairing_code": {
+                    "type": "string"
+                },
+                "qr_code": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.CreateChannelRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "description": "external account / phone (E.164)",
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "whatsapp",
+                        "instagram"
+                    ]
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse": {
+            "type": "object",
+            "properties": {
+                "agent_id": {
+                    "type": "string"
+                },
+                "assigned_user_id": {
+                    "type": "string"
+                },
+                "channel_id": {
+                    "type": "string"
+                },
+                "closed_at": {
+                    "type": "string"
+                },
+                "contact_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_message_at": {
+                    "type": "string"
+                },
+                "opened_at": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "direction": {
+                    "type": "string"
+                },
+                "external_message_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "media": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "sender_type": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_handover_dto.ReplyRequest": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.AcceptInviteRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "token"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.InviteRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "role"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "admin",
+                        "operator",
+                        "knowledge_manager"
+                    ]
+                }
+            }
+        },
         "github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest": {
             "type": "object",
             "required": [
@@ -540,6 +2094,214 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.CreateKBRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "chunk_overlap": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "chunk_size": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "embedding_model": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "source_type": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "token_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse": {
+            "type": "object",
+            "properties": {
+                "chunk_overlap": {
+                    "type": "integer"
+                },
+                "chunk_size": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "embedding_model": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.UploadTextRequest": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.AddDomainRequest": {
+            "type": "object",
+            "required": [
+                "domain"
+            ],
+            "properties": {
+                "domain": {
+                    "type": "string"
+                },
+                "is_primary": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse": {
+            "type": "object",
+            "properties": {
+                "company_id": {
+                    "type": "string"
+                },
+                "email_sender_name": {
+                    "type": "string"
+                },
+                "favicon_url": {
+                    "type": "string"
+                },
+                "logo_url": {
+                    "type": "string"
+                },
+                "primary_color": {
+                    "type": "string"
+                },
+                "secondary_color": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "plan": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CreateCompanyRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "slug"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 2
+                },
+                "plan": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse": {
+            "type": "object",
+            "properties": {
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_primary": {
+                    "type": "boolean"
+                },
+                "verified_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.UpdateBrandingRequest": {
+            "type": "object",
+            "properties": {
+                "email_sender_name": {
+                    "type": "string"
+                },
+                "favicon_url": {
+                    "type": "string"
+                },
+                "logo_url": {
+                    "type": "string"
+                },
+                "primary_color": {
+                    "type": "string"
+                },
+                "secondary_color": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -557,8 +2319,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Lumia API",
-	Description:      "SaaS multi-tenant white-label de atendimento automatizado e omnicanal (WhatsApp/Instagram) com IA + RAG.",
+	Title:            "API",
+	Description:      "SaaS multi-tenant white-label de atendimento automatizado e omnichannel (WhatsApp/Instagram) com IA + RAG.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

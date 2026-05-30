@@ -45,7 +45,7 @@ O servidor sobe em `http://localhost:8080`.
 | --- | --- |
 | `GET /health` | Liveness. |
 | `GET /metrics` | Métricas Prometheus. |
-| `GET /swagger/index.html` | UI do Swagger (gere com `make swag`). |
+| `GET /docs/index.html` | UI do Swagger (gere com `make swag`). |
 | `GET /ws` | WebSocket de logs em tempo real (token JWT). |
 
 ## Comandos úteis (Makefile)

@@ -8,6 +8,12 @@ import (
 )
 
 // GetBrandingByHost serves the white-label theme for a Host (public).
+// @Summary  Get branding
+// @Tags     tenant
+// @Produce  json
+// @Param    host query string false "Hostname (defaults to request Host header)"
+// @Success  200 {object} dto.BrandingResponse
+// @Router   /branding [get]
 func (h *Handler) GetBrandingByHost(c *gin.Context) {
 	host := c.Query("host")
 	if host == "" {
@@ -22,6 +28,14 @@ func (h *Handler) GetBrandingByHost(c *gin.Context) {
 }
 
 // UpdateBranding upserts the authenticated tenant's branding.
+// @Summary  Update branding
+// @Tags     tenant
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.UpdateBrandingRequest true "Branding"
+// @Success  200 {object} dto.BrandingResponse
+// @Router   /branding [put]
 func (h *Handler) UpdateBranding(c *gin.Context) {
 	var in dto.UpdateBrandingRequest
 	if !httputil.BindJSON(c, &in) {

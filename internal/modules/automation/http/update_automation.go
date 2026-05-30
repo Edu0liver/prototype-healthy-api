@@ -7,6 +7,15 @@ import (
 )
 
 // Update handles PUT /automations/:id.
+// @Summary  Update automation
+// @Tags     automations
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    id   path string                        true "Automation ID"
+// @Param    body body dto.UpdateAutomationRequest   true "Automation"
+// @Success  200 {object} dto.AutomationResponse
+// @Router   /automations/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

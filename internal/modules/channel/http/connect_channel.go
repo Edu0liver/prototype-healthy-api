@@ -7,6 +7,15 @@ import (
 )
 
 // Connect handles POST /channels/:id/connect.
+// @Summary  Connect channel
+// @Tags     channels
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    id   path string             true  "Channel ID"
+// @Param    body body dto.ConnectRequest false "Connect options (method: qr|pairing)"
+// @Success  200 {object} dto.ConnectResponse
+// @Router   /channels/{id}/connect [post]
 func (h *Handler) Connect(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {
@@ -26,6 +35,13 @@ func (h *Handler) Connect(c *gin.Context) {
 }
 
 // ConnectionState handles GET /channels/:id/connection-state.
+// @Summary  Get connection state
+// @Tags     channels
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Channel ID"
+// @Success  200 {object} map[string]string
+// @Router   /channels/{id}/connection-state [get]
 func (h *Handler) ConnectionState(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

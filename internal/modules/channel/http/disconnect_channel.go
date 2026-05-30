@@ -6,6 +6,12 @@ import (
 )
 
 // Disconnect handles DELETE /channels/:id.
+// @Summary  Disconnect channel
+// @Tags     channels
+// @Security BearerAuth
+// @Param    id path string true "Channel ID"
+// @Success  204
+// @Router   /channels/{id} [delete]
 func (h *Handler) Disconnect(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

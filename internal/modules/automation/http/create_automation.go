@@ -7,6 +7,14 @@ import (
 )
 
 // Create handles POST /automations.
+// @Summary  Create automation
+// @Tags     automations
+// @Security BearerAuth
+// @Accept   json
+// @Produce  json
+// @Param    body body dto.CreateAutomationRequest true "Automation"
+// @Success  201 {object} dto.AutomationResponse
+// @Router   /automations [post]
 func (h *Handler) Create(c *gin.Context) {
 	var in dto.CreateAutomationRequest
 	if !httputil.BindJSON(c, &in) {

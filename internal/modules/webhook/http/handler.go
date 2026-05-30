@@ -29,6 +29,13 @@ func NewHandler(svc *service.Service, cfg *config.Config, log *zap.Logger) *Hand
 // Evolution handles POST /webhooks/evolution. It validates the shared token,
 // then processes the event. It always returns 200 quickly so the provider does
 // not retry on transient internal errors (those are logged + audited).
+// @Summary  Evolution webhook receiver
+// @Tags     webhooks
+// @Accept   json
+// @Produce  json
+// @Param    Authorization header string false "Bearer <webhook-token>"
+// @Success  200 {object} map[string]bool
+// @Router   /webhooks/evolution [post]
 func (h *Handler) Evolution(c *gin.Context) {
 	if h.token != "" {
 		if c.GetHeader("authorization") != "Bearer "+h.token {

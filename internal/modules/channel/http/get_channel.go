@@ -7,6 +7,13 @@ import (
 )
 
 // Get handles GET /channels/:id.
+// @Summary  Get channel
+// @Tags     channels
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Channel ID"
+// @Success  200 {object} dto.ChannelResponse
+// @Router   /channels/{id} [get]
 func (h *Handler) Get(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {
@@ -21,6 +28,12 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 // List handles GET /channels.
+// @Summary  List channels
+// @Tags     channels
+// @Security BearerAuth
+// @Produce  json
+// @Success  200 {object} map[string][]dto.ChannelResponse
+// @Router   /channels [get]
 func (h *Handler) List(c *gin.Context) {
 	channels, err := h.svc.List(c.Request.Context())
 	if err != nil {

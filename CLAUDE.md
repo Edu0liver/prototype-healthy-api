@@ -45,7 +45,7 @@ fx em `internal/shared/module.go` (package `shared`). Providers mapeiam `config.
 > Regra: `/pkg` nunca importa `internal/`. Clientes que precisavam de `config` recebem structs próprias (ex.: `openai.Config`).
 
 ## Swagger
-Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag` gera `docs/`. UI em `/swagger/index.html`.
+Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag` gera `docs/`. UI em `/docs/index.html`.
 
 ### Isolamento multi-tenant (OBRIGATÓRIO em todo módulo)
 - **App-layer (primário):** toda query de domínio filtra `company_id`. Reads usam `database.MustTx(ctx).Scopes(database.TenantScope(ctx))`. Nunca executar query de domínio sem `company_id`.

@@ -7,6 +7,13 @@ import (
 )
 
 // Get handles GET /automations/:id.
+// @Summary  Get automation
+// @Tags     automations
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Automation ID"
+// @Success  200 {object} dto.AutomationResponse
+// @Router   /automations/{id} [get]
 func (h *Handler) Get(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {
@@ -21,6 +28,12 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 // List handles GET /automations.
+// @Summary  List automations
+// @Tags     automations
+// @Security BearerAuth
+// @Produce  json
+// @Success  200 {object} map[string][]dto.AutomationResponse
+// @Router   /automations [get]
 func (h *Handler) List(c *gin.Context) {
 	items, err := h.svc.List(c.Request.Context())
 	if err != nil {

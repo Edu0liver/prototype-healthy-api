@@ -6,6 +6,13 @@ import (
 )
 
 // Close handles POST /conversations/:id/handover/close.
+// @Summary  Close conversation
+// @Tags     handover
+// @Security BearerAuth
+// @Produce  json
+// @Param    id path string true "Conversation ID"
+// @Success  200 {object} map[string]string
+// @Router   /conversations/{id}/handover/close [post]
 func (h *Handler) Close(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {
