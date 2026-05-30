@@ -15,20 +15,37 @@ Cada empresa (`company`) tem usuários, canais de mensageria e base de conhecime
 - **UUID v7** para todas as PKs (`github.com/google/uuid v1.6.0`)
 
 ## Estrutura obrigatória de módulo
+Um arquivo por caso de uso (ex.: `create_user.go`, `update_user.go`, `delete_user.go`) com o respectivo `_test.go` ao lado, em `dto/`, `http/` e `service/`.
 ```
 /internal/modules/<nome>/
-├── dtos/           # request/response structs com json + validator tags
-├── http/          # handlers Gin + routes.go + integration_test.go
+├── dto/            # 1 arquivo por caso de uso (request/response structs, json + validator tags)
+│   ├── create_<x>.go
+│   └── update_<x>.go
+├── http/          # 1 handler por caso de uso + _test, routes.go, integration_test.go
+│   ├── create_<x>.go
+│   ├── create_<x>_test.go
+│   ├── routes.go
+│   └── integration_test.go
 ├── infra/
 │   ├── models/    # GORM structs (sem json tags) = entidades
-│   └── repositories/
-├── services/       # 1 arquivo por caso de uso + interfaces.go + errors.go
+│   └── repository/  # <nome>_repository.go + <nome>_repository_test.go
+├── service/        # 1 arquivo por caso de uso + _test + interfaces.go + errors.go
+│   ├── create_<x>.go
+│   └── create_<x>_test.go
 ├── module.go      # fx.Module — único ponto público do módulo para o fx
 └── <NOME>.md      # Deve ser referênciado no CLAUDE.md após criação de todo módulo, ao invés de ser citado diretamente nele
 ```
 
-## Plataforma (`/internal/platform/`)
-Camada transversal (fx em `internal/platform/module.go`): `config`, `logger` (zap), `database` (GORM+pgx; `TenantScope`, tipos `JSONMap`/`JSONStringArray`/`Vector`), `redisx` (lock/stream/buffer/state), `crypto` (AES-256-GCM), `token` (JWT), `appctx` (identidade no ctx), `mailer` (Resend), `events` (Pub/Sub realtime), `jobs` (`InboundJob`), `middleware` (auth/tenant-RLS/RBAC/rate-limit), `httputil`, `httpserver`, `metrics` (Prometheus `/metrics`), `openai`, `evolution` (clientes com retry/backoff), `channeladapter`, `storage`, `resilience`, `testsupport`.
+## Camada transversal (Go standard layout)
+fx em `internal/shared/module.go` (package `shared`). Providers mapeiam `config.Config` → opções de cada pacote `/pkg`.
+
+- **`/pkg`** — libs genéricas, SEM import de `internal/` (reutilizáveis): `httputil`, `resilience` (retry+breaker), `metrics` (Prometheus), `crypto` (AES-256-GCM, `New(keyHex)`), `token` (JWT, `New(secret,ttls)`), `storage` (`NewLocal(root)`), `openai` (`New(openai.Config)`, retry), `evolution` (`New(evolution.Config)`, retry).
+- **`/internal/shared`** — glue específico da app: `config`, `logger` (zap), `database` (GORM+pgx; `TenantScope`, tipos `JSONMap`/`JSONStringArray`/`Vector`), `redisx` (lock/stream/buffer/state), `appctx` (identidade no ctx), `mailer` (Resend), `events` (Pub/Sub realtime), `jobs` (`InboundJob`), `middleware` (auth/tenant-RLS/RBAC/rate-limit), `httpserver` (+swagger UI `/swagger`), `channeladapter`, `testsupport`.
+
+> Regra: `/pkg` nunca importa `internal/`. Clientes que precisavam de `config` recebem structs próprias (ex.: `openai.Config`).
+
+## Swagger
+Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag` gera `docs/`. UI em `/swagger/index.html`.
 
 ### Isolamento multi-tenant (OBRIGATÓRIO em todo módulo)
 - **App-layer (primário):** toda query de domínio filtra `company_id`. Reads usam `database.MustTx(ctx).Scopes(database.TenantScope(ctx))`. Nunca executar query de domínio sem `company_id`.

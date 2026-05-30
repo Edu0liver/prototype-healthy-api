@@ -10,8 +10,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/config"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/database"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/argon2"
 	gormpg "gorm.io/driver/postgres"

@@ -3,17 +3,17 @@
 package orchestration
 
 import (
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/orchestration/infra/repositories"
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/orchestration/services"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/orchestration/infra/repository"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/orchestration/service"
 	"go.uber.org/fx"
 )
 
 // Module is the orchestration module's sole public entry for fx.
 var Module = fx.Module("orchestration",
 	fx.Provide(
-		repositories.New,
-		services.New,
-		services.NewWorker,
+		repository.New,
+		service.New,
+		service.NewWorker,
 	),
-	fx.Invoke(services.Register),
+	fx.Invoke(service.Register),
 )

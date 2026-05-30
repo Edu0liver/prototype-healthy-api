@@ -4,7 +4,7 @@ package models
 import (
 	"time"
 
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/database"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 )
 

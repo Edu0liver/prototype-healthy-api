@@ -1,0 +1,350 @@
+basePath: /
+definitions:
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse:
+    properties:
+      handover_enabled:
+        type: boolean
+      handover_keywords:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      max_output_tokens:
+        type: integer
+      model:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      system_prompt:
+        type: string
+      temperature:
+        type: number
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.CreateAgentRequest:
+    properties:
+      handover_enabled:
+        type: boolean
+      handover_keywords:
+        items:
+          type: string
+        type: array
+      max_output_tokens:
+        type: integer
+      model:
+        type: string
+      name:
+        minLength: 2
+        type: string
+      status:
+        enum:
+        - active
+        - draft
+        type: string
+      system_prompt:
+        type: string
+      temperature:
+        maximum: 2
+        minimum: 0
+        type: number
+    required:
+    - name
+    - system_prompt
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.UpdateAgentRequest:
+    properties:
+      handover_enabled:
+        type: boolean
+      handover_keywords:
+        items:
+          type: string
+        type: array
+      max_output_tokens:
+        type: integer
+      model:
+        type: string
+      name:
+        minLength: 2
+        type: string
+      status:
+        enum:
+        - active
+        - draft
+        type: string
+      system_prompt:
+        type: string
+      temperature:
+        maximum: 2
+        minimum: 0
+        type: number
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest:
+    properties:
+      company_slug:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - company_slug
+    - email
+    - password
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RegisterAdminRequest:
+    properties:
+      company_slug:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - company_slug
+    - email
+    - password
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: SaaS multi-tenant white-label de atendimento automatizado e omnicanal
+    (WhatsApp/Instagram) com IA + RAG.
+  title: Lumia API
+  version: "1.0"
+paths:
+  /agents:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List agents
+      tags:
+      - agents
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Agent
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.CreateAgentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
+      security:
+      - BearerAuth: []
+      summary: Create agent
+      tags:
+      - agents
+  /agents/{id}:
+    delete:
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete agent
+      tags:
+      - agents
+    get:
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Get agent
+      tags:
+      - agents
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Agent
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.UpdateAgentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
+      security:
+      - BearerAuth: []
+      summary: Update agent
+      tags:
+      - agents
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+      security:
+      - BearerAuth: []
+      summary: Current user
+      tags:
+      - users
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse'
+      summary: Refresh token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Admin
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RegisterAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+      summary: Register first admin
+      tags:
+      - auth
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List users
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

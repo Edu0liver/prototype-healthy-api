@@ -14,7 +14,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/realtime"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/tenant"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/webhook"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
@@ -27,9 +27,17 @@ var (
 	buildDate = "unknown"
 )
 
+// @title                      API
+// @version                    1.0
+// @description                SaaS multi-tenant white-label de atendimento automatizado e omnichannel (WhatsApp/Instagram) com IA + RAG.
+// @BasePath                   /
+// @securityDefinitions.apikey BearerAuth
+// @in                         header
+// @name                       Authorization
+// @description.markdown
 func main() {
 	app := fx.New(
-		platform.Module,
+		shared.Module,
 		// Domain modules.
 		tenant.Module,
 		iam.Module,

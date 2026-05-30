@@ -1,0 +1,13 @@
+package dto
+
+// UpdateAgentRequest updates mutable agent fields (system prompt is live-editable).
+type UpdateAgentRequest struct {
+	Name             *string  `json:"name" binding:"omitempty,min=2"`
+	SystemPrompt     *string  `json:"system_prompt"`
+	Model            *string  `json:"model"`
+	Temperature      *float64 `json:"temperature" binding:"omitempty,gte=0,lte=2"`
+	MaxOutputTokens  *int     `json:"max_output_tokens" binding:"omitempty,gt=0"`
+	HandoverEnabled  *bool    `json:"handover_enabled"`
+	HandoverKeywords []string `json:"handover_keywords"`
+	Status           *string  `json:"status" binding:"omitempty,oneof=active draft"`
+}

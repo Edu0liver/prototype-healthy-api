@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/infra/repositories"
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/services"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/config"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/database"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/testsupport"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/token"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/infra/repository"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/service"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/testsupport"
+	"github.com/Edu0liver/prototype-healthy-api/pkg/token"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -20,13 +20,13 @@ type noopMailer struct{}
 
 func (noopMailer) Send(string, string, string) error { return nil }
 
-func newService(t *testing.T, db *database.DB) *services.Service {
+func newService(t *testing.T, db *database.DB) *service.Service {
 	cfg := &config.Config{}
 	cfg.App.PublicBaseURL = "http://test"
 	cfg.JWT.Secret = "test-secret-please-change"
 	cfg.JWT.AccessTTL = 15 * time.Minute
 	cfg.JWT.RefreshTTL = time.Hour
-	return services.New(repositories.New(), db, token.New(cfg), noopMailer{}, cfg)
+	return service.New(repository.New(), db, token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL), noopMailer{}, cfg)
 }
 
 func seedCompany(t *testing.T, db *database.DB, slug string) uuid.UUID {
@@ -77,9 +77,9 @@ func TestTenantIsolation(t *testing.T) {
 
 	// A user from B is invisible inside A's scope (email is unique per company).
 	err = db.Tenant(ctx, userA.CompanyID, func(ctx context.Context) error {
-		repo := repositories.New()
+		repo := repository.New()
 		_, err := repo.FindByEmail(ctx, "admin@b.com")
-		require.True(t, errors.Is(err, repositories.ErrNotFound), "expected B's user invisible to A, got %v", err)
+		require.True(t, errors.Is(err, repository.ErrNotFound), "expected B's user invisible to A, got %v", err)
 		return nil
 	})
 	require.NoError(t, err)

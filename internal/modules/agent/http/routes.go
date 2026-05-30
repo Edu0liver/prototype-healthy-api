@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/middleware"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/middleware"
 	"github.com/gin-gonic/gin"
 )
 

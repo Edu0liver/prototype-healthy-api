@@ -5,8 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/webhook/services"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/config"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/webhook/service"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -16,13 +16,13 @@ const maxBodyBytes = 5 << 20 // 5 MiB
 
 // Handler receives provider webhooks.
 type Handler struct {
-	svc   *services.Service
+	svc   *service.Service
 	token string
 	log   *zap.Logger
 }
 
 // NewHandler builds the handler.
-func NewHandler(svc *services.Service, cfg *config.Config, log *zap.Logger) *Handler {
+func NewHandler(svc *service.Service, cfg *config.Config, log *zap.Logger) *Handler {
 	return &Handler{svc: svc, token: cfg.Evolution.WebhookToken, log: log}
 }
 

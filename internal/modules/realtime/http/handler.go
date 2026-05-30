@@ -7,9 +7,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/events"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/redisx"
-	"github.com/Edu0liver/prototype-healthy-api/internal/platform/token"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/events"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/redisx"
+	"github.com/Edu0liver/prototype-healthy-api/pkg/token"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
