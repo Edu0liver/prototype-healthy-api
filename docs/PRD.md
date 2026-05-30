@@ -63,6 +63,7 @@ O produto resolve três problemas centrais:
 ### 1.5 Âmbito (Scope)
 
 **Dentro do âmbito (v1):**
+
 - Gestão multi-tenant e white-label.
 - Canais WhatsApp (via Evolution API V2) e Instagram (via adaptador — ver §6.7).
 - Agentes GPT com prompt de sistema configurável.
@@ -71,6 +72,7 @@ O produto resolve três problemas centrais:
 - Painel do tenant com logs em tempo real, gestão de RAG e configuração de agentes.
 
 **Fora do âmbito (v1):**
+
 - Faturação/billing automático e gateways de pagamento.
 - Construtor visual de fluxos (flow builder *drag-and-drop*).
 - Análise de sentimento avançada e relatórios de BI complexos.
@@ -251,6 +253,7 @@ contacts ──N:1── channels
 > Tipos: `uuid` (default `gen_random_uuid()`), `timestamptz`, `jsonb`. Todas as tabelas de domínio incluem `created_at`, `updated_at` e `company_id`.
 
 #### `companies`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -261,6 +264,7 @@ contacts ──N:1── channels
 | created_at / updated_at | timestamptz | |
 
 #### `company_branding` (white-label)
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | company_id | uuid PK FK→companies | 1:1 |
@@ -271,6 +275,7 @@ contacts ──N:1── channels
 | email_sender_name | text | |
 
 #### `company_domains`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -280,6 +285,7 @@ contacts ──N:1── channels
 | verified_at | timestamptz | |
 
 #### `users`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -290,6 +296,7 @@ contacts ──N:1── channels
 | status | text | `active`, `invited`, `disabled` |
 
 #### `channels`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -307,6 +314,7 @@ contacts ──N:1── channels
 *Constraint:* `UNIQUE (company_id, type, external_account_id)` para evitar duplicação do mesmo número/conta.
 
 #### `agents`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -321,6 +329,7 @@ contacts ──N:1── channels
 | status | text | `active`, `draft` |
 
 #### `automations`
+
 Representa a ligação operacional **canal → agente** e respetivas regras (horário, *fallback*, gatilhos de handover). É o ponto onde a regra "um agente por canal" é imposta.
 
 | Coluna | Tipo | Notas |
@@ -335,14 +344,17 @@ Representa a ligação operacional **canal → agente** e respetivas regras (hor
 | created_at / updated_at | timestamptz | |
 
 *Constraint crítica (um agente ativo por canal):*
+
 ```sql
 CREATE UNIQUE INDEX uniq_active_automation_per_channel
   ON automations (channel_id)
   WHERE is_active = true;
 ```
+
 Esta *partial unique index* garante que, em qualquer momento, **existe no máximo uma automação ativa por canal** — logo, no máximo **um agente** a operar esse canal de cada vez.
 
 #### `knowledge_bases`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -354,6 +366,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 | chunk_overlap | int | |
 
 #### `agent_knowledge_bases` (junção N:M)
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | agent_id | uuid FK→agents | PK composta |
@@ -363,6 +376,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 *PK:* `(agent_id, knowledge_base_id)`.
 
 #### `documents`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -376,6 +390,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 | token_count | int | |
 
 #### `document_chunks` (vetorial — pgvector)
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -388,6 +403,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 | metadata | jsonb | página, título, etc. |
 
 #### `contacts`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -400,6 +416,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 *Constraint:* `UNIQUE (channel_id, remote_jid)`.
 
 #### `conversations`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -413,6 +430,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 | opened_at / closed_at | timestamptz | |
 
 #### `messages`
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -429,6 +447,7 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 *Constraint:* `UNIQUE (company_id, external_message_id)` quando não nulo.
 
 #### `webhook_events` (auditoria/idempotência durável)
+
 | Coluna | Tipo | Notas |
 | --- | --- | --- |
 | id | uuid PK | |
@@ -442,11 +461,13 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 ### 3.4 Índices
 
 - **Vetorial (pgvector):** índice HNSW para similaridade por cosseno.
+
   ```sql
   CREATE INDEX idx_chunks_embedding_hnsw
     ON document_chunks
     USING hnsw (embedding vector_cosine_ops);
   ```
+
   Alternativa: `ivfflat` com `lists` ajustado ao volume; HNSW recomendado para *recall*/latência em cargas de leitura.
 - **Filtragem tenant + RAG:** `CREATE INDEX ON document_chunks (company_id, knowledge_base_id);` — a pesquisa vetorial é sempre pré-filtrada por estas colunas para garantir isolamento e relevância.
 - **Conversas/mensagens:** `CREATE INDEX ON messages (conversation_id, created_at DESC);` e `CREATE INDEX ON conversations (company_id, state, last_message_at DESC);`.
@@ -479,16 +500,19 @@ Esta *partial unique index* garante que, em qualquer momento, **existe no máxim
 
 **RF-WL-01 — Configuração de branding.**
 O Tenant Admin pode definir logótipo, favicon, cores e nome do remetente.
+
 - *Dado* que sou Tenant Admin autenticado,
 - *Quando* atualizo o logótipo e as cores no painel,
 - *Então* o painel passa a refletir o novo tema sem necessidade de *rebuild* e os valores persistem em `company_branding`.
 
 **RF-WL-02 — Domínio personalizado.**
+
 - *Dado* um domínio personalizado registado e verificado,
 - *Quando* um utilizador acede via esse `Host`,
 - *Então* o sistema resolve o `company_id` correto e serve o branding desse tenant.
 
 **RF-WL-03 — Isolamento de dados.**
+
 - *Dado* dois tenants A e B,
 - *Quando* um utilizador de A consulta qualquer recurso (conversas, agentes, RAG),
 - *Então* nunca são devolvidos dados de B, mesmo com manipulação de IDs (verificado por RLS + camada de aplicação).
@@ -496,91 +520,109 @@ O Tenant Admin pode definir logótipo, favicon, cores e nome do remetente.
 ### 4.2 Módulo: Canais
 
 **RF-CH-01 — Criar canal WhatsApp e ligar via QR Code.**
+
 - *Dado* que crio um canal do tipo `whatsapp`,
 - *Quando* solicito a ligação,
 - *Então* o sistema cria a instância na Evolution (`POST /instance/create`), obtém o QR Code (`GET /instance/connect/{instance}`) e exibe-o no painel; o estado transita para `connecting` e depois `connected` após leitura.
 
 **RF-CH-02 — Ligar via Pairing Code.**
+
 - *Dado* que indico o número de telefone do canal,
 - *Quando* opto por *Pairing Code*,
 - *Então* o sistema chama `GET /instance/connect/{instance}?number=<E164>` e exibe o `pairingCode` devolvido para introdução no telemóvel.
 
 **RF-CH-03 — Associar um único agente ao canal.**
+
 - *Dado* um canal ligado,
 - *Quando* associo um agente (cria/ativa uma automação),
 - *Então* o sistema garante que **não existe outra automação ativa** para esse canal; se já existir, a operação exige desativar a anterior (a *partial unique index* rejeita duas ativas).
 
 **RF-CH-04 — Monitorizar estado de ligação.**
+
 - *Dado* um canal,
 - *Quando* a Evolution dispara `CONNECTION_UPDATE`,
 - *Então* o estado do canal é atualizado em `channels.status` e em cache Redis, e refletido em tempo real no painel.
 
 **RF-CH-05 — Desligar / remover canal.**
+
 - *Quando* o Admin desliga o canal,
 - *Então* o sistema chama o *logout*/*delete* da instância na Evolution e marca o canal como `disconnected`.
 
 ### 4.3 Módulo: Agentes
 
 **RF-AG-01 — Criar/editar agente e prompt de sistema.**
+
 - *Dado* que sou Admin,
 - *Quando* defino `name`, `system_prompt`, `model`, `temperature`,
 - *Então* o agente é persistido e fica disponível para associação a canais e bases RAG.
 
 **RF-AG-02 — Associar múltiplas bases RAG ao agente (N:M).**
+
 - *Dado* um agente,
 - *Quando* seleciono várias bases de conhecimento,
 - *Então* o agente consome, em simultâneo, os chunks de todas as bases associadas no *retrieval* (filtrado por `company_id`).
 
 **RF-AG-03 — Ajuste fino do prompt em produção.**
+
 - *Quando* edito o `system_prompt`,
 - *Então* a alteração aplica-se às novas mensagens processadas (sem necessidade de redeploy).
 
 ### 4.4 Módulo: RAG (Bases de Conhecimento)
 
 **RF-RAG-01 — Criar base de conhecimento.**
+
 - *Quando* crio uma base,
 - *Então* é persistida com `embedding_model`, `chunk_size`, `chunk_overlap`.
 
 **RF-RAG-02 — Upload de ficheiros e textos.**
+
 - *Dado* uma base,
 - *Quando* faço upload de PDF/DOCX/TXT/MD ou colo texto,
 - *Então* o ficheiro é guardado (prefixo do tenant), criado um `document` com `status=pending`, e iniciada a indexação assíncrona.
 
 **RF-RAG-03 — Indexação (chunking + embeddings).**
+
 - *Quando* a indexação corre,
 - *Então* o texto é segmentado, cada chunk recebe um embedding via OpenAI e é inserido em `document_chunks`; no fim, `documents.status=indexed`. Em erro, `status=failed` com mensagem.
 
 **RF-RAG-04 — Pesquisa semântica isolada por tenant.**
+
 - *Dado* uma pergunta de um contacto,
 - *Quando* o worker executa o *retrieval*,
 - *Então* a pesquisa vetorial filtra **sempre** por `company_id` e pelas `knowledge_base_id` do agente, devolvendo os top-K chunks mais relevantes por similaridade de cosseno.
 
 **RF-RAG-05 — Gestão do ciclo de vida.**
+
 - *Quando* removo um documento,
 - *Então* os respetivos `document_chunks` são eliminados e deixam de ser usados no *retrieval*.
 
 ### 4.5 Módulo: Handover (Transição para Humano)
 
 **RF-HO-01 — IA transfere para humano.**
+
 - *Dado* `handover_enabled = true`,
 - *Quando* a IA deteta intenção de falar com humano (via *function calling* `transfer_to_human` ou *keyword* configurada),
 - *Então* o estado da conversa passa a `human` em Redis (`conv:state:{id}`), um operador é notificado, e a IA **cessa imediatamente** qualquer resposta automática nessa conversa.
 
 **RF-HO-02 — IA não responde em estado humano.**
+
 - *Dado* uma conversa em estado `human`,
 - *Quando* o contacto envia novas mensagens,
 - *Então* o worker regista as mensagens mas **não** chama a OpenAI nem envia respostas automáticas; as mensagens aparecem em tempo real para o operador.
 
 **RF-HO-03 — Operador assume e responde.**
+
 - *Dado* uma conversa em `human`,
 - *Quando* o operador envia uma mensagem pelo painel,
 - *Então* a mensagem é despachada via Evolution e registada com `sender_type=human`.
 
 **RF-HO-04 — Devolver à IA / fechar.**
+
 - *Quando* o operador devolve a conversa à IA,
 - *Então* o estado volta a `ai` e a automação retoma o atendimento; ao fechar, o estado passa a `closed`.
 
 **RF-HO-05 — Consistência do estado.**
+
 - *Dado* uma falha transitória do Redis,
 - *Quando* o worker não encontra `conv:state:{id}`,
 - *Então* recorre a `conversations.state` no Postgres como *fallback* e repovoa o Redis, garantindo que nunca responde automaticamente sobre uma conversa que estava em `human`.
@@ -588,25 +630,30 @@ O Tenant Admin pode definir logótipo, favicon, cores e nome do remetente.
 ### 4.6 Módulo: Logs e Auditoria em Tempo Real
 
 **RF-LOG-01 — Visualização em tempo real.**
+
 - *Dado* que estou no painel,
 - *Quando* chegam/saem mensagens numa conversa,
 - *Então* vejo-as em tempo real via WebSocket, com `sender_type` (contacto/IA/humano), timestamp e estado de entrega.
 
 **RF-LOG-02 — Auditoria completa.**
+
 - *Quando* abro o histórico de uma conversa,
 - *Então* vejo a sequência completa e imutável de mensagens, incluindo eventos de handover e qual agente/operador atuou.
 
 **RF-LOG-03 — Filtros.**
+
 - *Quando* filtro por canal, estado (`ai`/`human`/`closed`) ou período,
 - *Então* a lista de conversas reflete o filtro, sempre restrita ao meu tenant.
 
 ### 4.7 Módulo: Utilizadores e Permissões
 
 **RF-USR-01 — Convidar utilizadores.**
+
 - *Quando* o Admin convida por e-mail com um `role`,
 - *Então* o utilizador é criado com `status=invited` e recebe acesso conforme o papel (`admin`, `operator`, `knowledge_manager`).
 
 **RF-USR-02 — Controlo de acesso por papel.**
+
 - *Então* operadores acedem a conversas/handover; gestores de conhecimento acedem a RAG; apenas admins gerem canais, agentes, branding e utilizadores.
 
 ---
@@ -686,6 +733,7 @@ A `apikey` de cada instância (devolvida na criação) é armazenada cifrada em 
 **Endpoint:** `POST {{server-url}}/instance/create`
 
 Payload (essencial):
+
 ```json
 {
   "instanceName": "tenant-<company_slug>-<channel_id>",
@@ -716,10 +764,12 @@ Resposta relevante (`201`): `instance.instanceName`, `instance.instanceId`, `ins
 ### 6.3 Ligação: QR Code e Pairing Code
 
 **Endpoint:** `GET {{server-url}}/instance/connect/{instance}`
+
 - **QR Code:** sem `number` → a resposta inclui `code` (conteúdo do QR) e `count`. O QR também chega de forma assíncrona via evento `QRCODE_UPDATED` (em base64).
 - **Pairing Code:** com query `?number=<E164>` → a resposta inclui `pairingCode` (ex.: `WZYEH1YY`) para introdução manual no telemóvel.
 
 Resposta (exemplo):
+
 ```json
 { "pairingCode": "WZYEH1YY", "code": "2@y8eK+bjtEjUWy9/FOM...", "count": 1 }
 ```
@@ -733,6 +783,7 @@ Resposta (exemplo):
 ### 6.5 Configuração de Webhook (alternativa/posterior à criação)
 
 **Endpoint:** `POST {{server-url}}/webhook/set/{instance}`
+
 ```json
 {
   "enabled": true,
@@ -748,6 +799,7 @@ Resposta (exemplo):
   ]
 }
 ```
+
 Consulta: `GET {{server-url}}/webhook/find/{instance}`.
 
 ### 6.6 Receção de Mensagens (Webhook → Ingestion)
@@ -777,6 +829,7 @@ Estrutura típica do *envelope* recebido (campos-chave a extrair): `instance` (r
 | Marcar como lida | `POST {{server-url}}/chat/markMessageAsRead/{instance}` |
 
 Envio de texto:
+
 ```json
 POST /message/sendText/{instance}
 {
@@ -786,6 +839,7 @@ POST /message/sendText/{instance}
   "linkPreview": false
 }
 ```
+
 Resposta (`201`) inclui `key.id` (id da mensagem enviada), `key.remoteJid`, `status` (ex.: `PENDING`) — persistir como `external_message_id` da mensagem outbound.
 
 > **Naturalidade:** opcionalmente, enviar presença ("a escrever...") antes da resposta e usar `delay` para simular cadência humana.
