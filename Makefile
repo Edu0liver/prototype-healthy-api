@@ -30,6 +30,12 @@ deps:
 	go mod download
 	go mod tidy
 
+# ── Lint ───────────────────────────────────────────────────────────────────────
+
+lint:
+	go vet ./...
+	@gofmt -l . | grep -v '^docs/' | (! grep .) || (echo "gofmt: files need formatting (run: gofmt -w .)" && exit 1)
+
 # ── Tests ──────────────────────────────────────────────────────────────────────
 
 test:

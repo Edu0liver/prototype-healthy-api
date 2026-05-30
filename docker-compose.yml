@@ -51,12 +51,17 @@ services:
 
   api:
     build: .
+    # app_user only exists after `make migrate-up`; restart until migrations land.
+    restart: unless-stopped
     ports:
       - "8080:8080"
     env_file: .env
     environment:
       DATABASE_URL: postgres://app_user:app_pw@postgres:5432/lumia?sslmode=disable
       REDIS_URL: redis://redis:6379
+      EVOLUTION_BASE_URL: http://evolution:8080
+      # Evolution must reach the api by its service name inside the compose network.
+      EVOLUTION_WEBHOOK_URL: http://api:8080/webhooks/evolution
     depends_on:
       postgres:
         condition: service_healthy
