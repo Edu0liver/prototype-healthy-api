@@ -1,0 +1,13 @@
+.git
+.github
+.claude
+.code-review-graph
+bin/
+*.md
+*.html
+coverage.out
+.env
+.env.*
+!.env.example
+docs/runbooks
+scripts/loadtest
