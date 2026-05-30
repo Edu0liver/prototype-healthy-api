@@ -15,8 +15,10 @@ Cada empresa (`company`) tem usuários, canais de mensageria e base de conhecime
 - **UUID v7** para todas as PKs (`github.com/google/uuid v1.6.0`)
 
 ## Estrutura obrigatória de módulo
+
 Um arquivo por caso de uso (ex.: `create_user.go`, `update_user.go`, `delete_user.go`) com o respectivo `_test.go` ao lado, em `dto/`, `http/` e `service/`.
-```
+
+```txt
 /internal/modules/<nome>/
 ├── dto/            # 1 arquivo por caso de uso (request/response structs, json + validator tags)
 │   ├── create_<x>.go
@@ -37,6 +39,7 @@ Um arquivo por caso de uso (ex.: `create_user.go`, `update_user.go`, `delete_use
 ```
 
 ## Camada transversal (Go standard layout)
+
 fx em `internal/shared/module.go` (package `shared`). Providers mapeiam `config.Config` → opções de cada pacote `/pkg`.
 
 - **`/pkg`** — libs genéricas, SEM import de `internal/` (reutilizáveis): `httputil`, `resilience` (retry+breaker), `metrics` (Prometheus), `crypto` (AES-256-GCM, `New(keyHex)`), `token` (JWT, `New(secret,ttls)`), `storage` (`NewLocal(root)`), `openai` (`New(openai.Config)`, retry), `evolution` (`New(evolution.Config)`, retry).
@@ -45,14 +48,17 @@ fx em `internal/shared/module.go` (package `shared`). Providers mapeiam `config.
 > Regra: `/pkg` nunca importa `internal/`. Clientes que precisavam de `config` recebem structs próprias (ex.: `openai.Config`).
 
 ## Swagger
+
 Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag` gera `docs/`. UI em `/docs/index.html`.
 
 ### Isolamento multi-tenant (OBRIGATÓRIO em todo módulo)
+
 - **App-layer (primário):** toda query de domínio filtra `company_id`. Reads usam `database.MustTx(ctx).Scopes(database.TenantScope(ctx))`. Nunca executar query de domínio sem `company_id`.
 - **RLS (defesa em profundidade):** a app conecta como `app_user` (NÃO-superuser) para as policies engajarem; migrations correm como superuser (`MIGRATE_DATABASE_URL`). Escopo definido via `SET LOCAL app.current_company_id` dentro da transação (`DB.Tenant` / `middleware.Tenant`).
 - Registo de tenants (`companies`/`company_domains`/`company_branding`) e `webhook_events` ficam fora da RLS — usar `db.System`.
 
 ## Módulos
+
 - [tenant](internal/modules/tenant/TENANT.md) — empresas + white-label (branding, domínios, Host→tenant).
 - [iam](internal/modules/iam/IAM.md) — auth (JWT), RBAC, convites, gestão de utilizadores.
 - [agent](internal/modules/agent/AGENT.md) — CRUD de agentes de IA (prompt, modelo, handover).

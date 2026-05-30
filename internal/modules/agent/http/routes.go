@@ -6,7 +6,7 @@ import (
 )
 
 // RegisterRoutes mounts /agents (admin only) within a tenant transaction.
-func RegisterRoutes(e *gin.Engine, h *Handler, mw *middleware.Middleware) {
+func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	g := e.Group("/agents", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin))
 	g.POST("", h.Create)
 	g.GET("", h.List)

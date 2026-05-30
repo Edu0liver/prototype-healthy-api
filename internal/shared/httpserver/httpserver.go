@@ -18,6 +18,11 @@ import (
 	"go.uber.org/zap"
 )
 
+// NewAPIGroup creates the versioned API router group at /api/v1.
+func NewAPIGroup(e *gin.Engine) *gin.RouterGroup {
+	return e.Group("/api/v1")
+}
+
 // NewEngine creates a bare Gin engine (no default middleware).
 func NewEngine(cfg *config.Config) *gin.Engine {
 	if cfg.IsProduction() {

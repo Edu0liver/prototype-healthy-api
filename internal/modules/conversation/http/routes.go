@@ -6,7 +6,7 @@ import (
 )
 
 // RegisterRoutes mounts /conversations (admin + operator) within a tenant tx.
-func RegisterRoutes(e *gin.Engine, h *Handler, mw *middleware.Middleware) {
+func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	g := e.Group("/conversations", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin, middleware.RoleOperator))
 	g.GET("", h.List)
 	g.GET("/:id", h.Get)

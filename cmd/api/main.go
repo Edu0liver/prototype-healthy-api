@@ -20,17 +20,11 @@ import (
 	"go.uber.org/zap"
 )
 
-// Build metadata injected via -ldflags.
-var (
-	version   = "dev"
-	commit    = "unknown"
-	buildDate = "unknown"
-)
-
 // @title                      API
 // @version                    1.0
 // @description                SaaS multi-tenant white-label de atendimento automatizado e omnichannel (WhatsApp/Instagram) com IA + RAG.
-// @BasePath                   /
+// @host                       localhost:8080
+// @BasePath                   /api/v1
 // @securityDefinitions.apikey BearerAuth
 // @in                         header
 // @name                       Authorization

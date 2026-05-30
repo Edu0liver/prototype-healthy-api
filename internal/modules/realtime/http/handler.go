@@ -33,7 +33,7 @@ func NewHandler(tokens *token.Manager, rdb *redisx.Client, log *zap.Logger) *Han
 }
 
 // RegisterRoutes mounts GET /ws.
-func RegisterRoutes(e *gin.Engine, h *Handler) {
+func RegisterRoutes(e *gin.RouterGroup, h *Handler) {
 	e.GET("/ws", h.WS)
 }
 

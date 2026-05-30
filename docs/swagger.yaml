@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api/v1
 definitions:
   github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse:
     properties:
@@ -455,6 +455,7 @@ definitions:
       secondary_color:
         type: string
     type: object
+host: localhost:8080
 info:
   contact: {}
   description: SaaS multi-tenant white-label de atendimento automatizado e omnichannel

@@ -6,7 +6,7 @@ import (
 )
 
 // RegisterRoutes mounts the iam routes under /auth (public) and /users (admin).
-func RegisterRoutes(e *gin.Engine, h *Handler, mw *middleware.Middleware) {
+func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	auth := e.Group("/auth")
 	auth.POST("/register", h.Register)
 	auth.POST("/login", h.Login)

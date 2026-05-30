@@ -34,6 +34,7 @@ var Module = fx.Module("shared",
 		middleware.New,
 		channeladapter.NewRegistry,
 		httpserver.NewEngine,
+		httpserver.NewAPIGroup,
 		// Generic /pkg clients built from app config.
 		provideCrypto,
 		provideToken,

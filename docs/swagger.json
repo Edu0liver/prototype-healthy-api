@@ -6,7 +6,8 @@
         "contact": {},
         "version": "1.0"
     },
-    "basePath": "/",
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
     "paths": {
         "/agents": {
             "get": {

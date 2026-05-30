@@ -7,7 +7,7 @@ import (
 
 // RegisterRoutes mounts the tenant routes. Public routes (signup, branding) need
 // no auth; the rest require an authenticated admin within a tenant transaction.
-func RegisterRoutes(e *gin.Engine, h *Handler, mw *middleware.Middleware) {
+func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	// Public.
 	e.POST("/companies", h.CreateCompany)
 	e.GET("/branding", h.GetBrandingByHost)
