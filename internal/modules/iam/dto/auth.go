@@ -1,11 +1,10 @@
 // Package dto holds request/response payloads for the iam module.
 package dto
 
-// LoginRequest authenticates a user inside a company.
+// LoginRequest authenticates a user. Email is globally unique across tenants.
 type LoginRequest struct {
-	CompanySlug string `json:"company_slug" binding:"required"`
-	Email       string `json:"email" binding:"required,email"`
-	Password    string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
 }
 
 // RefreshRequest exchanges a refresh token for a new access token.

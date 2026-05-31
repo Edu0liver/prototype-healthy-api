@@ -16,12 +16,12 @@ type Tokens struct {
 	Refresh string
 }
 
-// Login authenticates a user within a company (resolved by slug) and issues tokens.
-func (s *Service) Login(ctx context.Context, slug, email, password string) (*Tokens, *models.User, error) {
-	var companyID uuid.UUID
+// Login authenticates a user by globally-unique email and issues tokens.
+func (s *Service) Login(ctx context.Context, email, password string) (*Tokens, *models.User, error) {
+	var userID, companyID uuid.UUID
 	if err := s.db.System(ctx, func(ctx context.Context) error {
-		id, err := s.repo.CompanyIDBySlug(ctx, slug)
-		companyID = id
+		uid, cid, err := s.repo.FindByEmailGlobal(ctx, email)
+		userID, companyID = uid, cid
 		return err
 	}); err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
@@ -32,9 +32,19 @@ func (s *Service) Login(ctx context.Context, slug, email, password string) (*Tok
 
 	var user *models.User
 	if err := s.db.Tenant(ctx, companyID, func(ctx context.Context) error {
-		u, err := s.repo.FindByEmail(ctx, email)
+		u, err := s.repo.FindByID(ctx, userID)
+		if err != nil {
+			return err
+		}
+		if u.Status == "disabled" {
+			return ErrUserDisabled
+		}
+		ok, err := verifyPassword(password, u.PasswordHash)
+		if err != nil || !ok {
+			return ErrInvalidCredentials
+		}
 		user = u
-		return err
+		return nil
 	}); err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, nil, ErrInvalidCredentials
@@ -42,15 +52,7 @@ func (s *Service) Login(ctx context.Context, slug, email, password string) (*Tok
 		return nil, nil, err
 	}
 
-	if user.Status == "disabled" {
-		return nil, nil, ErrUserDisabled
-	}
-	ok, err := verifyPassword(password, user.PasswordHash)
-	if err != nil || !ok {
-		return nil, nil, ErrInvalidCredentials
-	}
-
-	tokens, err := s.issueTokens(companyID, user.ID, user.Role)
+	tokens, err := s.issueTokens(companyID, userID, user.Role.Name)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -73,18 +75,22 @@ func (s *Service) Refresh(ctx context.Context, refreshToken string) (*Tokens, er
 		return nil, ErrInvalidCredentials
 	}
 
-	var user *models.User
+	var roleName string
 	if err := s.db.Tenant(ctx, companyID, func(ctx context.Context) error {
-		u, err := s.repo.FindByID(ctx, userID)
-		user = u
-		return err
+		user, err := s.repo.FindByID(ctx, userID)
+		if err != nil {
+			return err
+		}
+		if user.Status == "disabled" {
+			return ErrUserDisabled
+		}
+		roleName = user.Role.Name
+		return nil
 	}); err != nil {
 		return nil, ErrInvalidCredentials
 	}
-	if user.Status == "disabled" {
-		return nil, ErrUserDisabled
-	}
-	return s.issueTokens(companyID, user.ID, user.Role)
+
+	return s.issueTokens(companyID, userID, roleName)
 }
 
 func (s *Service) issueTokens(companyID, userID uuid.UUID, role string) (*Tokens, error) {

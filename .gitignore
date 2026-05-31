@@ -7,3 +7,4 @@ bin/
 coverage.out
 coverage.html
 .claude
+.storage/

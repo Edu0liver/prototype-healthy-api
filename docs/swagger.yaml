@@ -260,14 +260,11 @@ definitions:
     type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest:
     properties:
-      company_slug:
-        type: string
       email:
         type: string
       password:
         type: string
     required:
-    - company_slug
     - email
     - password
     type: object
@@ -280,7 +277,7 @@ definitions:
     type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RegisterAdminRequest:
     properties:
-      company_slug:
+      company_id:
         type: string
       email:
         type: string
@@ -290,7 +287,7 @@ definitions:
         minLength: 8
         type: string
     required:
-    - company_slug
+    - company_id
     - email
     - password
     type: object
@@ -579,7 +576,7 @@ paths:
           schema:
             additionalProperties:
               items:
-                type: string
+                $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
               type: array
             type: object
       security:

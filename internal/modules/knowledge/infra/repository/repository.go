@@ -149,11 +149,26 @@ func (r *Repository) UnlinkAgentKB(ctx context.Context, agentID, kbID uuid.UUID)
 		Delete(&models.AgentKnowledgeBase{}, "agent_id = ? AND knowledge_base_id = ?", agentID, kbID).Error
 }
 
-// KBIDsForAgent returns the knowledge base ids linked to an agent.
+// KBIDsForAgent returns just the knowledge base IDs linked to an agent (used by retrieval).
 func (r *Repository) KBIDsForAgent(ctx context.Context, agentID uuid.UUID) ([]uuid.UUID, error) {
 	var ids []uuid.UUID
 	err := database.MustTx(ctx).Model(&models.AgentKnowledgeBase{}).
 		Scopes(database.TenantScope(ctx)).
 		Where("agent_id = ?", agentID).Pluck("knowledge_base_id", &ids).Error
 	return ids, err
+}
+
+// KBsForAgent returns full knowledge base records linked to an agent.
+// TenantScope cannot be used here because both tables share a company_id column,
+// causing an ambiguous reference error on JOIN; qualify explicitly instead.
+func (r *Repository) KBsForAgent(ctx context.Context, agentID uuid.UUID) ([]models.KnowledgeBase, error) {
+	companyID := appctx.CompanyID(ctx)
+	var out []models.KnowledgeBase
+	err := database.MustTx(ctx).
+		Where("knowledge_bases.company_id = ?", companyID).
+		Joins("JOIN agent_knowledge_bases akb ON akb.knowledge_base_id = knowledge_bases.id").
+		Where("akb.agent_id = ?", agentID).
+		Order("knowledge_bases.created_at DESC").
+		Find(&out).Error
+	return out, err
 }

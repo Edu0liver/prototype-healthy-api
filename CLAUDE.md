@@ -42,7 +42,7 @@ Um arquivo por caso de uso (ex.: `create_user.go`, `update_user.go`, `delete_use
 
 fx em `internal/shared/module.go` (package `shared`). Providers mapeiam `config.Config` → opções de cada pacote `/pkg`.
 
-- **`/pkg`** — libs genéricas, SEM import de `internal/` (reutilizáveis): `httputil`, `resilience` (retry+breaker), `metrics` (Prometheus), `crypto` (AES-256-GCM, `New(keyHex)`), `token` (JWT, `New(secret,ttls)`), `storage` (`NewLocal(root)`), `openai` (`New(openai.Config)`, retry), `evolution` (`New(evolution.Config)`, retry).
+- **`/pkg`** — libs genéricas, SEM import de `internal/` (reutilizáveis): `httputil`, `resilience` (retry+breaker), `metrics` (Prometheus), `crypto` (AES-256-GCM, `New(keyHex)`), `token` (JWT, `New(secret,ttls)`), `storage` (`NewMinIO(storage.MinIOConfig)`, S3-compatible), `openai` (`New(openai.Config)`, retry), `evolution` (`New(evolution.Config)`, retry).
 - **`/internal/shared`** — glue específico da app: `config`, `logger` (zap), `database` (GORM+pgx; `TenantScope`, tipos `JSONMap`/`JSONStringArray`/`Vector`), `redisx` (lock/stream/buffer/state), `appctx` (identidade no ctx), `mailer` (Resend), `events` (Pub/Sub realtime), `jobs` (`InboundJob`), `middleware` (auth/tenant-RLS/RBAC/rate-limit), `httpserver` (+swagger UI `/swagger`), `channeladapter`, `testsupport`.
 
 > Regra: `/pkg` nunca importa `internal/`. Clientes que precisavam de `config` recebem structs próprias (ex.: `openai.Config`).

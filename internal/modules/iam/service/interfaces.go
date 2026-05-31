@@ -9,7 +9,8 @@ import (
 
 // Repository is the persistence contract consumed by the iam service.
 type Repository interface {
-	CompanyIDBySlug(ctx context.Context, slug string) (uuid.UUID, error)
+	FindByEmailGlobal(ctx context.Context, email string) (userID, companyID uuid.UUID, err error)
+	FindRoleByName(ctx context.Context, name string) (*models.SystemRole, error)
 	Create(ctx context.Context, u *models.User) error
 	Update(ctx context.Context, u *models.User) error
 	FindByEmail(ctx context.Context, email string) (*models.User, error)

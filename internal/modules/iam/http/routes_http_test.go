@@ -80,20 +80,20 @@ func TestAuthAndUserRoutes(t *testing.T) {
 	r, mail := newRouter(t, db)
 
 	slug := "rt-" + uuid.New().String()[:8]
-	seedCompany(t, db, slug)
+	companyID := seedCompany(t, db, slug)
 
 	const adminEmail = "admin@rt.com"
 	const adminPass = "supersecret"
 
 	// 1. POST /auth/register — bootstrap first admin.
 	w := do(t, r, http.MethodPost, "/auth/register", gin.H{
-		"company_slug": slug, "email": adminEmail, "password": adminPass, "name": "Admin",
+		"company_id": companyID.String(), "email": adminEmail, "password": adminPass, "name": "Admin",
 	}, "")
 	require.Equal(t, http.StatusCreated, w.Code, "register: %s", w.Body.String())
 
-	// 2. POST /auth/login — obtain tokens.
+	// 2. POST /auth/login — obtain tokens (email only, no company_slug).
 	w = do(t, r, http.MethodPost, "/auth/login", gin.H{
-		"company_slug": slug, "email": adminEmail, "password": adminPass,
+		"email": adminEmail, "password": adminPass,
 	}, "")
 	require.Equal(t, http.StatusOK, w.Code, "login: %s", w.Body.String())
 	var tok struct {
@@ -145,7 +145,7 @@ func TestAuthAndUserRoutes(t *testing.T) {
 
 	// The agent can now log in with the password it just set.
 	w = do(t, r, http.MethodPost, "/auth/login", gin.H{
-		"company_slug": slug, "email": "agent@rt.com", "password": "newpassword",
+		"email": "agent@rt.com", "password": "newpassword",
 	}, "")
 	require.Equal(t, http.StatusOK, w.Code, "agent-login: %s", w.Body.String())
 

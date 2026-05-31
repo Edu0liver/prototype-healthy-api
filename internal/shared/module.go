@@ -56,8 +56,15 @@ func provideToken(cfg *config.Config) *token.Manager {
 	return token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL)
 }
 
-func provideStorage(cfg *config.Config) (*storage.LocalStorage, error) {
-	return storage.NewLocal(cfg.Storage.LocalPath)
+func provideStorage(cfg *config.Config) (*storage.MinIOStorage, error) {
+	return storage.NewMinIO(storage.MinIOConfig{
+		Endpoint:  cfg.Storage.Endpoint,
+		AccessKey: cfg.Storage.AccessKey,
+		SecretKey: cfg.Storage.SecretKey,
+		Bucket:    cfg.Storage.Bucket,
+		UseSSL:    cfg.Storage.UseSSL,
+		Region:    cfg.Storage.Region,
+	})
 }
 
 func provideOpenAI(cfg *config.Config) *openai.HTTPClient {

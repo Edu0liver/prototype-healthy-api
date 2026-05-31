@@ -2,29 +2,15 @@ package service
 
 import (
 	"context"
-	"errors"
 	"strings"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/infra/models"
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/infra/repository"
 	"github.com/google/uuid"
 )
 
 // RegisterFirstAdmin bootstraps the initial admin for a freshly created company.
 // It is only permitted while the company has zero users (self-serve onboarding).
-func (s *Service) RegisterFirstAdmin(ctx context.Context, slug, email, password, name string) (*models.User, error) {
-	var companyID uuid.UUID
-	if err := s.db.System(ctx, func(ctx context.Context) error {
-		id, err := s.repo.CompanyIDBySlug(ctx, slug)
-		companyID = id
-		return err
-	}); err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
-			return nil, ErrCompanyNotFound
-		}
-		return nil, err
-	}
-
+func (s *Service) RegisterFirstAdmin(ctx context.Context, companyID uuid.UUID, email, password, name string) (*models.User, error) {
 	hash, err := hashPassword(password)
 	if err != nil {
 		return nil, err
@@ -39,13 +25,17 @@ func (s *Service) RegisterFirstAdmin(ctx context.Context, slug, email, password,
 		if n > 0 {
 			return ErrAdminExists
 		}
+		role, err := s.repo.FindRoleByName(ctx, "admin")
+		if err != nil {
+			return err
+		}
 		admin = &models.User{
 			ID:           mustUUIDv7(),
 			CompanyID:    companyID,
 			Email:        strings.ToLower(email),
 			PasswordHash: hash,
 			Name:         name,
-			Role:         "admin",
+			RoleID:       role.ID,
 			Status:       "active",
 		}
 		return s.repo.Create(ctx, admin)

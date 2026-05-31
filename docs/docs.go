@@ -210,7 +210,7 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
+                                    "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
                                 }
                             }
                         }
@@ -2047,14 +2047,10 @@ const docTemplate = `{
         "github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.LoginRequest": {
             "type": "object",
             "required": [
-                "company_slug",
                 "email",
                 "password"
             ],
             "properties": {
-                "company_slug": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -2077,12 +2073,12 @@ const docTemplate = `{
         "github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RegisterAdminRequest": {
             "type": "object",
             "required": [
-                "company_slug",
+                "company_id",
                 "email",
                 "password"
             ],
             "properties": {
-                "company_slug": {
+                "company_id": {
                     "type": "string"
                 },
                 "email": {

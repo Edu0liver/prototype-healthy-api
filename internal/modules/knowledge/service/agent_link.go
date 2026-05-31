@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/infra/models"
 	"github.com/google/uuid"
 )
 
@@ -19,7 +20,7 @@ func (s *Service) UnlinkAgent(ctx context.Context, agentID, kbID uuid.UUID) erro
 	return s.repo.UnlinkAgentKB(ctx, agentID, kbID)
 }
 
-// KBIDsForAgent returns the knowledge base ids linked to an agent.
-func (s *Service) KBIDsForAgent(ctx context.Context, agentID uuid.UUID) ([]uuid.UUID, error) {
-	return s.repo.KBIDsForAgent(ctx, agentID)
+// KBsForAgent returns full knowledge bases linked to an agent.
+func (s *Service) KBsForAgent(ctx context.Context, agentID uuid.UUID) ([]models.KnowledgeBase, error) {
+	return s.repo.KBsForAgent(ctx, agentID)
 }

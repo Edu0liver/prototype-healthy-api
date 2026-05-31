@@ -47,13 +47,13 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string, string) {
 	slug := "tn-" + uuid.New().String()[:8]
 	tenantSvc := tenantservice.New(tenantrepo.New(), db)
 	ctx := context.Background()
-	_, err := tenantSvc.CreateCompany(ctx, tenantdto.CreateCompanyRequest{Name: slug, Slug: slug})
+	company, err := tenantSvc.CreateCompany(ctx, tenantdto.CreateCompanyRequest{Name: slug, Slug: slug})
 	require.NoError(t, err)
 
 	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
-	_, err = iamSvc.RegisterFirstAdmin(ctx, slug, "admin@tenant.test", "secret123", "Admin")
+	_, err = iamSvc.RegisterFirstAdmin(ctx, company.ID, "admin@tenant.test", "secret123", "Admin")
 	require.NoError(t, err)
-	tokens, _, err := iamSvc.Login(ctx, slug, "admin@tenant.test", "secret123")
+	tokens, _, err := iamSvc.Login(ctx, "admin@tenant.test", "secret123")
 	require.NoError(t, err)
 
 	var rdb *redisx.Client

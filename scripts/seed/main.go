@@ -63,16 +63,18 @@ func main() {
 			args []any
 		}{
 			{`INSERT INTO company_branding (company_id) VALUES (?) ON CONFLICT DO NOTHING`, []any{companyID}},
-			{`INSERT INTO users (id,company_id,email,password_hash,name,role,status)
-			  VALUES (?,?,?,?,'Demo Admin','admin','active')
-			  ON CONFLICT (company_id,email) DO NOTHING`, []any{mustUUID(), companyID, demoEmail, hash}},
+			{`INSERT INTO users (id,company_id,email,password_hash,name,role_id,status)
+			  VALUES (?,?,?,?,'Demo Admin',(SELECT id FROM roles WHERE name='admin'),'active')
+			  ON CONFLICT (email) DO NOTHING`, []any{mustUUID(), companyID, demoEmail, hash}},
 			{`INSERT INTO agents (id,company_id,name,system_prompt,model,temperature,max_output_tokens,handover_enabled,handover_keywords,status)
-			  VALUES (?,?,'Demo Bot','Você é um atendente prestável da Demo Co.','gpt-4o-mini',0.7,1024,true,'["humano","atendente"]'::jsonb,'active')`,
-				[]any{mustUUID(), companyID}},
+			  VALUES (?,?,'Demo Bot','Você é um atendente prestável da Demo Co.','gpt-4o-mini',0.7,1024,true,'["humano","atendente"]'::jsonb,'active')
+			  ON CONFLICT DO NOTHING`, []any{mustUUID(), companyID}},
 			{`INSERT INTO knowledge_bases (id,company_id,name,embedding_model,chunk_size,chunk_overlap)
-			  VALUES (?,?,'Demo KB','text-embedding-3-small',800,100)`, []any{mustUUID(), companyID}},
+			  VALUES (?,?,'Demo KB','text-embedding-3-small',800,100)
+			  ON CONFLICT DO NOTHING`, []any{mustUUID(), companyID}},
 			{`INSERT INTO channels (id,company_id,type,name,status,metadata)
-			  VALUES (?,?,'instagram','Demo IG','disconnected','{}'::jsonb)`, []any{mustUUID(), companyID}},
+			  VALUES (?,?,'instagram','Demo IG','disconnected','{}'::jsonb)
+			  ON CONFLICT (company_id,type,external_account_id) DO NOTHING`, []any{mustUUID(), companyID}},
 		}
 		for _, s := range stmts {
 			if err := tx.Exec(s.sql, s.args...).Error; err != nil {

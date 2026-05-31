@@ -39,7 +39,13 @@ type App struct {
 }
 
 type Database struct {
-	URL string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
+	SSLMode  string
+	URL      string // built from above fields
 }
 
 type Redis struct {
@@ -81,7 +87,12 @@ type Worker struct {
 }
 
 type Storage struct {
-	LocalPath string // root dir for local-fs storage
+	Endpoint  string // MinIO/S3 host:port (no scheme)
+	AccessKey string
+	SecretKey string
+	Bucket    string
+	UseSSL    bool
+	Region    string
 }
 
 type Email struct {
@@ -100,7 +111,14 @@ func Load() (*Config, error) {
 			Version:       env("APP_VERSION", "dev"),
 			PublicBaseURL: env("PUBLIC_BASE_URL", "http://localhost:8080"),
 		},
-		Database: Database{URL: env("DATABASE_URL", "")},
+		Database: Database{
+			Host:     env("PG_HOST", "localhost"),
+			Port:     env("PG_PORT", "5432"),
+			User:     env("PG_USER", "app_user"),
+			Password: env("PG_PASSWORD", "app_pw"),
+			Name:     env("PG_DB", "lumia"),
+			SSLMode:  env("PG_SSLMODE", "disable"),
+		},
 		Redis:    Redis{URL: env("REDIS_URL", "redis://localhost:6379")},
 		JWT: JWT{
 			Secret:     env("JWT_SECRET", ""),
@@ -128,7 +146,14 @@ func Load() (*Config, error) {
 			ConsumerGroup:   env("WORKER_GROUP", "orchestrators"),
 			DebounceSeconds: intEnv("DEBOUNCE_SECONDS", 8),
 		},
-		Storage:  Storage{LocalPath: env("STORAGE_LOCAL_PATH", "./.storage")},
+		Storage: Storage{
+			Endpoint:  env("STORAGE_ENDPOINT", "localhost:9000"),
+			AccessKey: env("STORAGE_ACCESS_KEY", "minioadmin"),
+			SecretKey: env("STORAGE_SECRET_KEY", "minioadmin"),
+			Bucket:    env("STORAGE_BUCKET", "lumia"),
+			UseSSL:    boolEnv("STORAGE_USE_SSL", false),
+			Region:    env("STORAGE_REGION", "us-east-1"),
+		},
 		Security: Security{RateLimitPerMinute: intEnv("RATE_LIMIT_PER_MINUTE", 600)},
 		Email: Email{
 			ResendAPIKey: env("RESEND_API_KEY", ""),
@@ -136,9 +161,11 @@ func Load() (*Config, error) {
 		},
 	}
 
-	if cfg.Database.URL == "" {
-		return nil, fmt.Errorf("config: DATABASE_URL is required")
-	}
+	cfg.Database.URL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		cfg.Database.User, cfg.Database.Password,
+		cfg.Database.Host, cfg.Database.Port,
+		cfg.Database.Name, cfg.Database.SSLMode,
+	)
 	if cfg.JWT.Secret == "" {
 		return nil, fmt.Errorf("config: JWT_SECRET is required")
 	}
@@ -167,6 +194,15 @@ func durationEnv(key string, def time.Duration) time.Duration {
 	if v := os.Getenv(key); v != "" {
 		if d, err := time.ParseDuration(v); err == nil {
 			return d
+		}
+	}
+	return def
+}
+
+func boolEnv(key string, def bool) bool {
+	if v := os.Getenv(key); v != "" {
+		if b, err := strconv.ParseBool(v); err == nil {
+			return b
 		}
 	}
 	return def

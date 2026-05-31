@@ -85,9 +85,9 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string, uuid.UUID) {
 
 	ctx := context.Background()
 	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
-	_, err := iamSvc.RegisterFirstAdmin(ctx, slug, "admin@knowledge.test", "secret123", "Admin")
+	_, err := iamSvc.RegisterFirstAdmin(ctx, companyID, "admin@knowledge.test", "secret123", "Admin")
 	require.NoError(t, err)
-	tokens, _, err := iamSvc.Login(ctx, slug, "admin@knowledge.test", "secret123")
+	tokens, _, err := iamSvc.Login(ctx, "admin@knowledge.test", "secret123")
 	require.NoError(t, err)
 
 	var rdb *redisx.Client
@@ -317,10 +317,10 @@ func TestAgentKBLinkRoutes(t *testing.T) {
 	w = do(t, r, http.MethodGet, "/agents/"+agentID+"/knowledge-bases", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code, "list-kbs-empty: %s", w.Body.String())
 	var linked struct {
-		IDs []string `json:"knowledge_base_ids"`
+		KBs []struct{ ID string `json:"id"` } `json:"knowledge_bases"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &linked))
-	require.Empty(t, linked.IDs)
+	require.Empty(t, linked.KBs)
 
 	// 2. POST /agents/:id/knowledge-bases/:kbId — link.
 	w = do(t, r, http.MethodPost, "/agents/"+agentID+"/knowledge-bases/"+kb.ID, nil, adminTok)
@@ -330,8 +330,8 @@ func TestAgentKBLinkRoutes(t *testing.T) {
 	w = do(t, r, http.MethodGet, "/agents/"+agentID+"/knowledge-bases", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code, "list-kbs-linked: %s", w.Body.String())
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &linked))
-	require.Len(t, linked.IDs, 1)
-	require.Equal(t, kb.ID, linked.IDs[0])
+	require.Len(t, linked.KBs, 1)
+	require.Equal(t, kb.ID, linked.KBs[0].ID)
 
 	// 4. DELETE /agents/:id/knowledge-bases/:kbId — unlink.
 	w = do(t, r, http.MethodDelete, "/agents/"+agentID+"/knowledge-bases/"+kb.ID, nil, adminTok)
@@ -341,7 +341,7 @@ func TestAgentKBLinkRoutes(t *testing.T) {
 	w = do(t, r, http.MethodGet, "/agents/"+agentID+"/knowledge-bases", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code)
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &linked))
-	require.Empty(t, linked.IDs, "list-after-unlink: %s", w.Body.String())
+	require.Empty(t, linked.KBs, "list-after-unlink: %s", w.Body.String())
 
 	// 6. Auth enforcement on link routes.
 	w = do(t, r, http.MethodPost, "/agents/"+agentID+"/knowledge-bases/"+kb.ID, nil, "")

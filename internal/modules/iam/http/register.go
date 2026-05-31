@@ -4,6 +4,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/dto"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // Register bootstraps the first admin for a company (public, first-user only).
@@ -19,7 +20,8 @@ func (h *Handler) Register(c *gin.Context) {
 	if !httputil.BindJSON(c, &in) {
 		return
 	}
-	user, err := h.svc.RegisterFirstAdmin(c.Request.Context(), in.CompanySlug, in.Email, in.Password, in.Name)
+	companyID, _ := uuid.Parse(in.CompanyID) // validated as uuid by binding tag
+	user, err := h.svc.RegisterFirstAdmin(c.Request.Context(), companyID, in.Email, in.Password, in.Name)
 	if err != nil {
 		httputil.Fail(c, err)
 		return

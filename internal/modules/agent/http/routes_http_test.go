@@ -31,7 +31,7 @@ type noopMailer struct{}
 
 func (noopMailer) Send(string, string, string) error { return nil }
 
-func seedCompany(t *testing.T, db *database.DB, slug string) {
+func seedCompany(t *testing.T, db *database.DB, slug string) uuid.UUID {
 	t.Helper()
 	id := uuid.New()
 	err := db.System(context.Background(), func(ctx context.Context) error {
@@ -41,6 +41,7 @@ func seedCompany(t *testing.T, db *database.DB, slug string) {
 		).Error
 	})
 	require.NoError(t, err)
+	return id
 }
 
 // newRouter spins up the agent Gin router with real middleware and returns an
@@ -56,13 +57,14 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string) {
 	tok := token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL)
 
 	slug := "ag-" + uuid.New().String()[:8]
-	seedCompany(t, db, slug)
+	companyID := seedCompany(t, db, slug)
+	email := "admin+" + slug + "@agent.test"
 
 	ctx := context.Background()
 	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
-	_, err := iamSvc.RegisterFirstAdmin(ctx, slug, "admin@agent.test", "secret123", "Admin")
+	_, err := iamSvc.RegisterFirstAdmin(ctx, companyID, email, "secret123", "Admin")
 	require.NoError(t, err)
-	tokens, _, err := iamSvc.Login(ctx, slug, "admin@agent.test", "secret123")
+	tokens, _, err := iamSvc.Login(ctx, email, "secret123")
 	require.NoError(t, err)
 
 	var rdb *redisx.Client

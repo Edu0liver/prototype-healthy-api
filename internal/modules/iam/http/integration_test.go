@@ -50,23 +50,25 @@ func TestTenantIsolation(t *testing.T) {
 	svc := newService(t, db)
 	ctx := context.Background()
 
-	slugA := "company-a"
-	slugB := "company-b"
-	seedCompany(t, db, slugA)
-	seedCompany(t, db, slugB)
+	companyAID := seedCompany(t, db, "company-a")
+	companyBID := seedCompany(t, db, "company-b")
 
-	_, err := svc.RegisterFirstAdmin(ctx, slugA, "admin@a.com", "supersecret", "A")
+	_, err := svc.RegisterFirstAdmin(ctx, companyAID, "admin@a.com", "supersecret", "A")
 	require.NoError(t, err)
-	_, err = svc.RegisterFirstAdmin(ctx, slugB, "admin@b.com", "supersecret", "B")
+	_, err = svc.RegisterFirstAdmin(ctx, companyBID, "admin@b.com", "supersecret", "B")
 	require.NoError(t, err)
 
-	// A's admin can log in; the scope is resolved by company slug.
-	tokensA, userA, err := svc.Login(ctx, slugA, "admin@a.com", "supersecret")
+	// Email is globally unique — registering the same email in a second company fails.
+	_, err = svc.RegisterFirstAdmin(ctx, companyBID, "admin@a.com", "supersecret", "X")
+	require.Error(t, err, "duplicate global email must be rejected")
+
+	// A's admin can log in without specifying a company.
+	tokensA, _, err := svc.Login(ctx, "admin@a.com", "supersecret")
 	require.NoError(t, err)
 	require.NotEmpty(t, tokensA.Access)
 
 	// Listing users inside A's tenant scope returns only A's users.
-	err = db.Tenant(ctx, userA.CompanyID, func(ctx context.Context) error {
+	err = db.Tenant(ctx, companyAID, func(ctx context.Context) error {
 		users, err := svc.ListUsers(ctx)
 		require.NoError(t, err)
 		require.Len(t, users, 1)
@@ -75,16 +77,12 @@ func TestTenantIsolation(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	// A user from B is invisible inside A's scope (email is unique per company).
-	err = db.Tenant(ctx, userA.CompanyID, func(ctx context.Context) error {
+	// A user from B is invisible inside A's scope.
+	err = db.Tenant(ctx, companyAID, func(ctx context.Context) error {
 		repo := repository.New()
 		_, err := repo.FindByEmail(ctx, "admin@b.com")
 		require.True(t, errors.Is(err, repository.ErrNotFound), "expected B's user invisible to A, got %v", err)
 		return nil
 	})
 	require.NoError(t, err)
-
-	// Cross-tenant login is rejected: A's credentials under B's slug fail.
-	_, _, err = svc.Login(ctx, slugB, "admin@a.com", "supersecret")
-	require.Error(t, err)
 }

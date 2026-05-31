@@ -17,7 +17,7 @@ func NewHandler(svc *service.Service) *Handler { return &Handler{svc: svc} }
 
 func userResponse(u *models.User) dto.UserResponse {
 	return dto.UserResponse{
-		ID: u.ID.String(), Email: u.Email, Name: u.Name, Role: u.Role, Status: u.Status,
+		ID: u.ID.String(), Email: u.Email, Name: u.Name, Role: u.Role.Name, Status: u.Status,
 	}
 }
 

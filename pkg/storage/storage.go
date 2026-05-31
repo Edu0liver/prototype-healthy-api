@@ -1,13 +1,10 @@
 // Package storage abstracts object storage for RAG uploads and branding assets.
-// Objects are namespaced per tenant: tenant/<company_id>/... . A local-fs
-// implementation backs development; an S3 driver can be added behind the same
-// interface later.
+// Objects are namespaced per tenant: tenant/<company_id>/... . A MinIO
+// (S3-compatible) driver backs all environments behind this interface.
 package storage
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/google/uuid"
@@ -20,44 +17,7 @@ type Storage interface {
 	Delete(ctx context.Context, path string) error
 }
 
-// TenantPrefix builds the per-tenant key prefix.
+// TenantPrefix builds the per-tenant object key prefix.
 func TenantPrefix(companyID uuid.UUID, key string) string {
 	return filepath.ToSlash(filepath.Join("tenant", companyID.String(), key))
-}
-
-// LocalStorage stores objects on the local filesystem (dev).
-type LocalStorage struct {
-	root string
-}
-
-// NewLocal builds the local-fs storage rooted at the given path.
-func NewLocal(root string) (*LocalStorage, error) {
-	if err := os.MkdirAll(root, 0o755); err != nil {
-		return nil, fmt.Errorf("storage: mkdir root: %w", err)
-	}
-	return &LocalStorage{root: root}, nil
-}
-
-func (s *LocalStorage) Put(_ context.Context, companyID uuid.UUID, key string, data []byte) (string, error) {
-	rel := TenantPrefix(companyID, key)
-	abs := filepath.Join(s.root, rel)
-	if err := os.MkdirAll(filepath.Dir(abs), 0o755); err != nil {
-		return "", err
-	}
-	if err := os.WriteFile(abs, data, 0o644); err != nil {
-		return "", err
-	}
-	return rel, nil
-}
-
-func (s *LocalStorage) Get(_ context.Context, path string) ([]byte, error) {
-	return os.ReadFile(filepath.Join(s.root, path))
-}
-
-func (s *LocalStorage) Delete(_ context.Context, path string) error {
-	err := os.Remove(filepath.Join(s.root, path))
-	if os.IsNotExist(err) {
-		return nil
-	}
-	return err
 }

@@ -11,4 +11,5 @@ var (
 	ErrInvalidInvite      = httputil.BadRequest("invalid or expired invite")
 	ErrCompanyNotFound    = httputil.NotFound("company not found")
 	ErrAdminExists        = httputil.Conflict("company already has users")
+	ErrInvalidRole        = httputil.BadRequest("invalid role")
 )

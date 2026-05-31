@@ -28,6 +28,7 @@ type Repository interface {
 	LinkAgentKB(ctx context.Context, agentID, kbID uuid.UUID) error
 	UnlinkAgentKB(ctx context.Context, agentID, kbID uuid.UUID) error
 	KBIDsForAgent(ctx context.Context, agentID uuid.UUID) ([]uuid.UUID, error)
+	KBsForAgent(ctx context.Context, agentID uuid.UUID) ([]models.KnowledgeBase, error)
 }
 
 // Embedder generates embeddings (satisfied by platform/openai.Client).

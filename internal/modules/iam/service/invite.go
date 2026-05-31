@@ -19,7 +19,7 @@ const inviteTTL = 72 * time.Hour
 
 // Invite creates an invited user and emails them an acceptance link. Runs in the
 // caller's tenant transaction (admin only).
-func (s *Service) Invite(ctx context.Context, email, name, role string) (*models.User, error) {
+func (s *Service) Invite(ctx context.Context, email, name, roleName string) (*models.User, error) {
 	companyID := appctx.CompanyID(ctx)
 	email = strings.ToLower(email)
 
@@ -29,12 +29,20 @@ func (s *Service) Invite(ctx context.Context, email, name, role string) (*models
 		return nil, err
 	}
 
+	role, err := s.repo.FindRoleByName(ctx, roleName)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, ErrInvalidRole
+		}
+		return nil, err
+	}
+
 	user := &models.User{
 		ID:        mustUUIDv7(),
 		CompanyID: companyID,
 		Email:     email,
 		Name:      name,
-		Role:      role,
+		RoleID:    role.ID,
 		Status:    "invited",
 	}
 	if err := s.repo.Create(ctx, user); err != nil {

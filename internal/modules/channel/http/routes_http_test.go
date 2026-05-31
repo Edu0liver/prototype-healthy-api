@@ -84,13 +84,13 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string) {
 
 	tok := token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL)
 	slug := "ch-" + uuid.New().String()[:8]
-	seedCompany(t, db, slug)
+	companyID := seedCompany(t, db, slug)
 
 	ctx := context.Background()
 	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
-	_, err := iamSvc.RegisterFirstAdmin(ctx, slug, "admin@channel.test", "secret123", "Admin")
+	_, err := iamSvc.RegisterFirstAdmin(ctx, companyID, "admin@channel.test", "secret123", "Admin")
 	require.NoError(t, err)
-	tokens, _, err := iamSvc.Login(ctx, slug, "admin@channel.test", "secret123")
+	tokens, _, err := iamSvc.Login(ctx, "admin@channel.test", "secret123")
 	require.NoError(t, err)
 
 	// AES key: 32 zero bytes encoded as 64 hex chars.

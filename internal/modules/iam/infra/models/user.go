@@ -9,13 +9,14 @@ import (
 
 // User is a panel user belonging to a company.
 type User struct {
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
-	CompanyID    uuid.UUID `gorm:"type:uuid"`
+	ID           uuid.UUID  `gorm:"type:uuid;primaryKey"`
+	CompanyID    uuid.UUID  `gorm:"type:uuid"`
 	Email        string
 	PasswordHash string
 	Name         string
-	Role         string // admin | operator | knowledge_manager
-	Status       string // active | invited | disabled
+	RoleID       uuid.UUID  `gorm:"type:uuid"`
+	Role         SystemRole `gorm:"foreignKey:RoleID"`
+	Status       string     // active | invited | disabled
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }

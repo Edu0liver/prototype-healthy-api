@@ -19,7 +19,7 @@ func (h *Handler) Login(c *gin.Context) {
 	if !httputil.BindJSON(c, &in) {
 		return
 	}
-	tokens, user, err := h.svc.Login(c.Request.Context(), in.CompanySlug, in.Email, in.Password)
+	tokens, user, err := h.svc.Login(c.Request.Context(), in.Email, in.Password)
 	if err != nil {
 		httputil.Fail(c, err)
 		return
