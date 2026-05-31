@@ -25,6 +25,7 @@ func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	// NOTE: param must be ":id" to match the agent module's /agents/:id routes
 	// (Gin panics on differing wildcard names at the same path position).
 	link := e.Group("/agents/:id/knowledge-bases", rag...)
+	link.GET("", h.ListAgentKBs)
 	link.POST("/:kbId", h.LinkAgent)
 	link.DELETE("/:kbId", h.UnlinkAgent)
 }

@@ -50,7 +50,14 @@ func (r *Repository) ListKB(ctx context.Context) ([]models.KnowledgeBase, error)
 }
 
 func (r *Repository) DeleteKB(ctx context.Context, id uuid.UUID) error {
-	return wrap(database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.KnowledgeBase{}, "id = ?", id).Error)
+	res := database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.KnowledgeBase{}, "id = ?", id)
+	if res.Error != nil {
+		return wrap(res.Error)
+	}
+	if res.RowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 // ---- Documents ------------------------------------------------------------
@@ -79,7 +86,14 @@ func (r *Repository) ListDocuments(ctx context.Context, kbID uuid.UUID) ([]model
 }
 
 func (r *Repository) DeleteDocument(ctx context.Context, id uuid.UUID) error {
-	return wrap(database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.Document{}, "id = ?", id).Error)
+	res := database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.Document{}, "id = ?", id)
+	if res.Error != nil {
+		return wrap(res.Error)
+	}
+	if res.RowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 // ---- Chunks ---------------------------------------------------------------

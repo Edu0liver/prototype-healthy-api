@@ -563,6 +563,30 @@ paths:
       summary: Update agent
       tags:
       - agents
+  /agents/{id}/knowledge-bases:
+    get:
+      parameters:
+      - description: Agent ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List knowledge bases linked to an agent
+      tags:
+      - knowledge
   /agents/{id}/knowledge-bases/{kbId}:
     delete:
       parameters:

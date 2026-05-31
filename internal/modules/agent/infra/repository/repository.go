@@ -55,5 +55,12 @@ func (r *Repository) List(ctx context.Context) ([]models.Agent, error) {
 
 // Delete removes an agent within the tenant scope.
 func (r *Repository) Delete(ctx context.Context, id uuid.UUID) error {
-	return wrap(database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.Agent{}, "id = ?", id).Error)
+	res := database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Delete(&models.Agent{}, "id = ?", id)
+	if res.Error != nil {
+		return wrap(res.Error)
+	}
+	if res.RowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
