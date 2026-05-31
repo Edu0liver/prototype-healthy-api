@@ -9,8 +9,8 @@ import (
 
 // User is a panel user belonging to a company.
 type User struct {
-	ID           uuid.UUID  `gorm:"type:uuid;primaryKey"`
-	CompanyID    uuid.UUID  `gorm:"type:uuid"`
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
+	CompanyID    uuid.UUID `gorm:"type:uuid"`
 	Email        string
 	PasswordHash string
 	Name         string

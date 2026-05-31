@@ -119,7 +119,7 @@ func Load() (*Config, error) {
 			Name:     env("PG_DB", "lumia"),
 			SSLMode:  env("PG_SSLMODE", "disable"),
 		},
-		Redis:    Redis{URL: env("REDIS_URL", "redis://localhost:6379")},
+		Redis: Redis{URL: env("REDIS_URL", "redis://localhost:6379")},
 		JWT: JWT{
 			Secret:     env("JWT_SECRET", ""),
 			AccessTTL:  durationEnv("JWT_ACCESS_TTL", 15*time.Minute),

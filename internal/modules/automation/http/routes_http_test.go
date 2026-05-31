@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
+	agentdto "github.com/Edu0liver/prototype-healthy-api/internal/modules/agent/dto"
 	agentrepo "github.com/Edu0liver/prototype-healthy-api/internal/modules/agent/infra/repository"
 	agentservice "github.com/Edu0liver/prototype-healthy-api/internal/modules/agent/service"
-	agentdto "github.com/Edu0liver/prototype-healthy-api/internal/modules/agent/dto"
 	automationhttp "github.com/Edu0liver/prototype-healthy-api/internal/modules/automation/http"
 	automationrepo "github.com/Edu0liver/prototype-healthy-api/internal/modules/automation/infra/repository"
 	automationservice "github.com/Edu0liver/prototype-healthy-api/internal/modules/automation/service"

@@ -41,8 +41,8 @@ type noopStore struct{}
 func (noopStore) Put(_ context.Context, _ uuid.UUID, key string, _ []byte) (string, error) {
 	return key, nil
 }
-func (noopStore) Get(_ context.Context, _ string) ([]byte, error)  { return []byte("ok"), nil }
-func (noopStore) Delete(_ context.Context, _ string) error          { return nil }
+func (noopStore) Get(_ context.Context, _ string) ([]byte, error) { return []byte("ok"), nil }
+func (noopStore) Delete(_ context.Context, _ string) error        { return nil }
 
 type noopEmbedder struct{}
 
@@ -209,7 +209,9 @@ func TestDocumentRoutes(t *testing.T) {
 		"name": "Doc KB", "description": "docs test",
 	}, adminTok)
 	require.Equal(t, http.StatusCreated, w.Code)
-	var kb struct{ ID string `json:"id"` }
+	var kb struct {
+		ID string `json:"id"`
+	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &kb))
 
 	// 1. POST /knowledge-bases/:id/documents/text — missing content must be 400.
@@ -310,14 +312,18 @@ func TestAgentKBLinkRoutes(t *testing.T) {
 		"name": "Link KB", "description": "for linking",
 	}, adminTok)
 	require.Equal(t, http.StatusCreated, w.Code)
-	var kb struct{ ID string `json:"id"` }
+	var kb struct {
+		ID string `json:"id"`
+	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &kb))
 
 	// 1. GET /agents/:id/knowledge-bases — no links yet, empty list.
 	w = do(t, r, http.MethodGet, "/agents/"+agentID+"/knowledge-bases", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code, "list-kbs-empty: %s", w.Body.String())
 	var linked struct {
-		KBs []struct{ ID string `json:"id"` } `json:"knowledge_bases"`
+		KBs []struct {
+			ID string `json:"id"`
+		} `json:"knowledge_bases"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &linked))
 	require.Empty(t, linked.KBs)

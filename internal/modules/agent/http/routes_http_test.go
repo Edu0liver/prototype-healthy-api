@@ -216,14 +216,18 @@ func TestAgentTenantIsolation(t *testing.T) {
 		"name": "A-Bot", "system_prompt": "hello", "status": "active",
 	}, tokA)
 	require.Equal(t, http.StatusCreated, w.Code)
-	var a struct{ ID string `json:"id"` }
+	var a struct {
+		ID string `json:"id"`
+	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &a))
 
 	// Tenant B lists agents — must not include A's agent.
 	w = do(t, rA, http.MethodGet, "/agents", nil, tokB)
 	require.Equal(t, http.StatusOK, w.Code)
 	var listB struct {
-		Agents []struct{ ID string `json:"id"` } `json:"agents"`
+		Agents []struct {
+			ID string `json:"id"`
+		} `json:"agents"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &listB))
 	for _, ag := range listB.Agents {
