@@ -11,6 +11,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // ErrNotFound is returned when a row does not exist.
@@ -61,7 +62,15 @@ func (r *Repository) SlugExists(ctx context.Context, slug string) (bool, error) 
 
 // UpsertBranding creates or updates the branding row for a company.
 func (r *Repository) UpsertBranding(ctx context.Context, b *models.CompanyBranding) error {
-	return wrap(database.MustTx(ctx).Save(b).Error)
+	return wrap(database.MustTx(ctx).
+		Clauses(clause.OnConflict{
+			Columns: []clause.Column{{Name: "company_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{
+				"logo_url", "favicon_url", "primary_color",
+				"secondary_color", "email_sender_name", "updated_at",
+			}),
+		}).
+		Create(b).Error)
 }
 
 // GetBranding loads the branding for a company.

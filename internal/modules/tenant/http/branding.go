@@ -8,18 +8,35 @@ import (
 )
 
 // GetBrandingByHost serves the white-label theme for a Host (public).
-// @Summary  Get branding
+// @Summary  Get branding by host
 // @Tags     tenant
 // @Produce  json
 // @Param    host query string false "Hostname (defaults to request Host header)"
 // @Success  200 {object} dto.BrandingResponse
-// @Router   /branding [get]
+// @Router   /branding/host [get]
 func (h *Handler) GetBrandingByHost(c *gin.Context) {
 	host := c.Query("host")
 	if host == "" {
 		host = c.Request.Host
 	}
 	b, err := h.svc.GetBrandingByHost(c.Request.Context(), host)
+	if err != nil {
+		httputil.Fail(c, err)
+		return
+	}
+	httputil.OK(c, brandingResponse(b))
+}
+
+// GetBranding returns the authenticated tenant's branding.
+// @Summary  Get own branding
+// @Tags     tenant
+// @Security BearerAuth
+// @Produce  json
+// @Success  200 {object} dto.BrandingResponse
+// @Router   /branding [get]
+func (h *Handler) GetBranding(c *gin.Context) {
+	id := appctx.CompanyID(c.Request.Context())
+	b, err := h.svc.GetBranding(c.Request.Context(), id)
 	if err != nil {
 		httputil.Fail(c, err)
 		return

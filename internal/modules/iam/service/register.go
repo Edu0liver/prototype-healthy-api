@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/iam/infra/models"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 )
 
@@ -14,6 +15,13 @@ func (s *Service) RegisterFirstAdmin(ctx context.Context, companyID uuid.UUID, e
 	hash, err := hashPassword(password)
 	if err != nil {
 		return nil, err
+	}
+
+	var exists bool
+	if err = s.db.System(ctx, func(ctx context.Context) error {
+		return database.MustTx(ctx).Raw("SELECT EXISTS(SELECT 1 FROM companies WHERE id = ?)", companyID).Scan(&exists).Error
+	}); err != nil || !exists {
+		return nil, ErrCompanyNotFound
 	}
 
 	var admin *models.User

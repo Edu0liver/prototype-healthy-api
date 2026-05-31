@@ -57,8 +57,9 @@ func (DocumentChunk) TableName() string { return "document_chunks" }
 
 // AgentKnowledgeBase is the N:M join between agents and knowledge bases.
 type AgentKnowledgeBase struct {
-	AgentID         uuid.UUID `gorm:"type:uuid;primaryKey"`
-	KnowledgeBaseID uuid.UUID `gorm:"type:uuid;primaryKey"`
+	ID              uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
+	AgentID         uuid.UUID `gorm:"type:uuid;uniqueIndex:uniq_agent_kb"`
+	KnowledgeBaseID uuid.UUID `gorm:"type:uuid;uniqueIndex:uniq_agent_kb"`
 	CompanyID       uuid.UUID `gorm:"type:uuid"`
 }
 

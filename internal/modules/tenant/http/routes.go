@@ -10,11 +10,12 @@ import (
 func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	// Public.
 	e.POST("/companies", h.CreateCompany)
-	e.GET("/branding", h.GetBrandingByHost)
+	e.GET("/branding/host", h.GetBrandingByHost)
 
 	// Authenticated tenant admin.
 	admin := e.Group("/", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin))
 	admin.GET("company", h.GetCompany)
+	admin.GET("branding", h.GetBranding)
 	admin.PUT("branding", h.UpdateBranding)
 	admin.POST("domains", h.AddDomain)
 	admin.GET("domains", h.ListDomains)

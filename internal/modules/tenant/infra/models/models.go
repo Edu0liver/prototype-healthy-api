@@ -22,7 +22,8 @@ func (Company) TableName() string { return "companies" }
 
 // CompanyBranding is the white-label theme (1:1 with Company).
 type CompanyBranding struct {
-	CompanyID       uuid.UUID `gorm:"type:uuid;primaryKey"`
+	ID              uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
+	CompanyID       uuid.UUID `gorm:"type:uuid;uniqueIndex"`
 	LogoURL         string
 	FaviconURL      string
 	PrimaryColor    string
