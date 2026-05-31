@@ -2,12 +2,9 @@ package service
 
 import (
 	"context"
-	"errors"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/tenant/dto"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/tenant/infra/models"
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/tenant/infra/repository"
-	"github.com/google/uuid"
 )
 
 // CreateCompany provisions a new tenant with default branding (public signup).
@@ -41,21 +38,4 @@ func (s *Service) CreateCompany(ctx context.Context, in dto.CreateCompanyRequest
 		return nil, err
 	}
 	return created, nil
-}
-
-// GetCompany loads the caller's company (authenticated; uses request tx).
-func (s *Service) GetCompany(ctx context.Context, id uuid.UUID) (*models.Company, error) {
-	c, err := s.repo.GetCompany(ctx, id)
-	if errors.Is(err, repository.ErrNotFound) {
-		return nil, ErrCompanyNotFound
-	}
-	return c, err
-}
-
-func mustUUIDv7() uuid.UUID {
-	id, err := uuid.NewV7()
-	if err != nil {
-		return uuid.New()
-	}
-	return id
 }

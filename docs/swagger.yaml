@@ -672,8 +672,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
       security:
       - BearerAuth: []
       summary: Current user
@@ -789,8 +787,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
       security:
       - BearerAuth: []
       summary: Get automation
@@ -825,19 +821,14 @@ paths:
       - automations
   /branding:
     get:
-      parameters:
-      - description: Hostname (defaults to request Host header)
-        in: query
-        name: host
-        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse'
-      summary: Get branding
+      security:
+      - BearerAuth: []
+      summary: Get own branding
       tags:
       - tenant
     put:
@@ -860,6 +851,21 @@ paths:
       security:
       - BearerAuth: []
       summary: Update branding
+      tags:
+      - tenant
+  /branding/host:
+    get:
+      parameters:
+      - description: Hostname (defaults to request Host header)
+        in: query
+        name: host
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get branding by host
       tags:
       - tenant
   /channels:
@@ -930,8 +936,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
       security:
       - BearerAuth: []
       summary: Get channel
@@ -1014,8 +1018,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse'
       security:
       - BearerAuth: []
       summary: Get company
@@ -1065,8 +1067,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse'
       security:
       - BearerAuth: []
       summary: Get conversation
@@ -1310,8 +1310,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
       security:
       - BearerAuth: []
       summary: Get knowledge base
@@ -1360,8 +1358,6 @@ paths:
       responses:
         "201":
           description: Created
-          schema:
-            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
       security:
       - BearerAuth: []
       summary: Upload document (file)

@@ -1,7 +1,6 @@
 package http
 
 import (
-	"github.com/Edu0liver/prototype-healthy-api/internal/modules/automation/dto"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +11,7 @@ import (
 // @Security BearerAuth
 // @Produce  json
 // @Param    id path string true "Automation ID"
-// @Success  200 {object} dto.AutomationResponse
+// @Success  200
 // @Router   /automations/{id} [get]
 func (h *Handler) Get(c *gin.Context) {
 	id, ok := parseID(c)
@@ -25,24 +24,4 @@ func (h *Handler) Get(c *gin.Context) {
 		return
 	}
 	httputil.OK(c, automationResponse(a))
-}
-
-// List handles GET /automations.
-// @Summary  List automations
-// @Tags     automations
-// @Security BearerAuth
-// @Produce  json
-// @Success  200 {object} map[string][]dto.AutomationResponse
-// @Router   /automations [get]
-func (h *Handler) List(c *gin.Context) {
-	items, err := h.svc.List(c.Request.Context())
-	if err != nil {
-		httputil.Fail(c, err)
-		return
-	}
-	out := make([]dto.AutomationResponse, len(items))
-	for i := range items {
-		out[i] = automationResponse(&items[i])
-	}
-	httputil.OK(c, gin.H{"automations": out})
 }

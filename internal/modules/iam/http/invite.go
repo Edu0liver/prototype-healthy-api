@@ -27,23 +27,3 @@ func (h *Handler) Invite(c *gin.Context) {
 	}
 	httputil.Created(c, userResponse(user))
 }
-
-// AcceptInvite sets the password for an invited user (public).
-// @Summary  Accept invite
-// @Tags     auth
-// @Accept   json
-// @Produce  json
-// @Param    body body dto.AcceptInviteRequest true "Token and password"
-// @Success  204
-// @Router   /auth/accept-invite [post]
-func (h *Handler) AcceptInvite(c *gin.Context) {
-	var in dto.AcceptInviteRequest
-	if !httputil.BindJSON(c, &in) {
-		return
-	}
-	if err := h.svc.AcceptInvite(c.Request.Context(), in.Token, in.Password); err != nil {
-		httputil.Fail(c, err)
-		return
-	}
-	httputil.NoContent(c)
-}

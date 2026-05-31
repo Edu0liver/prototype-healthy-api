@@ -11,8 +11,3 @@ import (
 func (s *Service) Get(ctx context.Context, id uuid.UUID) (*models.Channel, error) {
 	return s.get(ctx, id)
 }
-
-// List returns all channels in the tenant.
-func (s *Service) List(ctx context.Context) ([]models.Channel, error) {
-	return s.repo.List(ctx)
-}

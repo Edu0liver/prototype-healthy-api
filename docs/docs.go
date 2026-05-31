@@ -363,10 +363,7 @@ const docTemplate = `{
                 "summary": "Current user",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             }
@@ -528,10 +525,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -606,27 +600,21 @@ const docTemplate = `{
         },
         "/branding": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "tenant"
                 ],
-                "summary": "Get branding",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Hostname (defaults to request Host header)",
-                        "name": "host",
-                        "in": "query"
-                    }
-                ],
+                "summary": "Get own branding",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -663,6 +651,30 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse"
                         }
+                    }
+                }
+            }
+        },
+        "/branding/host": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tenant"
+                ],
+                "summary": "Get branding by host",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hostname (defaults to request Host header)",
+                        "name": "host",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }
@@ -758,10 +770,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -920,10 +929,7 @@ const docTemplate = `{
                 "summary": "Get company",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             }
@@ -1003,10 +1009,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             }
@@ -1381,10 +1384,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
-                        }
+                        "description": "OK"
                     }
                 }
             },
@@ -1486,10 +1486,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse"
-                        }
+                        "description": "Created"
                     }
                 }
             }

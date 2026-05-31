@@ -6,10 +6,40 @@ import (
 	"time"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/infra/models"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/appctx"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
+
+// createAndIngest persists a document, stores its raw bytes and kicks off async
+// indexing (PRD §2.7 job). Shared by UploadFile and UploadText.
+func (s *Service) createAndIngest(ctx context.Context, kbID uuid.UUID, sourceType, filename string, data []byte) (*models.Document, error) {
+	companyID := appctx.CompanyID(ctx)
+	if _, err := s.GetKB(ctx, kbID); err != nil {
+		return nil, err
+	}
+	doc := &models.Document{
+		ID:              uuidV7(),
+		CompanyID:       companyID,
+		KnowledgeBaseID: kbID,
+		SourceType:      sourceType,
+		Filename:        filename,
+		Status:          StatusPending,
+	}
+	path, err := s.store.Put(ctx, companyID, fmt.Sprintf("kb/%s/%s-%s", kbID, doc.ID, filename), data)
+	if err != nil {
+		return nil, err
+	}
+	doc.StoragePath = path
+	if err := s.repo.CreateDocument(ctx, doc); err != nil {
+		return nil, err
+	}
+
+	// Index asynchronously. Detached context + tenant scope.
+	go s.ingest(companyID, doc.ID, kbID)
+	return doc, nil
+}
 
 // ingest runs the extract→chunk→embed pipeline for one document (RF-RAG-03).
 func (s *Service) ingest(companyID, documentID, kbID uuid.UUID) {
