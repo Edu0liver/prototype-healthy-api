@@ -59,6 +59,8 @@ Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag
 
 ## Módulos
 
+> Cada módulo tem o seu `<NOME>.md` com detalhe (rotas, regras, invariantes). **Leia o `.md` do módulo só quando for trabalhar nele** — não carregue todos de uma vez.
+
 - [tenant](internal/modules/tenant/TENANT.md) — empresas + white-label (branding, domínios, Host→tenant).
 - [iam](internal/modules/iam/IAM.md) — auth (JWT), RBAC, convites, gestão de utilizadores.
 - [agent](internal/modules/agent/AGENT.md) — CRUD de agentes de IA (prompt, modelo, handover).

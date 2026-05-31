@@ -89,7 +89,7 @@ up:
 	docker compose up -d
 
 up-db:
-	docker compose up -d postgres redis evolution
+	docker compose up -d postgres redis evolution minio
 
 down:
 	docker compose down

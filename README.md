@@ -5,7 +5,7 @@ SaaS multi-tenant white-label em Go com atendimento automatizado por IA (RAG + h
 ## Pré-requisitos
 
 - Go 1.26+
-- Docker + Docker Compose
+- Docker + Docker Compose (sobe Postgres+pgvector, Redis, Evolution e MinIO/S3)
 - `goose` — `go install github.com/pressly/goose/v3/cmd/goose@latest`
 - (opcional) `swag` p/ regenerar docs — `go install github.com/swaggo/swag/cmd/swag@latest`
 
@@ -14,11 +14,16 @@ SaaS multi-tenant white-label em Go com atendimento automatizado por IA (RAG + h
 ```bash
 # 1. Copie e configure as variáveis de ambiente
 cp .env.example .env
-# Mínimo p/ subir: DATABASE_URL e JWT_SECRET (já preenchidos no exemplo).
+# Única var OBRIGATÓRIA p/ subir: JWT_SECRET (já preenchida no exemplo).
+# A ligação ao Postgres é montada a partir de PG_HOST/PG_PORT/PG_USER/PG_PASSWORD/PG_DB
+# (defaults já apontam p/ o app_user do compose). MIGRATE_DATABASE_URL (superuser) é
+# usada só pelas migrations.
 # OPENAI_API_KEY / EVOLUTION_API_KEY são opcionais — sem eles a app sobe,
 # mas o pipeline de IA e o envio via Evolution ficam inativos.
+# STORAGE_* já aponta p/ o MinIO do compose (localhost:9000, minioadmin).
 
-# 2. Suba só a infra (Postgres + Redis + Evolution) — NÃO o container da api
+# 2. Suba só a infra (Postgres + Redis + Evolution + MinIO) — NÃO o container da api
+#    O MinIO é obrigatório: a app verifica/cria o bucket no arranque e NÃO sobe sem ele.
 make up-db
 
 # 3. Instale dependências
@@ -48,11 +53,13 @@ O servidor sobe em `http://localhost:8080`.
 | `GET /docs/index.html` | UI do Swagger (gere com `make swag`). |
 | `GET /ws` | WebSocket de logs em tempo real (token JWT). |
 
+> Console do MinIO em `http://localhost:9001` (`minioadmin` / `minioadmin`); S3 API em `:9000`.
+
 ## Comandos úteis (Makefile)
 
 | Comando | Ação |
 | --- | --- |
-| `make up-db` | Sobe Postgres + Redis + Evolution (sem a api). |
+| `make up-db` | Sobe Postgres + Redis + Evolution + MinIO (sem a api). |
 | `make up` / `make down` | Sobe / derruba todo o compose. |
 | `make migrate-up` / `migrate-down` / `migrate-status` | Migrations (goose). |
 | `make seed` | Insere tenant demo (company + admin + agente + KB + canal). |
