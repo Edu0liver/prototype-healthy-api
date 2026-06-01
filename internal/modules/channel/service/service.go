@@ -5,6 +5,8 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/channel/infra/models"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/channel/infra/repository"
@@ -47,6 +49,21 @@ func (s *Service) get(ctx context.Context, id uuid.UUID) (*models.Channel, error
 		return nil, ErrChannelNotFound
 	}
 	return ch, err
+}
+
+// evoInstance returns the Evolution instance name for a channel.
+// If the stored name is empty (legacy channels) or missing the prefix,
+// it is derived from the channel ID so all Evolution calls remain consistent.
+func evoInstance(ch *models.Channel) string {
+	const prefix = "lumia-"
+	name := ch.EvolutionInstanceName
+	if name == "" {
+		return fmt.Sprintf("%s%s", prefix, ch.ID.String())
+	}
+	if !strings.HasPrefix(name, prefix) {
+		return prefix + name
+	}
+	return name
 }
 
 func mapState(evoState string) string {

@@ -7,6 +7,8 @@ package database
 import (
 	"context"
 	"fmt"
+	stdlog "log"
+	"os"
 	"time"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/appctx"
@@ -33,8 +35,21 @@ func New(cfg *config.Config, lc fx.Lifecycle, log *zap.Logger) (*DB, error) {
 		gormLogLevel = logger.Error
 	}
 
+	// IgnoreRecordNotFoundError: "record not found" is an expected outcome for
+	// lookups like Host->tenant resolution (e.g. an unmapped domain). Logging it
+	// as an error floods the log on every miss; it is handled in the app layer.
+	gormLogger := logger.New(
+		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags),
+		logger.Config{
+			SlowThreshold:             200 * time.Millisecond,
+			LogLevel:                  gormLogLevel,
+			IgnoreRecordNotFoundError: true,
+			Colorful:                  true,
+		},
+	)
+
 	gdb, err := gorm.Open(postgres.Open(cfg.Database.URL), &gorm.Config{
-		Logger:                 logger.Default.LogMode(gormLogLevel),
+		Logger:                 gormLogger,
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {

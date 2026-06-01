@@ -55,6 +55,7 @@ type mockEvo struct {
 	createInstanceFn  func(ctx context.Context, req evolution.CreateInstanceRequest) (*evolution.CreateInstanceResult, error)
 	connectFn         func(ctx context.Context, instance, number string) (*evolution.ConnectResult, error)
 	connectionStateFn func(ctx context.Context, instance string) (string, error)
+	restartFn         func(ctx context.Context, instance string) error
 	logoutFn          func(ctx context.Context, instance string) error
 	deleteInstanceFn  func(ctx context.Context, instance string) error
 }
@@ -78,6 +79,13 @@ func (m *mockEvo) ConnectionState(ctx context.Context, instance string) (string,
 		return m.connectionStateFn(ctx, instance)
 	}
 	return "", nil
+}
+
+func (m *mockEvo) Restart(ctx context.Context, instance string) error {
+	if m.restartFn != nil {
+		return m.restartFn(ctx, instance)
+	}
+	return nil
 }
 
 func (m *mockEvo) Logout(ctx context.Context, instance string) error {

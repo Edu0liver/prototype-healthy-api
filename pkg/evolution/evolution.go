@@ -66,6 +66,7 @@ type Client interface {
 	CreateInstance(ctx context.Context, req CreateInstanceRequest) (*CreateInstanceResult, error)
 	Connect(ctx context.Context, instance, number string) (*ConnectResult, error)
 	ConnectionState(ctx context.Context, instance string) (string, error)
+	Restart(ctx context.Context, instance string) error
 	Logout(ctx context.Context, instance string) error
 	DeleteInstance(ctx context.Context, instance string) error
 	SendText(ctx context.Context, instance, apiKey string, req SendTextRequest) (*SendResult, error)
@@ -199,6 +200,13 @@ func (c *HTTPClient) ConnectionState(ctx context.Context, instance string) (stri
 		return "", err
 	}
 	return res.Instance.State, nil
+}
+
+// Restart reconnects the instance, forcing Evolution to emit a fresh
+// QRCODE_UPDATED webhook. Used when a connect call yields no QR (instance
+// already mid-handshake with an expired/already-delivered code).
+func (c *HTTPClient) Restart(ctx context.Context, instance string) error {
+	return c.request(ctx, http.MethodPost, "/instance/restart/"+instance, "", nil, nil)
 }
 
 // Logout ends the WhatsApp session.

@@ -14,8 +14,9 @@ import (
 
 // Event types.
 const (
-	TypeMessage = "message"
-	TypeState   = "state"
+	TypeMessage  = "message"
+	TypeState    = "state"
+	TypeQRUpdate = "qr_update"
 )
 
 // Event is a realtime notification scoped to a company.

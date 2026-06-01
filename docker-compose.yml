@@ -58,6 +58,17 @@ services:
       AUTHENTICATION_API_KEY: changeme
       DEL_INSTANCE: false
       LANGUAGE: pt-BR
+      # Baileys ships a hardcoded WhatsApp Web version. When WhatsApp deprecates
+      # it, the handshake fails silently and no QRCODE_UPDATED is ever emitted —
+      # the instance sits at "connecting" forever. Pin a current WA Web version.
+      # Bump this value if QR generation breaks again (check whatsapp web "version").
+      CONFIG_SESSION_PHONE_VERSION: 2.3000.1040556859
+      CONFIG_SESSION_PHONE_CLIENT: Lumia
+      CONFIG_SESSION_PHONE_NAME: Chrome
+    # Lets the container reach the host-run API (air) for webhook delivery.
+    # On Linux host.docker.internal is not automatic without this mapping.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy

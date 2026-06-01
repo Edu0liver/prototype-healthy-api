@@ -45,6 +45,7 @@ func (noopEvo) Connect(_ context.Context, _, _ string) (*evolution.ConnectResult
 	return &evolution.ConnectResult{}, nil
 }
 func (noopEvo) ConnectionState(_ context.Context, _ string) (string, error) { return "open", nil }
+func (noopEvo) Restart(_ context.Context, _ string) error                   { return nil }
 func (noopEvo) Logout(_ context.Context, _ string) error                    { return nil }
 func (noopEvo) DeleteInstance(_ context.Context, _ string) error            { return nil }
 func (noopEvo) SendText(_ context.Context, _, _ string, _ evolution.SendTextRequest) (*evolution.SendResult, error) {

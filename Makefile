@@ -1,4 +1,4 @@
-.PHONY: run build test lint ci migrate-up migrate-down migrate-create swag swag-check seed deps docker-build
+.PHONY: run dev build test lint ci migrate-up migrate-down migrate-create swag swag-check seed deps docker-build
 
 -include .env
 export
@@ -11,6 +11,7 @@ SWAG=$(shell go env GOPATH)/bin/swag
 GOOSE_DRIVER=postgres
 # Migrations run as the superuser; fall back to DATABASE_URL if unset.
 GOOSE_DBSTRING?=$(or $(MIGRATE_DATABASE_URL),$(DATABASE_URL))
+AIR=$(shell go env GOPATH)/bin/air
 
 VERSION  ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT   ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
@@ -20,6 +21,9 @@ BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 
 run:
 	go run $(MAIN)/main.go
+
+dev:
+	$(AIR)
 
 build:
 	go build \

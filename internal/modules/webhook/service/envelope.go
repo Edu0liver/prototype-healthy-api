@@ -55,6 +55,15 @@ type statusData struct {
 	Status string `json:"status"`
 }
 
+// qrCodeData is the QRCODE_UPDATED data payload.
+type qrCodeData struct {
+	QRCode struct {
+		Code   string `json:"code"`
+		Base64 string `json:"base64"`
+		Count  int    `json:"count"`
+	} `json:"qrcode"`
+}
+
 // normalizeEvent maps "messages.upsert" -> "MESSAGES_UPSERT".
 func normalizeEvent(e string) string {
 	return strings.ToUpper(strings.ReplaceAll(e, ".", "_"))

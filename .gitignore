@@ -4,6 +4,8 @@
 
 .env
 bin/
+tmp/
+build-errors.log
 coverage.out
 coverage.html
 .claude

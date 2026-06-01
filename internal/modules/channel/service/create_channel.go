@@ -32,7 +32,11 @@ func (s *Service) Create(ctx context.Context, in dto.CreateChannelRequest) (*mod
 			InstanceName: instanceName,
 			Integration:  "WHATSAPP-BAILEYS",
 			QRCode:       true,
-			Number:       in.Number,
+			// Passing the number puts the instance in pairing mode, which (on
+			// Evolution v2.2.3) makes connect return BOTH the pairing code and
+			// the QR code, so the panel can offer either. Omitting it yields a
+			// QR-only instance (pairingCode always null).
+			Number: in.Number,
 			Webhook: &evolution.WebhookConfig{
 				URL:     s.cfg.Evolution.WebhookURL,
 				Base64:  true,

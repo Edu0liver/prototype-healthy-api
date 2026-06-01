@@ -23,10 +23,7 @@ func (h *Handler) Connect(c *gin.Context) {
 	}
 	var in dto.ConnectRequest
 	_ = c.ShouldBindJSON(&in)
-	if in.Method == "" {
-		in.Method = "qr"
-	}
-	res, err := h.svc.Connect(c.Request.Context(), id, in.Method, in.Number)
+	res, err := h.svc.Connect(c.Request.Context(), id, in.Number)
 	if err != nil {
 		httputil.Fail(c, err)
 		return

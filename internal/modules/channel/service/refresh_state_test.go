@@ -40,14 +40,17 @@ func TestRefreshState_MapsEvolutionState(t *testing.T) {
 	}
 }
 
-func TestRefreshState_EvolutionError(t *testing.T) {
+// When the Evolution instance is unavailable (e.g. deleted on disconnect),
+// RefreshState degrades to "disconnected" instead of erroring, so status
+// polling keeps working on channels that are not connected.
+func TestRefreshState_EvolutionErrorMarksDisconnected(t *testing.T) {
 	evo := &mockEvo{connectionStateFn: func(context.Context, string) (string, error) {
 		return "", errors.New("evolution down")
 	}}
 	svc := newSvc(t, &mockRepo{getFn: func(_ context.Context, id uuid.UUID) (*models.Channel, error) {
-		return &models.Channel{ID: id, Type: channeladapter.WhatsApp, EvolutionInstanceName: "lumia-x"}, nil
+		return &models.Channel{ID: id, Type: channeladapter.WhatsApp, EvolutionInstanceName: "lumia-x", Status: StatusConnecting}, nil
 	}}, evo)
 	out, err := svc.RefreshState(context.Background(), uuid.New())
-	require.Nil(t, out)
-	require.Error(t, err)
+	require.NoError(t, err)
+	require.Equal(t, StatusDisconnected, out.Status)
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/webhook/infra/repository"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/events"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/jobs"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/redisx"
 	"github.com/google/uuid"
@@ -27,13 +28,14 @@ type Service struct {
 	rdb  *redisx.Client
 	conv *convsvc.Service
 	repo *repository.Repository
+	pub  *events.Publisher
 	cfg  *config.Config
 	log  *zap.Logger
 }
 
 // New builds the webhook service.
-func New(db *database.DB, rdb *redisx.Client, conv *convsvc.Service, repo *repository.Repository, cfg *config.Config, log *zap.Logger) *Service {
-	return &Service{db: db, rdb: rdb, conv: conv, repo: repo, cfg: cfg, log: log}
+func New(db *database.DB, rdb *redisx.Client, conv *convsvc.Service, repo *repository.Repository, pub *events.Publisher, cfg *config.Config, log *zap.Logger) *Service {
+	return &Service{db: db, rdb: rdb, conv: conv, repo: repo, pub: pub, cfg: cfg, log: log}
 }
 
 // Process handles one raw Evolution webhook body.
@@ -71,8 +73,10 @@ func (s *Service) Process(ctx context.Context, body []byte) error {
 		return s.handleConnection(ctx, res, env)
 	case EventSendMessage, EventMessagesUpdate:
 		return s.handleStatus(ctx, res, env)
+	case EventQRCodeUpdated:
+		return s.handleQRCode(ctx, res, env)
 	default:
-		return nil // QRCODE_UPDATED etc. handled via realtime later
+		return nil
 	}
 }
 
@@ -186,6 +190,24 @@ func (s *Service) handleStatus(ctx context.Context, res repository.Resolved, env
 	return s.db.Tenant(ctx, res.CompanyID, func(ctx context.Context) error {
 		return s.conv.MarkStatusByExternalID(ctx, d.Key.ID, status)
 	})
+}
+
+func (s *Service) handleQRCode(ctx context.Context, res repository.Resolved, env envelope) error {
+	var d qrCodeData
+	if err := json.Unmarshal(env.Data, &d); err != nil {
+		return err
+	}
+	if d.QRCode.Code == "" {
+		return nil
+	}
+	s.pub.Publish(ctx, res.CompanyID, events.Event{
+		Type: events.TypeQRUpdate,
+		Payload: map[string]any{
+			"channel_id": res.ChannelID.String(),
+			"qr_code":    d.QRCode.Code,
+		},
+	})
+	return nil
 }
 
 func uuidV7() uuid.UUID {

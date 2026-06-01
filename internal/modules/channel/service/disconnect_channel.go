@@ -14,11 +14,12 @@ func (s *Service) Disconnect(ctx context.Context, id uuid.UUID) error {
 	if err != nil {
 		return err
 	}
-	if ch.Type == channeladapter.WhatsApp && ch.EvolutionInstanceName != "" {
-		if err := s.evo.Logout(ctx, ch.EvolutionInstanceName); err != nil {
+	if ch.Type == channeladapter.WhatsApp {
+		inst := evoInstance(ch)
+		if err := s.evo.Logout(ctx, inst); err != nil {
 			s.log.Warn("evolution logout failed", zap.Error(err))
 		}
-		if err := s.evo.DeleteInstance(ctx, ch.EvolutionInstanceName); err != nil {
+		if err := s.evo.DeleteInstance(ctx, inst); err != nil {
 			s.log.Warn("evolution delete failed", zap.Error(err))
 		}
 	}

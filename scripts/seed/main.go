@@ -50,6 +50,17 @@ func main() {
 			return err
 		}
 		companyID = uuid.MustParse(idStr)
+
+		// Map dev hosts -> demo tenant so Host->tenant resolution (branding,
+		// /branding/host) works locally. The frontend Host includes the port.
+		for _, domain := range []string{"localhost:3000", "localhost"} {
+			if err := tx.Exec(
+				`INSERT INTO company_domains (id,company_id,domain,is_primary,verified_at)
+				 VALUES (?,?,?,?,now()) ON CONFLICT (domain) DO NOTHING`,
+				mustUUID(), companyID, domain, domain == "localhost:3000").Error; err != nil {
+				return err
+			}
+		}
 		return nil
 	}); err != nil {
 		log.Fatalf("seed company: %v", err)
