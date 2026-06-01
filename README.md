@@ -103,7 +103,7 @@ curl -s http://localhost:8080/health
 ```bash
 curl -s -X POST http://localhost:8080/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"company_slug":"demo","email":"admin@demo.com","password":"demodemo"}'
+  -d '{"email":"admin@demo.com","password":"demodemo"}'
 ```
 
 Resposta inclui `access_token`. Guarde-o:

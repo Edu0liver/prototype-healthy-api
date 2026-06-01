@@ -10,6 +10,7 @@ CREATE TABLE roles (
 
 INSERT INTO roles (name, description) VALUES
     ('admin',             'Full access to all resources'),
+    ('company_admin',     'Full access to all resources of a company'),
     ('operator',          'Handle conversations and customers'),
     ('knowledge_manager', 'Manage knowledge bases');
 
