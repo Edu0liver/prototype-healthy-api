@@ -15,7 +15,7 @@ Bases de conhecimento, ingestão de documentos e retrieval vetorial (pgvector).
 
 ## Pipeline de ingestão (assíncrono, RF-RAG-03)
 Upload → guarda em storage (`tenant/<company_id>/kb/...`) → cria `documents` (pending) → goroutine `ingest`: `processing` → extrai texto → chunk → embeddings (OpenAI batch) → `ReplaceChunks` em `document_chunks` → `indexed` (ou `failed` com erro).
-- Extração: txt/md/html nativo; **pdf/docx ainda não suportado** (status `failed` com `ErrUnsupportedFormat`) — requer lib de parsing.
+- Extração (pure-Go): txt/md/html nativo; **pdf** via `dslipak/pdf`; **docx** via parse OOXML (`archive/zip`+`encoding/xml` de `word/document.xml`). PDF escaneado/imagem → `failed` com `ErrNoTextExtracted` (sem OCR). Legacy `.doc` (binário) → `failed` com `ErrUnsupportedFormat`.
 - Chunking: janela por caracteres (≈ tokens×4) com overlap.
 
 ## Retrieval (RF-RAG-04, invariante 6)

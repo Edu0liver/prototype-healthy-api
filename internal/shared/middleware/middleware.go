@@ -179,25 +179,32 @@ func (m *Middleware) RBAC(roles ...string) gin.HandlerFunc {
 	}
 }
 
-// RateLimit applies a fixed-window per-tenant limit using Redis counters.
-func (m *Middleware) RateLimit(limit int64, window time.Duration) gin.HandlerFunc {
+// AuthRateLimit applies a per-client-IP fixed-window (1 min) limit to the public
+// auth endpoints (/auth/*) to blunt credential brute-forcing and registration
+// abuse. It fails open if Redis is unavailable so that an outage cannot lock
+// every user out of logging in. Uses a key namespace distinct from the
+// per-tenant limiter to avoid cross-counting.
+func (m *Middleware) AuthRateLimit() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		companyID := appctx.CompanyID(c.Request.Context())
-		if companyID == uuid.Nil {
+		limit := int64(m.cfg.Security.AuthRateLimitPerMinute)
+		if limit <= 0 {
 			c.Next()
 			return
 		}
-		key := "ratelimit:company:" + companyID.String()
+		key := "ratelimit:auth:ip:" + c.ClientIP()
 		n, err := m.rdb.Incr(c.Request.Context(), key).Result()
-		if err == nil {
-			if n == 1 {
-				m.rdb.Expire(c.Request.Context(), key, window)
-			}
-			if n > limit {
-				httputil.Fail(c, httputil.NewDomainError(http.StatusTooManyRequests, "rate_limited", "rate limit exceeded"))
-				c.Abort()
-				return
-			}
+		if err != nil {
+			m.log.Warn("auth rate limit: redis unavailable, failing open", zap.Error(err))
+			c.Next()
+			return
+		}
+		if n == 1 {
+			m.rdb.Expire(c.Request.Context(), key, time.Minute)
+		}
+		if n > limit {
+			httputil.Fail(c, httputil.NewDomainError(http.StatusTooManyRequests, "rate_limited", "too many attempts; please slow down"))
+			c.Abort()
+			return
 		}
 		c.Next()
 	}

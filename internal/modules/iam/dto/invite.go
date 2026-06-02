@@ -10,5 +10,5 @@ type InviteRequest struct {
 // AcceptInviteRequest sets the password for an invited user.
 type AcceptInviteRequest struct {
 	Token    string `json:"token" binding:"required"`
-	Password string `json:"password" binding:"required,min=8"`
+	Password string `json:"password" binding:"required,min=8,max=128"`
 }

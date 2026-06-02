@@ -12,6 +12,9 @@ import (
 // @Security BearerAuth
 // @Produce  json
 // @Success  200
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /auth/me [get]
 func (h *Handler) Me(c *gin.Context) {
 	user, err := h.svc.Me(c.Request.Context(), appctx.UserID(c.Request.Context()))

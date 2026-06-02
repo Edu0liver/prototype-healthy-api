@@ -3,6 +3,7 @@
 package service
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/redisx"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/crypto"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
+	"github.com/google/uuid"
 )
 
 // blockTTL keeps the AI silent while a human is active.
@@ -23,13 +25,27 @@ var (
 	ErrNoChannel = httputil.BadRequest("conversation channel cannot dispatch")
 )
 
+// Narrow dependency contracts (defined here so Reply can be unit-tested with
+// mocks; the concrete repository/registry/cipher satisfy them).
+type (
+	dispatchRepo interface {
+		LoadDispatchInfo(ctx context.Context, convID uuid.UUID) (*repository.DispatchInfo, error)
+	}
+	adapterRegistry interface {
+		For(channelType string) (channeladapter.Adapter, bool)
+	}
+	decrypter interface {
+		Decrypt(enc string) (string, error)
+	}
+)
+
 // Service implements handover use cases.
 type Service struct {
 	conv     *convsvc.Service
 	rdb      *redisx.Client
-	repo     *repository.Repository
-	cipher   *crypto.Cipher
-	adapters *channeladapter.Registry
+	repo     dispatchRepo
+	cipher   decrypter
+	adapters adapterRegistry
 }
 
 // New builds the handover service.

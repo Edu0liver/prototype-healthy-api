@@ -15,6 +15,11 @@ import (
 // @Produce  json
 // @Param    body body dto.UpdateBrandingRequest true "Branding"
 // @Success  200 {object} dto.BrandingResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /branding [put]
 func (h *Handler) UpdateBranding(c *gin.Context) {
 	var in dto.UpdateBrandingRequest

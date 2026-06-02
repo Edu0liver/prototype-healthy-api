@@ -69,3 +69,31 @@ func TestClose_ConversationNotFound(t *testing.T) {
 	})
 	require.ErrorIs(t, svc.Close(context.Background(), uuid.New()), convsvc.ErrConversationNotFound)
 }
+
+func TestReturn_ConversationNotFound(t *testing.T) {
+	svc := newSvc(&mockConvRepo{
+		getConvFn: func(context.Context, uuid.UUID) (*convmodels.Conversation, error) {
+			return nil, convrepo.ErrNotFound
+		},
+	})
+	require.ErrorIs(t, svc.Return(context.Background(), uuid.New()), convsvc.ErrConversationNotFound)
+}
+
+// Reply must refuse when the conversation is not under human control. The guard
+// runs before any dispatch dependency (repo/adapters/cipher) is touched.
+func TestReply_RejectsWhenNotHuman(t *testing.T) {
+	conv := &convmodels.Conversation{ID: uuid.New(), CompanyID: uuid.New(), State: convsvc.StateAI}
+	svc := newSvc(&mockConvRepo{
+		getConvFn: func(context.Context, uuid.UUID) (*convmodels.Conversation, error) { return conv, nil },
+	})
+	require.ErrorIs(t, svc.Reply(context.Background(), conv.ID, "hello"), ErrNotHuman)
+}
+
+func TestReply_ConversationNotFound(t *testing.T) {
+	svc := newSvc(&mockConvRepo{
+		getConvFn: func(context.Context, uuid.UUID) (*convmodels.Conversation, error) {
+			return nil, convrepo.ErrNotFound
+		},
+	})
+	require.ErrorIs(t, svc.Reply(context.Background(), uuid.New(), "hi"), convsvc.ErrConversationNotFound)
+}

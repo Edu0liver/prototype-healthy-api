@@ -26,7 +26,7 @@ func newService(t *testing.T, db *database.DB) *service.Service {
 	cfg.JWT.Secret = "test-secret-please-change"
 	cfg.JWT.AccessTTL = 15 * time.Minute
 	cfg.JWT.RefreshTTL = time.Hour
-	return service.New(repository.New(), db, token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL), noopMailer{}, cfg)
+	return service.New(repository.New(), db, token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL), noopMailer{}, cfg, nil)
 }
 
 func seedCompany(t *testing.T, db *database.DB, slug string) uuid.UUID {

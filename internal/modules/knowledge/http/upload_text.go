@@ -15,6 +15,12 @@ import (
 // @Param    id   path string                  true "Knowledge base ID"
 // @Param    body body dto.UploadTextRequest   true "Text content"
 // @Success  201 {object} dto.DocumentResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid id or body"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  404 {object} httputil.ErrorResponse "knowledge base not found"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /knowledge-bases/{id}/documents/text [post]
 func (h *Handler) UploadText(c *gin.Context) {
 	kbID, ok := parseID(c, "id")

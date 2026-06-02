@@ -15,6 +15,12 @@ import (
 // @Param    id   path string                 true "Agent ID"
 // @Param    body body dto.UpdateAgentRequest true "Agent"
 // @Success  200 {object} dto.AgentResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid id or body"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  404 {object} httputil.ErrorResponse "agent not found"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /agents/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	id, ok := parseID(c)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -28,6 +29,16 @@ type Config struct {
 type Security struct {
 	// RateLimitPerMinute caps authenticated requests per tenant per minute.
 	RateLimitPerMinute int
+	// AuthRateLimitPerMinute caps requests to public auth endpoints per client IP
+	// per minute (brute-force defense on /auth/*).
+	AuthRateLimitPerMinute int
+	// LoginMaxAttempts is the number of consecutive failed logins per email before
+	// the account is temporarily locked. LoginLockout is how long the lock holds.
+	LoginMaxAttempts int
+	LoginLockout     time.Duration
+	// AllowedOrigins is the explicit Origin allowlist for browser-facing endpoints
+	// (e.g. the WebSocket). Empty falls back to a same-origin check.
+	AllowedOrigins []string
 }
 
 type App struct {
@@ -154,7 +165,13 @@ func Load() (*Config, error) {
 			UseSSL:    boolEnv("STORAGE_USE_SSL", false),
 			Region:    env("STORAGE_REGION", "us-east-1"),
 		},
-		Security: Security{RateLimitPerMinute: intEnv("RATE_LIMIT_PER_MINUTE", 600)},
+		Security: Security{
+			RateLimitPerMinute:     intEnv("RATE_LIMIT_PER_MINUTE", 600),
+			AuthRateLimitPerMinute: intEnv("AUTH_RATE_LIMIT_PER_MINUTE", 10),
+			LoginMaxAttempts:       intEnv("LOGIN_MAX_ATTEMPTS", 5),
+			LoginLockout:           durationEnv("LOGIN_LOCKOUT", 15*time.Minute),
+			AllowedOrigins:         csvEnv("ALLOWED_ORIGINS"),
+		},
 		Email: Email{
 			ResendAPIKey: env("RESEND_API_KEY", ""),
 			FromAddress:  env("EMAIL_FROM", "no-reply@example.com"),
@@ -168,6 +185,17 @@ func Load() (*Config, error) {
 	)
 	if cfg.JWT.Secret == "" {
 		return nil, fmt.Errorf("config: JWT_SECRET is required")
+	}
+	if cfg.IsProduction() {
+		if len(cfg.JWT.Secret) < 32 {
+			return nil, fmt.Errorf("config: JWT_SECRET must be at least 32 bytes in production")
+		}
+		if cfg.Crypto.EncryptionKey == "" {
+			return nil, fmt.Errorf("config: ENCRYPTION_KEY is required in production (secrets would be stored in plaintext)")
+		}
+		if cfg.Database.SSLMode == "disable" {
+			return nil, fmt.Errorf("config: PG_SSLMODE must not be 'disable' in production")
+		}
 	}
 	return cfg, nil
 }
@@ -197,6 +225,21 @@ func durationEnv(key string, def time.Duration) time.Duration {
 		}
 	}
 	return def
+}
+
+// csvEnv parses a comma-separated env var into a trimmed, non-empty slice.
+func csvEnv(key string) []string {
+	v := os.Getenv(key)
+	if v == "" {
+		return nil
+	}
+	var out []string
+	for _, p := range strings.Split(v, ",") {
+		if p = strings.TrimSpace(p); p != "" {
+			out = append(out, p)
+		}
+	}
+	return out
 }
 
 func boolEnv(key string, def bool) bool {

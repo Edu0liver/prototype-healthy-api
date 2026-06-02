@@ -22,7 +22,7 @@ func newInviteSvc(repo Repository, mailer Mailer) *Service {
 	cfg := &config.Config{}
 	cfg.App.PublicBaseURL = "https://panel.test"
 	tok := token.New("test-secret-please-change", 15*time.Minute, time.Hour)
-	return New(repo, nil, tok, mailer, cfg)
+	return New(repo, nil, tok, mailer, cfg, nil)
 }
 
 func inviteCtx() context.Context {

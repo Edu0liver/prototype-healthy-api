@@ -11,6 +11,8 @@ import (
 // @Produce  json
 // @Param    host query string false "Hostname (defaults to request Host header)"
 // @Success  200
+// @Failure  404 {object} httputil.ErrorResponse "branding not found"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /branding/host [get]
 func (h *Handler) GetBrandingByHost(c *gin.Context) {
 	host := c.Query("host")

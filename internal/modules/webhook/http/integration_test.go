@@ -37,7 +37,7 @@ func newRouter(t *testing.T, db *database.DB, token string) *gin.Engine {
 	var rdb *redisx.Client
 	pub := events.New(nil, zap.NewNop())
 	convSvc := conversationservice.New(conversationrepo.New(), pub)
-	svc := webhookservice.New(db, rdb, convSvc, webhookrepo.New(), cfg, zap.NewNop())
+	svc := webhookservice.New(db, rdb, convSvc, webhookrepo.New(), pub, cfg, zap.NewNop())
 	h := webhookhttp.NewHandler(svc, cfg, zap.NewNop())
 
 	gin.SetMode(gin.TestMode)

@@ -151,11 +151,6 @@ definitions:
     type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest:
     properties:
-      method:
-        enum:
-        - qr
-        - pairing
-        type: string
       number:
         type: string
     type: object
@@ -234,6 +229,7 @@ definitions:
   github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.AcceptInviteRequest:
     properties:
       password:
+        maxLength: 128
         minLength: 8
         type: string
       token:
@@ -263,6 +259,7 @@ definitions:
       email:
         type: string
       password:
+        maxLength: 128
         type: string
     required:
     - email
@@ -284,6 +281,7 @@ definitions:
       name:
         type: string
       password:
+        maxLength: 128
         minLength: 8
         type: string
     required:
@@ -452,6 +450,20 @@ definitions:
       secondary_color:
         type: string
     type: object
+  github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse:
+    properties:
+      code:
+        type: string
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+  internal_modules_webhook_http.AckResponse:
+    properties:
+      received:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -473,6 +485,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List agents
@@ -495,6 +523,26 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
+        "400":
+          description: invalid request
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create agent
@@ -511,6 +559,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete agent
@@ -528,6 +600,30 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: invalid request
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get agent
@@ -555,6 +651,30 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse'
+        "400":
+          description: invalid id or body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update agent
@@ -579,6 +699,30 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
               type: array
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List knowledge bases linked to an agent
@@ -600,6 +744,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent or knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Unlink knowledge base from agent
@@ -620,6 +788,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: agent or knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Link knowledge base to agent
@@ -641,6 +833,14 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid or expired invite
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Accept invite
       tags:
       - auth
@@ -662,7 +862,54 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: invalid credentials
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: user disabled
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: too many attempts (IP or account lockout)
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token to revoke
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      summary: Logout
       tags:
       - auth
   /auth/me:
@@ -672,6 +919,18 @@ paths:
       responses:
         "200":
           description: OK
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Current user
@@ -695,6 +954,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: invalid or expired refresh token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Refresh token
       tags:
       - auth
@@ -716,6 +987,18 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: email already in use or company already has users
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Register first admin
       tags:
       - auth
@@ -732,6 +1015,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List automations
@@ -754,6 +1053,30 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+        "400":
+          description: invalid body, or channel/agent not found in tenant
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: an active automation already exists for this channel
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create automation
@@ -770,6 +1093,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: automation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete automation
@@ -787,6 +1134,30 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: automation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get automation
@@ -814,6 +1185,34 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse'
+        "400":
+          description: invalid id or body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: automation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: an active automation already exists for this channel
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update automation
@@ -826,6 +1225,26 @@ paths:
       responses:
         "200":
           description: OK
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: branding not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get own branding
@@ -848,6 +1267,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update branding
@@ -865,6 +1304,14 @@ paths:
       responses:
         "200":
           description: OK
+        "404":
+          description: branding not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Get branding by host
       tags:
       - tenant
@@ -881,6 +1328,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List channels
@@ -903,6 +1366,26 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse'
+        "400":
+          description: unsupported channel type or invalid body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create channel
@@ -919,6 +1402,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: channel not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Disconnect channel
@@ -936,6 +1443,30 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: channel not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get channel
@@ -963,6 +1494,30 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse'
+        "400":
+          description: invalid id or not a whatsapp channel
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: channel not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Connect channel
@@ -985,6 +1540,30 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: channel not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get connection state
@@ -1008,6 +1587,18 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: slug already in use
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Create company
       tags:
       - tenant
@@ -1018,6 +1609,26 @@ paths:
       responses:
         "200":
           description: OK
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: company not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get company
@@ -1049,6 +1660,26 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.ConversationResponse'
               type: array
             type: object
+        "400":
+          description: invalid query filter
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List conversations
@@ -1067,6 +1698,30 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get conversation
@@ -1089,6 +1744,30 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Close conversation
@@ -1113,6 +1792,34 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id or body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: conversation is not under human control
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Reply as operator
@@ -1135,6 +1842,30 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Return conversation to AI
@@ -1157,6 +1888,30 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Take conversation (human)
@@ -1181,6 +1936,30 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_conversation_dto.MessageResponse'
               type: array
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: conversation not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List messages
@@ -1197,6 +1976,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: document not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete document
@@ -1215,6 +2018,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List domains
@@ -1237,6 +2056,30 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: domain already registered
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Add domain
@@ -1255,6 +2098,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List knowledge bases
@@ -1277,6 +2136,26 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse'
+        "400":
+          description: invalid request
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create knowledge base
@@ -1293,6 +2172,30 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete knowledge base
@@ -1310,6 +2213,30 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get knowledge base
@@ -1334,6 +2261,30 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
               type: array
             type: object
+        "400":
+          description: invalid id
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List documents
@@ -1358,6 +2309,30 @@ paths:
       responses:
         "201":
           description: Created
+        "400":
+          description: invalid id or missing file
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Upload document (file)
@@ -1386,6 +2361,30 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse'
+        "400":
+          description: invalid id or body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: knowledge base not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Upload document (text)
@@ -1404,6 +2403,22 @@ paths:
                 $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
               type: array
             type: object
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List users
@@ -1426,6 +2441,30 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse'
+        "400":
+          description: invalid role or body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: email already in use
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "429":
+          description: rate limit exceeded
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Invite user
@@ -1446,23 +2485,45 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: boolean
-            type: object
+            $ref: '#/definitions/internal_modules_webhook_http.AckResponse'
+        "400":
+          description: bad request body
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: invalid webhook token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Evolution webhook receiver
       tags:
       - webhooks
   /ws:
     get:
       parameters:
-      - description: Access token (JWT)
+      - description: Access token (JWT). Prefer the Sec-WebSocket-Protocol header
+          ('bearer, <token>').
         in: query
         name: token
-        required: true
         type: string
       responses:
         "101":
           description: Switching Protocols
+        "401":
+          description: invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: origin not allowed
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
       summary: Realtime WebSocket
       tags:
       - realtime

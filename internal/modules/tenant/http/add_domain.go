@@ -15,6 +15,12 @@ import (
 // @Produce  json
 // @Param    body body dto.AddDomainRequest true "Domain"
 // @Success  201 {object} dto.DomainResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  409 {object} httputil.ErrorResponse "domain already registered"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /domains [post]
 func (h *Handler) AddDomain(c *gin.Context) {
 	var in dto.AddDomainRequest

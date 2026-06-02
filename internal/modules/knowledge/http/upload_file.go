@@ -16,6 +16,12 @@ import (
 // @Param    id   path     string true "Knowledge base ID"
 // @Param    file formData file   true "File (PDF, DOCX, TXT, etc.)"
 // @Success  201
+// @Failure  400 {object} httputil.ErrorResponse "invalid id or missing file"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  404 {object} httputil.ErrorResponse "knowledge base not found"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /knowledge-bases/{id}/documents [post]
 func (h *Handler) UploadFile(c *gin.Context) {
 	kbID, ok := parseID(c, "id")

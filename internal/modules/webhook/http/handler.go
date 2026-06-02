@@ -2,17 +2,24 @@
 package http
 
 import (
+	"crypto/subtle"
 	"io"
 	"net/http"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/webhook/service"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
+	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 // maxBodyBytes caps a webhook body.
 const maxBodyBytes = 5 << 20 // 5 MiB
+
+// AckResponse is the webhook acknowledgement payload.
+type AckResponse struct {
+	Received bool `json:"received"`
+}
 
 // Handler receives provider webhooks.
 type Handler struct {
@@ -34,24 +41,29 @@ func NewHandler(svc *service.Service, cfg *config.Config, log *zap.Logger) *Hand
 // @Accept   json
 // @Produce  json
 // @Param    Authorization header string false "Bearer <webhook-token>"
-// @Success  200 {object} map[string]bool
+// @Success  200 {object} AckResponse
+// @Failure  400 {object} httputil.ErrorResponse "bad request body"
+// @Failure  401 {object} httputil.ErrorResponse "invalid webhook token"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /webhooks/evolution [post]
 func (h *Handler) Evolution(c *gin.Context) {
 	h.log.Debug("webhook: request received", zap.String("remote_addr", c.Request.RemoteAddr))
 	if h.token != "" {
-		if c.GetHeader("authorization") != "Bearer "+h.token {
-			h.log.Warn("webhook: auth failed", zap.String("got", c.GetHeader("authorization")))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		want := "Bearer " + h.token
+		got := c.GetHeader("authorization")
+		if subtle.ConstantTimeCompare([]byte(got), []byte(want)) != 1 {
+			h.log.Warn("webhook: auth failed", zap.String("remote_addr", c.Request.RemoteAddr))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, httputil.ErrorResponse{Error: "unauthorized", Message: "invalid webhook token"})
 			return
 		}
 	}
 	body, err := io.ReadAll(io.LimitReader(c.Request.Body, maxBodyBytes))
 	if err != nil {
 		h.log.Error("webhook: read body failed", zap.Error(err))
-		c.JSON(http.StatusBadRequest, gin.H{"error": "bad body"})
+		c.JSON(http.StatusBadRequest, httputil.ErrorResponse{Error: "bad_request", Message: "bad body"})
 		return
 	}
-	h.log.Debug("webhook: raw body", zap.Int("bytes", len(body)), zap.String("body", string(body)))
+	h.log.Debug("webhook: raw body", zap.Int("bytes", len(body)))
 	h.log.Debug("webhook: calling svc.Process")
 	if err := h.svc.Process(c.Request.Context(), body); err != nil {
 		h.log.Error("webhook: svc.Process error", zap.Error(err))
@@ -59,5 +71,5 @@ func (h *Handler) Evolution(c *gin.Context) {
 	} else {
 		h.log.Debug("webhook: svc.Process completed ok")
 	}
-	c.JSON(http.StatusOK, gin.H{"received": true})
+	c.JSON(http.StatusOK, AckResponse{Received: true})
 }

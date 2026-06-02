@@ -14,6 +14,11 @@ import (
 // @Produce  json
 // @Param    body body dto.CreateKBRequest true "Knowledge base"
 // @Success  201 {object} dto.KBResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /knowledge-bases [post]
 func (h *Handler) CreateKB(c *gin.Context) {
 	var in dto.CreateKBRequest

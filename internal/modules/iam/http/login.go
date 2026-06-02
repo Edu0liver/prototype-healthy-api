@@ -13,6 +13,11 @@ import (
 // @Produce json
 // @Param   body body dto.LoginRequest true "Credentials"
 // @Success 200 {object} dto.TokenResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  401 {object} httputil.ErrorResponse "invalid credentials"
+// @Failure  403 {object} httputil.ErrorResponse "user disabled"
+// @Failure  429 {object} httputil.ErrorResponse "too many attempts (IP or account lockout)"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router  /auth/login [post]
 func (h *Handler) Login(c *gin.Context) {
 	var in dto.LoginRequest

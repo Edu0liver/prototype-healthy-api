@@ -11,7 +11,7 @@ import (
 )
 
 func newSvc(repo Repository, mailer Mailer) *Service {
-	return New(repo, nil, nil, mailer, nil)
+	return New(repo, nil, nil, mailer, nil, nil)
 }
 
 func TestMe_OK(t *testing.T) {

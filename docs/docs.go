@@ -41,6 +41,30 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -77,6 +101,36 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -107,6 +161,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -150,6 +240,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_agent_dto.AgentResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid id or body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -175,6 +301,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -214,6 +376,42 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -248,6 +446,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent or knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -280,6 +514,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent or knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -310,6 +580,18 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid or expired invite",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -343,6 +625,78 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid credentials",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "user disabled",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "too many attempts (IP or account lockout)",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "parameters": [
+                    {
+                        "description": "Refresh token to revoke",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.RefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -364,6 +718,24 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -396,6 +768,24 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.TokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid or expired refresh token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -430,6 +820,24 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "email already in use or company already has users",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -459,6 +867,30 @@ const docTemplate = `{
                                     "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -496,6 +928,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid body, or channel/agent not found in tenant",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "an active automation already exists for this channel",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -526,6 +994,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "automation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -569,6 +1073,48 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_automation_dto.AutomationResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid id or body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "automation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "an active automation already exists for this channel",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -594,6 +1140,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "automation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -615,6 +1197,36 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "branding not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -651,6 +1263,36 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.BrandingResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -675,6 +1317,18 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "404": {
+                        "description": "branding not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -704,6 +1358,30 @@ const docTemplate = `{
                                     "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -741,6 +1419,36 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse"
                         }
+                    },
+                    "400": {
+                        "description": "unsupported channel type or invalid body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -771,6 +1479,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "channel not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -796,6 +1540,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "channel not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -840,6 +1620,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid id or not a whatsapp channel",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "channel not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -876,6 +1692,42 @@ const docTemplate = `{
                                 "type": "string"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "channel not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -909,6 +1761,24 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.CompanyResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "slug already in use",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -930,6 +1800,36 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "company not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -980,6 +1880,36 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid query filter",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1010,6 +1940,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1045,6 +2011,42 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "type": "string"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1085,6 +2087,48 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id or body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "conversation is not under human control",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1121,6 +2165,42 @@ const docTemplate = `{
                                 "type": "string"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1156,6 +2236,42 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "type": "string"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1196,6 +2312,42 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "conversation not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1223,6 +2375,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "document not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1252,6 +2440,30 @@ const docTemplate = `{
                                     "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1289,6 +2501,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_tenant_dto.DomainResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "domain already registered",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1318,6 +2566,30 @@ const docTemplate = `{
                                     "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1355,6 +2627,36 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.KBResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1385,6 +2687,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -1410,6 +2748,42 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1449,6 +2823,42 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "invalid id",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             },
@@ -1487,6 +2897,42 @@ const docTemplate = `{
                 "responses": {
                     "201": {
                         "description": "Created"
+                    },
+                    "400": {
+                        "description": "invalid id or missing file",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1532,6 +2978,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_knowledge_dto.DocumentResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid id or body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "knowledge base not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1561,6 +3043,30 @@ const docTemplate = `{
                                     "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1598,6 +3104,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_iam_dto.UserResponse"
                         }
+                    },
+                    "400": {
+                        "description": "invalid role or body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "email already in use",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1626,10 +3168,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "boolean"
-                            }
+                            "$ref": "#/definitions/internal_modules_webhook_http.AckResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request body",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid webhook token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1644,15 +3201,32 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Access token (JWT)",
+                        "description": "Access token (JWT). Prefer the Sec-WebSocket-Protocol header ('bearer, \u003ctoken\u003e').",
                         "name": "token",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "101": {
                         "description": "Switching Protocols"
+                    },
+                    "401": {
+                        "description": "invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "origin not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -1881,13 +3455,6 @@ const docTemplate = `{
         "github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ConnectRequest": {
             "type": "object",
             "properties": {
-                "method": {
-                    "type": "string",
-                    "enum": [
-                        "qr",
-                        "pairing"
-                    ]
-                },
                 "number": {
                     "type": "string"
                 }
@@ -2011,6 +3578,7 @@ const docTemplate = `{
             "properties": {
                 "password": {
                     "type": "string",
+                    "maxLength": 128,
                     "minLength": 8
                 },
                 "token": {
@@ -2052,7 +3620,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 128
                 }
             }
         },
@@ -2086,6 +3655,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
+                    "maxLength": 128,
                     "minLength": 8
                 }
             }
@@ -2332,6 +3902,28 @@ const docTemplate = `{
                 },
                 "secondary_color": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_modules_webhook_http.AckResponse": {
+            "type": "object",
+            "properties": {
+                "received": {
+                    "type": "boolean"
                 }
             }
         }

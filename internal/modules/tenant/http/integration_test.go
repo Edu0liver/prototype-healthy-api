@@ -50,7 +50,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string, string) {
 	company, err := tenantSvc.CreateCompany(ctx, tenantdto.CreateCompanyRequest{Name: slug, Slug: slug})
 	require.NoError(t, err)
 
-	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
+	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg, nil)
 	_, err = iamSvc.RegisterFirstAdmin(ctx, company.ID, "admin@tenant.test", "secret123", "Admin")
 	require.NoError(t, err)
 	tokens, _, err := iamSvc.Login(ctx, "admin@tenant.test", "secret123")

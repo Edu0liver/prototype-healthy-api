@@ -11,5 +11,7 @@ var (
 	ErrKBNotFound       = httputil.NotFound("knowledge base not found")
 	ErrDocumentNotFound = httputil.NotFound("document not found")
 	// ErrUnsupportedFormat is internal (drives document.status=failed), not an HTTP error.
-	ErrUnsupportedFormat = errors.New("knowledge: unsupported file format in v1 (txt/md/html supported)")
+	ErrUnsupportedFormat = errors.New("knowledge: unsupported file format (.doc — convert to .docx/.pdf/.txt)")
+	// ErrNoTextExtracted means the file parsed but yielded no text (e.g. a scanned/image-only PDF that needs OCR).
+	ErrNoTextExtracted = errors.New("knowledge: no extractable text (scanned/image PDF requires OCR)")
 )

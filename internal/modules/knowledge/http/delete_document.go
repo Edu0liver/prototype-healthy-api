@@ -11,6 +11,12 @@ import (
 // @Security BearerAuth
 // @Param    docId path string true "Document ID"
 // @Success  204
+// @Failure  400 {object} httputil.ErrorResponse "invalid id"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  404 {object} httputil.ErrorResponse "document not found"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /documents/{docId} [delete]
 func (h *Handler) DeleteDocument(c *gin.Context) {
 	id, ok := parseID(c, "docId")

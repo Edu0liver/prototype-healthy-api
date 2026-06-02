@@ -13,6 +13,9 @@ import (
 // @Produce json
 // @Param   body body dto.RefreshRequest true "Refresh token"
 // @Success 200 {object} dto.TokenResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  401 {object} httputil.ErrorResponse "invalid or expired refresh token"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router  /auth/refresh [post]
 func (h *Handler) Refresh(c *gin.Context) {
 	var in dto.RefreshRequest

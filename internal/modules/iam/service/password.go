@@ -34,6 +34,16 @@ func hashPassword(password string) (string, error) {
 	), nil
 }
 
+// dummyHash is a precomputed valid argon2id hash. dummyVerify runs a full
+// verification against it to equalize response time when the account does not
+// exist, mitigating user enumeration via timing (the expensive argon2 cost is
+// paid whether or not the user is found).
+var dummyHash, _ = hashPassword("timing-equalizer-not-a-real-password")
+
+func dummyVerify(password string) {
+	_, _ = verifyPassword(password, dummyHash)
+}
+
 // verifyPassword checks a password against an encoded argon2id hash.
 func verifyPassword(password, encoded string) (bool, error) {
 	parts := strings.Split(encoded, "$")

@@ -49,6 +49,10 @@ func (m *mockRepo) List(ctx context.Context) ([]models.Channel, error) {
 	return nil, nil
 }
 
+func (m *mockRepo) ListAllActive(ctx context.Context) ([]models.Channel, error) {
+	return nil, nil
+}
+
 // mockEvo is a function-backed evolution.Client; only the methods a test needs
 // are wired, the rest return zero values.
 type mockEvo struct {

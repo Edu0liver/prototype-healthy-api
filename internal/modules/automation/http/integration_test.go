@@ -63,7 +63,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string, uuid.UUID) {
 	companyID := seedCompany(t, db, slug)
 
 	ctx := context.Background()
-	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg)
+	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg, nil)
 	_, err := iamSvc.RegisterFirstAdmin(ctx, companyID, "admin@auto.test", "secret123", "Admin")
 	require.NoError(t, err)
 	tokens, _, err := iamSvc.Login(ctx, "admin@auto.test", "secret123")

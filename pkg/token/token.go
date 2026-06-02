@@ -61,6 +61,7 @@ func (m *Manager) sign(companyID, userID uuid.UUID, role, typ string, ttl time.D
 	now := time.Now()
 	claims := Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
+			ID:        uuid.NewString(), // jti: enables refresh-token revocation
 			Subject:   userID.String(),
 			IssuedAt:  jwt.NewNumericDate(now),
 			ExpiresAt: jwt.NewNumericDate(now.Add(ttl)),
@@ -81,7 +82,10 @@ func (m *Manager) Parse(tokenStr string) (*Claims, error) {
 			return nil, fmt.Errorf("token: unexpected signing method: %v", t.Header["alg"])
 		}
 		return m.secret, nil
-	})
+	},
+		jwt.WithValidMethods([]string{"HS256"}),
+		jwt.WithExpirationRequired(),
+	)
 	if err != nil {
 		return nil, err
 	}

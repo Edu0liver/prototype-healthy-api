@@ -14,6 +14,9 @@ import (
 // @Produce json
 // @Param   body body dto.RegisterAdminRequest true "Admin"
 // @Success 201 {object} dto.UserResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  409 {object} httputil.ErrorResponse "email already in use or company already has users"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router  /auth/register [post]
 func (h *Handler) Register(c *gin.Context) {
 	var in dto.RegisterAdminRequest

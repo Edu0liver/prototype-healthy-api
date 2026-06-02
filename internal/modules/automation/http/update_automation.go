@@ -15,6 +15,13 @@ import (
 // @Param    id   path string                        true "Automation ID"
 // @Param    body body dto.UpdateAutomationRequest   true "Automation"
 // @Success  200 {object} dto.AutomationResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid id or body"
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  404 {object} httputil.ErrorResponse "automation not found"
+// @Failure  409 {object} httputil.ErrorResponse "an active automation already exists for this channel"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /automations/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	id, ok := parseID(c)

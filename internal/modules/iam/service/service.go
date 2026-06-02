@@ -5,6 +5,7 @@ package service
 import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/redisx"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/token"
 	"github.com/google/uuid"
 )
@@ -16,11 +17,12 @@ type Service struct {
 	tokens *token.Manager
 	mailer Mailer
 	cfg    *config.Config
+	rdb    *redisx.Client
 }
 
 // New builds the iam service.
-func New(repo Repository, db *database.DB, tokens *token.Manager, mailer Mailer, cfg *config.Config) *Service {
-	return &Service{repo: repo, db: db, tokens: tokens, mailer: mailer, cfg: cfg}
+func New(repo Repository, db *database.DB, tokens *token.Manager, mailer Mailer, cfg *config.Config, rdb *redisx.Client) *Service {
+	return &Service{repo: repo, db: db, tokens: tokens, mailer: mailer, cfg: cfg, rdb: rdb}
 }
 
 // Tokens is an issued access/refresh pair.

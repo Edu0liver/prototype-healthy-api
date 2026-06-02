@@ -13,6 +13,9 @@ import (
 // @Produce  json
 // @Param    body body dto.CreateCompanyRequest true "Company"
 // @Success  201 {object} dto.CompanyResponse
+// @Failure  400 {object} httputil.ErrorResponse "invalid request body"
+// @Failure  409 {object} httputil.ErrorResponse "slug already in use"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /companies [post]
 func (h *Handler) CreateCompany(c *gin.Context) {
 	var in dto.CreateCompanyRequest

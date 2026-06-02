@@ -42,7 +42,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, *capMailer) {
 
 	tok := token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL)
 	mail := &capMailer{}
-	svc := service.New(repository.New(), db, tok, mail, cfg)
+	svc := service.New(repository.New(), db, tok, mail, cfg, nil)
 	h := iamhttp.NewHandler(svc)
 	// rdb is nil: the per-tenant rate limit is disabled because
 	// cfg.Security.RateLimitPerMinute is 0, so Redis is never touched.

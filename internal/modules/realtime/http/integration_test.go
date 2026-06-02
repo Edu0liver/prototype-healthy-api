@@ -8,6 +8,7 @@ import (
 	"time"
 
 	realtimehttp "github.com/Edu0liver/prototype-healthy-api/internal/modules/realtime/http"
+	"github.com/Edu0liver/prototype-healthy-api/internal/shared/config"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/redisx"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/token"
 	"github.com/gin-gonic/gin"
@@ -22,7 +23,7 @@ func newServer(t *testing.T) (*httptest.Server, *token.Manager) {
 	t.Helper()
 	tok := token.New("test-secret-please-change", 15*time.Minute, time.Hour)
 	rdb := &redisx.Client{Client: redis.NewClient(&redis.Options{Addr: "127.0.0.1:0"})}
-	h := realtimehttp.NewHandler(tok, rdb, zap.NewNop())
+	h := realtimehttp.NewHandler(tok, rdb, &config.Config{}, zap.NewNop())
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()

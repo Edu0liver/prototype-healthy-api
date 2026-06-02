@@ -13,6 +13,8 @@ import (
 // @Produce  json
 // @Param    body body dto.AcceptInviteRequest true "Token and password"
 // @Success  204
+// @Failure  400 {object} httputil.ErrorResponse "invalid or expired invite"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /auth/accept-invite [post]
 func (h *Handler) AcceptInvite(c *gin.Context) {
 	var in dto.AcceptInviteRequest

@@ -1,6 +1,10 @@
 package service
 
-import "github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
+import (
+	"net/http"
+
+	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
+)
 
 // Domain errors for the iam module.
 var (
@@ -12,4 +16,5 @@ var (
 	ErrCompanyNotFound    = httputil.NotFound("company not found")
 	ErrAdminExists        = httputil.Conflict("company already has users")
 	ErrInvalidRole        = httputil.BadRequest("invalid role")
+	ErrTooManyAttempts    = httputil.NewDomainError(http.StatusTooManyRequests, "rate_limited", "too many login attempts; try again later")
 )

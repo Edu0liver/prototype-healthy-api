@@ -4,6 +4,6 @@ package dto
 type RegisterAdminRequest struct {
 	CompanyID string `json:"company_id" binding:"required,uuid"`
 	Email     string `json:"email" binding:"required,email"`
-	Password  string `json:"password" binding:"required,min=8"`
+	Password  string `json:"password" binding:"required,min=8,max=128"`
 	Name      string `json:"name" binding:"omitempty"`
 }

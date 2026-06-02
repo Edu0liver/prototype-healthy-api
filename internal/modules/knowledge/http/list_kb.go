@@ -12,6 +12,10 @@ import (
 // @Security BearerAuth
 // @Produce  json
 // @Success  200 {object} map[string][]dto.KBResponse
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /knowledge-bases [get]
 func (h *Handler) ListKB(c *gin.Context) {
 	kbs, err := h.svc.ListKB(c.Request.Context())

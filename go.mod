@@ -3,6 +3,7 @@ module github.com/Edu0liver/prototype-healthy-api
 go 1.26
 
 require (
+	github.com/dslipak/pdf v0.0.2
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.12.0
 	github.com/golang-jwt/jwt/v5 v5.3.0

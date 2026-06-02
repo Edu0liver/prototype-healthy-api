@@ -12,6 +12,10 @@ import (
 // @Security BearerAuth
 // @Produce  json
 // @Success  200 {object} map[string][]dto.AgentResponse
+// @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
+// @Failure  403 {object} httputil.ErrorResponse "insufficient role"
+// @Failure  429 {object} httputil.ErrorResponse "rate limit exceeded"
+// @Failure  500 {object} httputil.ErrorResponse "internal error"
 // @Router   /agents [get]
 func (h *Handler) List(c *gin.Context) {
 	agents, err := h.svc.List(c.Request.Context())
