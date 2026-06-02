@@ -741,7 +741,7 @@ Payload (essencial):
   "qrcode": true,
   "number": "5511999999999",
   "webhook": {
-    "url": "https://api.suaplataforma.com/webhooks/evolution",
+    "url": "https://api.suaplataforma.com/api/v1/webhooks/evolution",
     "byEvents": false,
     "base64": true,
     "headers": { "authorization": "Bearer <token-interno>" },
@@ -787,7 +787,7 @@ Resposta (exemplo):
 ```json
 {
   "enabled": true,
-  "url": "https://api.suaplataforma.com/webhooks/evolution",
+  "url": "https://api.suaplataforma.com/api/v1/webhooks/evolution",
   "webhookByEvents": false,
   "webhookBase64": true,
   "events": [

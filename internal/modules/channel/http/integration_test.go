@@ -80,7 +80,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string) {
 	cfg.JWT.Secret = "test-secret-please-change"
 	cfg.JWT.AccessTTL = 15 * time.Minute
 	cfg.JWT.RefreshTTL = time.Hour
-	cfg.Evolution.WebhookURL = "http://test/webhooks/evolution"
+	cfg.Evolution.WebhookURL = "http://test/api/v1/webhooks/evolution"
 	cfg.Evolution.WebhookToken = "test-wh-token"
 
 	tok := token.New(cfg.JWT.Secret, cfg.JWT.AccessTTL, cfg.JWT.RefreshTTL)

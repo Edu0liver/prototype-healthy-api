@@ -32,7 +32,12 @@ func (s *Service) createAndIngest(ctx context.Context, kbID uuid.UUID, sourceTyp
 		return nil, err
 	}
 	doc.StoragePath = path
-	if err := s.repo.CreateDocument(ctx, doc); err != nil {
+
+	// Commit in its own transaction so the ingest goroutine can read the row
+	// immediately — the caller's HTTP transaction may not have committed yet.
+	if err := s.db.Tenant(context.Background(), companyID, func(bgCtx context.Context) error {
+		return s.repo.CreateDocument(bgCtx, doc)
+	}); err != nil {
 		return nil, err
 	}
 

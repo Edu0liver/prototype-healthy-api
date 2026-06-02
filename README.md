@@ -173,7 +173,7 @@ Sem um WhatsApp real, dispare o webhook manualmente para exercitar idempotência
 persistência → enqueue → worker (lock + debounce + RAG + OpenAI + envio):
 
 ```bash
-curl -s -X POST http://localhost:8080/webhooks/evolution \
+curl -s -X POST http://localhost:8080/api/v1/webhooks/evolution \
   -H 'Content-Type: application/json' \
   -H 'authorization: Bearer change-me' \
   -d '{
