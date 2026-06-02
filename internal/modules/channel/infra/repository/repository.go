@@ -52,3 +52,13 @@ func (r *Repository) List(ctx context.Context) ([]models.Channel, error) {
 	err := database.MustTx(ctx).Scopes(database.TenantScope(ctx)).Order("created_at DESC").Find(&out).Error
 	return out, err
 }
+
+// ListAllActive returns channels in connected/connecting status across all tenants.
+// Must be called within a db.System() scope — no tenant filter applied.
+func (r *Repository) ListAllActive(ctx context.Context) ([]models.Channel, error) {
+	var out []models.Channel
+	err := database.MustTx(ctx).
+		Where("status IN ?", []string{"connected", "connecting"}).
+		Order("created_at DESC").Find(&out).Error
+	return out, err
+}

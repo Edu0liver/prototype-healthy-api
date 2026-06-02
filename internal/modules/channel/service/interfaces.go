@@ -13,4 +13,7 @@ type Repository interface {
 	Update(ctx context.Context, c *models.Channel) error
 	Get(ctx context.Context, id uuid.UUID) (*models.Channel, error)
 	List(ctx context.Context) ([]models.Channel, error)
+	// ListAllActive returns connected/connecting channels across all tenants.
+	// Must be called within a db.System() scope.
+	ListAllActive(ctx context.Context) ([]models.Channel, error)
 }
