@@ -132,6 +132,62 @@ definitions:
       is_active:
         type: boolean
     type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CheckoutResponse:
+    properties:
+      checkout_url:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CreateCheckoutRequest:
+    properties:
+      plan_code:
+        type: string
+    required:
+    - plan_code
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.SubscriptionResponse:
+    properties:
+      billing_cycle:
+        type: string
+      cancel_at_period_end:
+        type: boolean
+      currency:
+        type: string
+      current_period_end:
+        type: string
+      current_period_start:
+        type: string
+      plan_code:
+        type: string
+      plan_name:
+        type: string
+      price_cents:
+        type: integer
+      status:
+        type: string
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageItem:
+    properties:
+      kind:
+        type: string
+      quota:
+        description: 0 = unlimited
+        type: integer
+      unlimited:
+        type: boolean
+      used:
+        type: integer
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageItem'
+        type: array
+      period_end:
+        type: string
+      period_start:
+        type: string
+    type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_channel_dto.ChannelResponse:
     properties:
       active_agent_id:
@@ -1218,6 +1274,101 @@ paths:
       summary: Update automation
       tags:
       - automations
+  /billing/checkout:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Plan to subscribe to
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CreateCheckoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CheckoutResponse'
+        "400":
+          description: invalid request
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: plan not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "409":
+          description: plan not purchasable
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "503":
+          description: billing gateway not configured
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Start a subscription checkout
+      tags:
+      - billing
+  /billing/subscription:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.SubscriptionResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "404":
+          description: subscription not found
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current subscription
+      tags:
+      - billing
+  /billing/usage:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current-period usage
+      tags:
+      - billing
   /branding:
     get:
       produces:
@@ -2501,6 +2652,36 @@ paths:
       summary: Evolution webhook receiver
       tags:
       - webhooks
+  /webhooks/stripe:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Stripe signature
+        in: header
+        name: Stripe-Signature
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: invalid signature
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "503":
+          description: billing gateway not configured
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      summary: Stripe billing webhook
+      tags:
+      - billing
   /ws:
     get:
       parameters:

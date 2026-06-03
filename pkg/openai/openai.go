@@ -65,10 +65,20 @@ type ChatRequest struct {
 	MaxTokens   int       `json:"max_tokens,omitempty"`
 }
 
+// Usage reports the token accounting returned by the OpenAI API. It feeds the
+// billing/metering pipeline (llm_tokens). Zero values mean the provider did not
+// report usage (e.g. a mock or an older endpoint).
+type Usage struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
+}
+
 // ChatResult is the normalized chat response.
 type ChatResult struct {
 	Content   string
 	ToolCalls []ToolCall
+	Usage     Usage
 }
 
 // Client is the OpenAI API contract (interface for mocking).
@@ -153,6 +163,7 @@ func (c *HTTPClient) Chat(ctx context.Context, req ChatRequest) (*ChatResult, er
 				ToolCalls []ToolCall `json:"tool_calls"`
 			} `json:"message"`
 		} `json:"choices"`
+		Usage Usage `json:"usage"`
 	}
 	if err := c.post(ctx, "/chat/completions", req, &resp); err != nil {
 		return nil, err
@@ -161,7 +172,7 @@ func (c *HTTPClient) Chat(ctx context.Context, req ChatRequest) (*ChatResult, er
 		return nil, fmt.Errorf("openai: empty chat response")
 	}
 	m := resp.Choices[0].Message
-	return &ChatResult{Content: m.Content, ToolCalls: m.ToolCalls}, nil
+	return &ChatResult{Content: m.Content, ToolCalls: m.ToolCalls, Usage: resp.Usage}, nil
 }
 
 // Embed generates embeddings for the inputs using the configured model.

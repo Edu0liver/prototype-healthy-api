@@ -35,13 +35,18 @@ type Service struct {
 	evo    evolution.Client
 	cipher *crypto.Cipher
 	cfg    *config.Config
+	bill   QuotaGuard
 	log    *zap.Logger
 }
 
-// New builds the channel service.
+// New builds the channel service. Billing enforcement defaults to a no-op; the
+// fx module wires the real guard via WithBilling so unit tests need no billing.
 func New(repo Repository, evo evolution.Client, cipher *crypto.Cipher, cfg *config.Config, log *zap.Logger) *Service {
-	return &Service{repo: repo, evo: evo, cipher: cipher, cfg: cfg, log: log}
+	return &Service{repo: repo, evo: evo, cipher: cipher, cfg: cfg, bill: noopQuota{}, log: log}
 }
+
+// WithBilling installs the billing quota guard (production wiring).
+func (s *Service) WithBilling(b QuotaGuard) *Service { s.bill = b; return s }
 
 func (s *Service) get(ctx context.Context, id uuid.UUID) (*models.Channel, error) {
 	ch, err := s.repo.Get(ctx, id)

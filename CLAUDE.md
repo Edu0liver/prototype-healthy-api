@@ -72,6 +72,7 @@ Anotações `// @...` nos handlers + info geral em `cmd/api/main.go`. `make swag
 - [orchestration](internal/modules/orchestration/ORCHESTRATION.md) — worker: lock+debounce, áudio→Whisper, RAG, OpenAI+function-calling, humanização, envio.
 - [handover](internal/modules/handover/HANDOVER.md) — controlo humano: take/reply/return/close (operador).
 - [realtime](internal/modules/realtime/REALTIME.md) — WebSocket `/ws` via Redis Pub/Sub (`platform/events`).
+- [billing](internal/modules/billing/BILLING.md) — SaaS billing híbrido tier+overage: planos, subscrição, metering (contador Redis + outbox worker), quotas (hard 402 nos create_* / soft no worker).
 
 ---
 
