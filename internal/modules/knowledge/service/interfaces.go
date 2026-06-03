@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	billingsvc "github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/service"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/infra/models"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/infra/repository"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
@@ -42,3 +43,15 @@ type Storage interface {
 	Get(ctx context.Context, path string) ([]byte, error)
 	Delete(ctx context.Context, path string) error
 }
+
+// Billing enforces KB resource caps and meters RAG usage (billing module).
+type Billing interface {
+	EnsureResource(ctx context.Context, companyID uuid.UUID, resource string) error
+	Record(ctx context.Context, e billingsvc.Event)
+}
+
+// noopBilling is the default (no enforcement / no metering) until WithBilling.
+type noopBilling struct{}
+
+func (noopBilling) EnsureResource(context.Context, uuid.UUID, string) error { return nil }
+func (noopBilling) Record(context.Context, billingsvc.Event)                {}

@@ -24,6 +24,7 @@ type Config struct {
 	Storage   Storage
 	Email     Email
 	Security  Security
+	Stripe    Stripe
 }
 
 type Security struct {
@@ -111,6 +112,16 @@ type Email struct {
 	FromAddress  string
 }
 
+// Stripe configures the billing gateway. Empty keys disable checkout/webhooks
+// (billing then runs catalogue-only with manual subscription provisioning).
+type Stripe struct {
+	SecretKey     string
+	WebhookSecret string
+	SuccessURL    string
+	CancelURL     string
+	Timeout       time.Duration
+}
+
 // Load reads configuration from the environment, optionally seeding from a .env file.
 func Load() (*Config, error) {
 	_ = godotenv.Load() // best effort; real env wins
@@ -175,6 +186,13 @@ func Load() (*Config, error) {
 		Email: Email{
 			ResendAPIKey: env("RESEND_API_KEY", ""),
 			FromAddress:  env("EMAIL_FROM", "no-reply@example.com"),
+		},
+		Stripe: Stripe{
+			SecretKey:     env("STRIPE_SECRET_KEY", ""),
+			WebhookSecret: env("STRIPE_WEBHOOK_SECRET", ""),
+			SuccessURL:    env("STRIPE_SUCCESS_URL", ""),
+			CancelURL:     env("STRIPE_CANCEL_URL", ""),
+			Timeout:       durationEnv("STRIPE_TIMEOUT", 20*time.Second),
 		},
 	}
 

@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	billingmodels "github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/infra/models"
+	billingsvc "github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/service"
 	convmodels "github.com/Edu0liver/prototype-healthy-api/internal/modules/conversation/infra/models"
 	convsvc "github.com/Edu0liver/prototype-healthy-api/internal/modules/conversation/service"
 	knowsvc "github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/service"
@@ -59,14 +61,16 @@ type Service struct {
 	oa       openai.Client
 	cipher   *crypto.Cipher
 	adapters *channeladapter.Registry
+	bill     *billingsvc.Service
 }
 
 // New builds the orchestration service.
 func New(db *database.DB, rdb *redisx.Client, cfg *config.Config, log *zap.Logger,
 	repo *repository.Repository, conv *convsvc.Service, know *knowsvc.Service,
-	evo evolution.Client, oa openai.Client, cipher *crypto.Cipher, adapters *channeladapter.Registry) *Service {
+	evo evolution.Client, oa openai.Client, cipher *crypto.Cipher, adapters *channeladapter.Registry,
+	bill *billingsvc.Service) *Service {
 	return &Service{db: db, rdb: rdb, cfg: cfg, log: log, repo: repo, conv: conv,
-		know: know, evo: evo, oa: oa, cipher: cipher, adapters: adapters}
+		know: know, evo: evo, oa: oa, cipher: cipher, adapters: adapters, bill: bill}
 }
 
 // Process handles a single inbound job end-to-end.
@@ -108,8 +112,13 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 	// Audio transcription (PROMPT 5): fetch base64 → Whisper → use transcript.
 	content := job.Content
 	if job.MessageType == "audioMessage" {
-		if t := s.transcribe(ctx, creds.InstanceName, apiKey, job.ExternalID); t != "" {
+		if t, mins := s.transcribe(ctx, creds.InstanceName, apiKey, job.ExternalID); t != "" {
 			content = t
+			agentID := agentCfg.AgentID
+			go s.bill.Record(context.WithoutCancel(ctx), billingsvc.Event{
+				CompanyID: companyID, Kind: billingmodels.KindAudioMinutes, Quantity: mins,
+				ConversationID: &convID, AgentID: &agentID, Model: "whisper",
+			})
 		}
 	}
 
@@ -193,6 +202,15 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 		return nil
 	}
 
+	// Usage quota (soft limit): default hard-stop unless the plan opts into
+	// overage. Checked before the LLM call so cost is never incurred past quota.
+	if dec, qerr := s.bill.CheckUsage(ctx, companyID, billingmodels.KindAIMessage); qerr == nil && !dec.Allowed {
+		s.log.Warn("pipeline: AI message quota exceeded, not engaging")
+		s.sendFallback(ctx, creds, apiKey, job, orStr(agentCfg.FallbackMessage, quotaLimitMessage))
+		s.markRead(ctx, creds, apiKey, job)
+		return nil
+	}
+
 	// Keyword-based handover (RF-HO-01).
 	if agentCfg.HandoverEnabled && containsKeyword(aggregated, agentCfg.HandoverKeywords) {
 		s.log.Debug("pipeline: handover keyword matched")
@@ -248,6 +266,9 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 	s.log.Debug("pipeline: calling deliver")
 	s.deliver(ctx, companyID, creds, apiKey, job, conv, parts)
 
+	// Meter usage off the hot path (best-effort, detached context).
+	go s.meterChat(context.WithoutCancel(ctx), companyID, conv.ID, agentCfg, result.Usage)
+
 	// Read receipt + mirror state.
 	s.markRead(ctx, creds, apiKey, job)
 	_ = s.rdb.SetState(ctx, convID.String(), redisx.StateAI)
@@ -255,22 +276,65 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 	return nil
 }
 
-func (s *Service) transcribe(ctx context.Context, instance, apiKey, externalID string) string {
+// transcribe fetches the audio, runs Whisper, and returns the transcript plus
+// an estimated duration in minutes for metering (audio_minutes).
+func (s *Service) transcribe(ctx context.Context, instance, apiKey, externalID string) (string, int64) {
 	b64, _, err := s.evo.GetMediaBase64(ctx, instance, apiKey, externalID)
 	if err != nil {
 		s.log.Warn("get media base64 failed", zap.Error(err))
-		return ""
+		return "", 0
 	}
 	audio, err := base64.StdEncoding.DecodeString(strings.TrimSpace(b64))
 	if err != nil {
-		return ""
+		return "", 0
 	}
 	txt, err := s.oa.Transcribe(ctx, audio, "audio.ogg")
 	if err != nil {
 		s.log.Warn("whisper transcription failed", zap.Error(err))
-		return ""
+		return "", 0
 	}
-	return txt
+	return txt, estimateAudioMinutes(len(audio))
+}
+
+// estimateAudioMinutes approximates duration from the encoded byte size. WhatsApp
+// voice notes are Opus at roughly ~2 KB/s; this is a coarse metering estimate
+// (refine with the provider's reported duration when available). Always ≥1 min
+// for any non-empty clip.
+func estimateAudioMinutes(bytes int) int64 {
+	if bytes <= 0 {
+		return 0
+	}
+	const bytesPerSecond = 2000
+	mins := int64(bytes) / (bytesPerSecond * 60)
+	if mins < 1 {
+		return 1
+	}
+	return mins
+}
+
+// quotaLimitMessage is the default reply when a tenant hits its usage quota and
+// the plan has no overage configured (hard-stop) and no custom fallback set.
+const quotaLimitMessage = "Estamos com o limite de atendimento automático atingido no momento. Em breve retornaremos."
+
+func orStr(v, def string) string {
+	if strings.TrimSpace(v) == "" {
+		return def
+	}
+	return v
+}
+
+func (s *Service) meterChat(ctx context.Context, companyID, convID uuid.UUID, agentCfg *repository.AgentConfig, usage openai.Usage) {
+	agentID := agentCfg.AgentID
+	s.bill.Record(ctx, billingsvc.Event{
+		CompanyID: companyID, Kind: billingmodels.KindAIMessage, Quantity: 1,
+		ConversationID: &convID, AgentID: &agentID, Model: agentCfg.Model,
+	})
+	if usage.TotalTokens > 0 {
+		s.bill.Record(ctx, billingsvc.Event{
+			CompanyID: companyID, Kind: billingmodels.KindLLMTokens, Quantity: int64(usage.TotalTokens),
+			ConversationID: &convID, AgentID: &agentID, Model: agentCfg.Model,
+		})
+	}
 }
 
 // loadConversation loads the conversation and resolves its state, repopulating

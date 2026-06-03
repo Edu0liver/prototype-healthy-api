@@ -22,13 +22,19 @@ type Service struct {
 	db    *database.DB
 	store Storage
 	embed Embedder
+	bill  Billing
 	log   *zap.Logger
 }
 
-// New builds the knowledge service.
+// New builds the knowledge service. Billing (quota + metering) defaults to a
+// no-op; the fx module wires the real one via WithBilling so unit tests need no
+// billing dependency.
 func New(repo Repository, db *database.DB, store Storage, embed Embedder, log *zap.Logger) *Service {
-	return &Service{repo: repo, db: db, store: store, embed: embed, log: log}
+	return &Service{repo: repo, db: db, store: store, embed: embed, bill: noopBilling{}, log: log}
 }
+
+// WithBilling installs the billing quota/metering hooks (production wiring).
+func (s *Service) WithBilling(b Billing) *Service { s.bill = b; return s }
 
 func uuidV7() uuid.UUID {
 	id, err := uuid.NewV7()

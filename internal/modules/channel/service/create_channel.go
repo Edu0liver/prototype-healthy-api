@@ -16,9 +16,13 @@ func (s *Service) Create(ctx context.Context, in dto.CreateChannelRequest) (*mod
 	if in.Type != channeladapter.WhatsApp && in.Type != channeladapter.Instagram {
 		return nil, ErrUnsupportedType
 	}
+	companyID := appctx.CompanyID(ctx)
+	if err := s.bill.EnsureResource(ctx, companyID, "channels"); err != nil {
+		return nil, err
+	}
 	ch := &models.Channel{
 		ID:                uuidV7(),
-		CompanyID:         appctx.CompanyID(ctx),
+		CompanyID:         companyID,
 		Type:              in.Type,
 		Name:              in.Name,
 		ExternalAccountID: in.Number,

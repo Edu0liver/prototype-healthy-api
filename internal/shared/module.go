@@ -17,6 +17,7 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/pkg/evolution"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/openai"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/storage"
+	"github.com/Edu0liver/prototype-healthy-api/pkg/stripe"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/token"
 	"go.uber.org/fx"
 )
@@ -41,6 +42,7 @@ var Module = fx.Module("shared",
 		fx.Annotate(provideOpenAI, fx.As(new(openai.Client))),
 		fx.Annotate(provideEvolution, fx.As(new(evolution.Client))),
 		fx.Annotate(provideStorage, fx.As(new(storage.Storage))),
+		fx.Annotate(provideStripe, fx.As(new(stripe.Client))),
 	),
 	fx.Invoke(
 		httpserver.InstallGlobal,
@@ -82,5 +84,15 @@ func provideEvolution(cfg *config.Config) *evolution.HTTPClient {
 		BaseURL:      cfg.Evolution.BaseURL,
 		GlobalAPIKey: cfg.Evolution.GlobalAPIKey,
 		Timeout:      cfg.Evolution.Timeout,
+	})
+}
+
+func provideStripe(cfg *config.Config) *stripe.HTTPClient {
+	return stripe.New(stripe.Config{
+		SecretKey:     cfg.Stripe.SecretKey,
+		WebhookSecret: cfg.Stripe.WebhookSecret,
+		SuccessURL:    cfg.Stripe.SuccessURL,
+		CancelURL:     cfg.Stripe.CancelURL,
+		Timeout:       cfg.Stripe.Timeout,
 	})
 }

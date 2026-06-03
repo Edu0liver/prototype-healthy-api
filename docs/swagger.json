@@ -1174,6 +1174,158 @@
                 }
             }
         },
+        "/billing/checkout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Start a subscription checkout",
+                "parameters": [
+                    {
+                        "description": "Plan to subscribe to",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CreateCheckoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CheckoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "plan not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "plan not purchasable",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "billing gateway not configured",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/billing/subscription": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Get current subscription",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.SubscriptionResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "subscription not found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/billing/usage": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Get current-period usage",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/branding": {
             "get": {
                 "security": [
@@ -3186,6 +3338,52 @@
                 }
             }
         },
+        "/webhooks/stripe": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Stripe billing webhook",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Stripe signature",
+                        "name": "Stripe-Signature",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid signature",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "billing gateway not configured",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/ws": {
             "get": {
                 "tags": [
@@ -3417,6 +3615,92 @@
                 },
                 "is_active": {
                     "type": "boolean"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CheckoutResponse": {
+            "type": "object",
+            "properties": {
+                "checkout_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.CreateCheckoutRequest": {
+            "type": "object",
+            "required": [
+                "plan_code"
+            ],
+            "properties": {
+                "plan_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.SubscriptionResponse": {
+            "type": "object",
+            "properties": {
+                "billing_cycle": {
+                    "type": "string"
+                },
+                "cancel_at_period_end": {
+                    "type": "boolean"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "current_period_end": {
+                    "type": "string"
+                },
+                "current_period_start": {
+                    "type": "string"
+                },
+                "plan_code": {
+                    "type": "string"
+                },
+                "plan_name": {
+                    "type": "string"
+                },
+                "price_cents": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageItem": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "type": "string"
+                },
+                "quota": {
+                    "description": "0 = unlimited",
+                    "type": "integer"
+                },
+                "unlimited": {
+                    "type": "boolean"
+                },
+                "used": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.UsageItem"
+                    }
+                },
+                "period_end": {
+                    "type": "string"
+                },
+                "period_start": {
+                    "type": "string"
                 }
             }
         },

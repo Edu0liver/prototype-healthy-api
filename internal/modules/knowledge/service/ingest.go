@@ -5,12 +5,27 @@ import (
 	"fmt"
 	"time"
 
+	billingmodels "github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/infra/models"
+	billingsvc "github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/service"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/knowledge/infra/models"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/appctx"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
+
+// storageMB converts a byte count to whole megabytes for metering (≥1 for any
+// non-empty document).
+func storageMB(bytes int) int64 {
+	if bytes <= 0 {
+		return 0
+	}
+	mb := int64(bytes) / (1024 * 1024)
+	if mb < 1 {
+		return 1
+	}
+	return mb
+}
 
 // createAndIngest persists a document, stores its raw bytes and kicks off async
 // indexing (PRD §2.7 job). Shared by UploadFile and UploadText.
@@ -108,6 +123,16 @@ func (s *Service) ingest(companyID, documentID, kbID uuid.UUID) {
 		}
 		doc.Status = StatusIndexed
 		doc.TokenCount = total
+
+		// Meter RAG ingestion (best-effort, detached context): embedding tokens
+		// consumed and storage occupied by the source document.
+		go s.bill.Record(context.WithoutCancel(ctx), billingsvc.Event{
+			CompanyID: companyID, Kind: billingmodels.KindEmbeddingTokens, Quantity: int64(total),
+		})
+		go s.bill.Record(context.WithoutCancel(ctx), billingsvc.Event{
+			CompanyID: companyID, Kind: billingmodels.KindStorageMB, Quantity: storageMB(len(raw)),
+		})
+
 		return s.repo.UpdateDocument(ctx, doc)
 	})
 

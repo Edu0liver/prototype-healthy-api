@@ -42,6 +42,11 @@ func Forbidden(msg string) *DomainError {
 }
 func Conflict(msg string) *DomainError { return NewDomainError(http.StatusConflict, "conflict", msg) }
 
+// PaymentRequired signals a plan quota/limit was hit (billing). Maps to 402.
+func PaymentRequired(msg string) *DomainError {
+	return NewDomainError(http.StatusPaymentRequired, "quota_exceeded", msg)
+}
+
 // OK writes a 200 with the payload.
 func OK(c *gin.Context, payload any) { c.JSON(http.StatusOK, payload) }
 

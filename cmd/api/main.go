@@ -5,6 +5,7 @@ package main
 import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/agent"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/automation"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/billing"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/channel"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/conversation"
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/handover"
@@ -29,12 +30,15 @@ import (
 // @in                         header
 // @name                       Authorization
 // @description.markdown
-func main() {
-	app := fx.New(
+// options assembles the fx application (platform layer + domain modules). It is
+// shared by main and the wiring-validation test (fx.ValidateApp).
+func options() fx.Option {
+	return fx.Options(
 		shared.Module,
 		// Domain modules.
 		tenant.Module,
 		iam.Module,
+		billing.Module,
 		agent.Module,
 		channel.Module,
 		automation.Module,
@@ -49,5 +53,9 @@ func main() {
 			return &fxevent.ZapLogger{Logger: log.Named("fx")}
 		}),
 	)
+}
+
+func main() {
+	app := fx.New(options())
 	app.Run()
 }

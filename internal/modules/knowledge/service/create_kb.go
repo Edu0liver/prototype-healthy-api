@@ -10,9 +10,13 @@ import (
 
 // CreateKB creates a knowledge base (RF-RAG-01).
 func (s *Service) CreateKB(ctx context.Context, in dto.CreateKBRequest) (*models.KnowledgeBase, error) {
+	companyID := appctx.CompanyID(ctx)
+	if err := s.bill.EnsureResource(ctx, companyID, "knowledge_bases"); err != nil {
+		return nil, err
+	}
 	kb := &models.KnowledgeBase{
 		ID:             uuidV7(),
-		CompanyID:      appctx.CompanyID(ctx),
+		CompanyID:      companyID,
 		Name:           in.Name,
 		Description:    in.Description,
 		EmbeddingModel: orDefault(in.EmbeddingModel, "text-embedding-3-small"),
