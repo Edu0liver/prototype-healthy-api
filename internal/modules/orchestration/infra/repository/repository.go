@@ -52,6 +52,7 @@ type AgentConfig struct {
 	HandoverKeywords database.JSONStringArray `gorm:"column:handover_keywords"`
 	FallbackMessage  string                   `gorm:"column:fallback_message"`
 	DebounceSeconds  int                      `gorm:"column:debounce_seconds"`
+	BusinessHours    database.JSONMap         `gorm:"column:business_hours"`
 }
 
 // LoadActiveAgent returns the active automation's agent config for a channel.
@@ -61,7 +62,7 @@ func (r *Repository) LoadActiveAgent(ctx context.Context, channelID uuid.UUID) (
 	// across the joined tables.
 	err := database.MustTx(ctx).
 		Table("automations AS au").
-		Select("a.id AS agent_id, a.system_prompt, a.model, a.temperature, a.max_output_tokens, a.handover_enabled, a.handover_keywords, au.fallback_message, au.debounce_seconds").
+		Select("a.id AS agent_id, a.system_prompt, a.model, a.temperature, a.max_output_tokens, a.handover_enabled, a.handover_keywords, au.fallback_message, au.debounce_seconds, au.business_hours").
 		Joins("JOIN agents a ON a.id = au.agent_id").
 		Where("au.company_id = ? AND au.channel_id = ? AND au.is_active = ?", appctx.CompanyID(ctx), channelID, true).
 		Take(&cfg).Error

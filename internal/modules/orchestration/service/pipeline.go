@@ -30,8 +30,8 @@ import (
 const (
 	bufferTTL      = 60 * time.Second
 	lockTTL        = 90 * time.Second
-	ragTopK        = 5
-	historyLimit   = 10
+	ragTopK        = 10
+	historyLimit   = 15
 	minSendDelayMs = 2000
 	maxSendDelayMs = 3000
 )
@@ -166,10 +166,30 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 		s.log.Warn("pipeline: state=human, AI staying silent")
 		return nil // human is in control — IA stays silent (RF-HO-02)
 	}
+	if state == redisx.StateClosed {
+		// Reopen policy (PRD §2.6b): a closed conversation that receives a new
+		// inbound is reopened under AI control. New threads are normally created
+		// at the webhook layer (FindOpenConversation excludes closed); this
+		// guards a stale `closed` mirror in Redis so we don't answer on a thread
+		// the panel still shows as closed.
+		s.log.Debug("pipeline: state=closed, reopening under AI control")
+		state = redisx.StateAI
+		_ = s.rdb.SetState(ctx, convID.String(), redisx.StateAI)
+	}
 	blocked, _ := s.rdb.IsBlocked(ctx, convID.String())
 	s.log.Debug("pipeline: block check", zap.Bool("blocked", blocked))
 	if blocked {
 		s.log.Warn("pipeline: conversation blocked, dropping")
+		return nil
+	}
+
+	// Business hours (automations.business_hours): outside the configured window
+	// the AI does not engage. Send the fallback message if set, mark the inbound
+	// as read, and stop — without calling the LLM or changing handover state.
+	if !withinBusinessHours(agentCfg.BusinessHours, time.Now()) {
+		s.log.Debug("pipeline: outside business hours, not engaging")
+		s.sendFallback(ctx, creds, apiKey, job, agentCfg.FallbackMessage)
+		s.markRead(ctx, creds, apiKey, job)
 		return nil
 	}
 

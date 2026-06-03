@@ -155,10 +155,12 @@ func (s *Service) handleMessage(ctx context.Context, res repository.Resolved, en
 			if err != nil {
 				return err
 			}
-			if err := s.conv.SetState(ctx, conv, convsvc.StateHuman); err != nil {
-				return err
-			}
-			_ = s.rdb.SetState(ctx, conv.ID.String(), redisx.StateHuman)
+			// Passive handover (operator replied from the phone): suppress the
+			// AI for a TTL window only. We deliberately do NOT flip the
+			// conversation to a persistent `human` state — that is reserved for
+			// explicit handover (panel take or transfer_to_human). The block is
+			// refreshed by each fromMe message, so the AI auto-resumes once the
+			// operator stops replying for passiveBlockTTL.
 			_ = s.rdb.Block(ctx, conv.ID.String(), passiveBlockTTL)
 			return nil
 		}
