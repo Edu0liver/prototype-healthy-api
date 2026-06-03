@@ -144,6 +144,43 @@ definitions:
     required:
     - plan_code
     type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlanResponse:
+    properties:
+      code:
+        type: string
+      currency:
+        type: string
+      max_agents:
+        type: integer
+      max_channels:
+        type: integer
+      max_kb:
+        type: integer
+      max_seats:
+        type: integer
+      name:
+        type: string
+      price_cents:
+        type: integer
+      purchasable:
+        description: has a Stripe price configured
+        type: boolean
+      quota_ai_messages:
+        type: integer
+      quota_audio_minutes:
+        type: integer
+      quota_storage_mb:
+        type: integer
+      quota_tokens:
+        type: integer
+    type: object
+  github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlansResponse:
+    properties:
+      plans:
+        items:
+          $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlanResponse'
+        type: array
+    type: object
   github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.SubscriptionResponse:
     properties:
       billing_cycle:
@@ -1319,6 +1356,28 @@ paths:
       security:
       - BearerAuth: []
       summary: Start a subscription checkout
+      tags:
+      - billing
+  /billing/plans:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlansResponse'
+        "401":
+          description: missing or invalid token
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+        "403":
+          description: insufficient role
+          schema:
+            $ref: '#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List the plan catalogue
       tags:
       - billing
   /billing/subscription:

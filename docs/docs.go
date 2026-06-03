@@ -1254,6 +1254,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/billing/plans": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "billing"
+                ],
+                "summary": "List the plan catalogue",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlansResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "missing or invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "insufficient role",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_pkg_httputil.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/billing/subscription": {
             "get": {
                 "security": [
@@ -3640,6 +3676,62 @@ const docTemplate = `{
             "properties": {
                 "plan_code": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlanResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "max_agents": {
+                    "type": "integer"
+                },
+                "max_channels": {
+                    "type": "integer"
+                },
+                "max_kb": {
+                    "type": "integer"
+                },
+                "max_seats": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price_cents": {
+                    "type": "integer"
+                },
+                "purchasable": {
+                    "description": "has a Stripe price configured",
+                    "type": "boolean"
+                },
+                "quota_ai_messages": {
+                    "type": "integer"
+                },
+                "quota_audio_minutes": {
+                    "type": "integer"
+                },
+                "quota_storage_mb": {
+                    "type": "integer"
+                },
+                "quota_tokens": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlansResponse": {
+            "type": "object",
+            "properties": {
+                "plans": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Edu0liver_prototype-healthy-api_internal_modules_billing_dto.PlanResponse"
+                    }
                 }
             }
         },

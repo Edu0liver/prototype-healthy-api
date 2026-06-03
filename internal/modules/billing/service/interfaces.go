@@ -18,6 +18,8 @@ type Repository interface {
 	GetSubscription(ctx context.Context, companyID uuid.UUID) (*models.Subscription, *models.Plan, error)
 	SumUsageSince(ctx context.Context, since time.Time) ([]repository.KindSum, error)
 
+	ListActivePlans(ctx context.Context) ([]models.Plan, error)
+
 	// Stripe gateway flow.
 	GetPlanByCode(ctx context.Context, code string) (*models.Plan, error)
 	GetPlanByStripePrice(ctx context.Context, priceID string) (*models.Plan, error)

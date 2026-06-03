@@ -96,6 +96,14 @@ func (r *Repository) GetSubscription(ctx context.Context, companyID uuid.UUID) (
 	return &sub, &plan, nil
 }
 
+// ListActivePlans returns the active plan catalogue ordered by price (system
+// scope; plans are global and not under RLS).
+func (r *Repository) ListActivePlans(ctx context.Context) ([]models.Plan, error) {
+	var out []models.Plan
+	err := database.MustTx(ctx).Where("is_active = ?", true).Order("price_cents ASC").Find(&out).Error
+	return out, err
+}
+
 // GetPlanByCode loads a plan by its code (e.g. "pro").
 func (r *Repository) GetPlanByCode(ctx context.Context, code string) (*models.Plan, error) {
 	var p models.Plan

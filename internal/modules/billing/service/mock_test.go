@@ -17,6 +17,7 @@ type mockRepo struct {
 	insertFn         func(ctx context.Context, e *models.UsageEvent) error
 	getSubFn         func(ctx context.Context, companyID uuid.UUID) (*models.Subscription, *models.Plan, error)
 	sumUsageFn       func(ctx context.Context, since time.Time) ([]repository.KindSum, error)
+	listPlansFn      func(ctx context.Context) ([]models.Plan, error)
 	getPlanByCodeFn  func(ctx context.Context, code string) (*models.Plan, error)
 	getPlanByPriceFn func(ctx context.Context, priceID string) (*models.Plan, error)
 	activateFn       func(ctx context.Context, companyID, planID uuid.UUID, customerID, subscriptionID string) error
@@ -38,6 +39,9 @@ func (m *mockRepo) GetSubscription(ctx context.Context, companyID uuid.UUID) (*m
 }
 func (m *mockRepo) SumUsageSince(ctx context.Context, since time.Time) ([]repository.KindSum, error) {
 	return m.sumUsageFn(ctx, since)
+}
+func (m *mockRepo) ListActivePlans(ctx context.Context) ([]models.Plan, error) {
+	return m.listPlansFn(ctx)
 }
 func (m *mockRepo) GetPlanByCode(ctx context.Context, code string) (*models.Plan, error) {
 	return m.getPlanByCodeFn(ctx, code)

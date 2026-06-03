@@ -9,6 +9,7 @@ import (
 // webhook (no auth — verified by the Stripe-Signature header).
 func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	g := e.Group("/billing", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin))
+	g.GET("/plans", h.GetPlans)
 	g.GET("/subscription", h.GetSubscription)
 	g.GET("/usage", h.GetUsage)
 	g.POST("/checkout", h.CreateCheckout)

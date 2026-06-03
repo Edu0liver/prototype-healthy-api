@@ -157,6 +157,24 @@ func TestBillingRoutes(t *testing.T) {
 		kinds[it.Kind] = it.Quota
 	}
 	require.Equal(t, int64(100), kinds["ai_message"], "free plan ai_message quota")
+
+	// GET /billing/plans — catalogue with the four seeded tiers.
+	w = do(t, r, http.MethodGet, "/billing/plans", nil, adminTok)
+	require.Equal(t, http.StatusOK, w.Code, "plans: %s", w.Body.String())
+	var plans struct {
+		Plans []struct {
+			Code        string `json:"code"`
+			PriceCents  int    `json:"price_cents"`
+			Purchasable bool   `json:"purchasable"`
+		} `json:"plans"`
+	}
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &plans))
+	require.GreaterOrEqual(t, len(plans.Plans), 4)
+	codes := map[string]bool{}
+	for _, p := range plans.Plans {
+		codes[p.Code] = true
+	}
+	require.True(t, codes["free"] && codes["pro"], "catalogue must include free + pro")
 }
 
 // TestBillingQuotaHardStop verifies the free plan's max_agents=1 cap yields a
