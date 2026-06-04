@@ -14,6 +14,9 @@ func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	g.GET("/usage", h.GetUsage)
 	g.POST("/checkout", h.CreateCheckout)
 
+	// Public plan catalogue (no auth) — powers the marketing/landing pricing.
+	e.GET("/plans", h.GetPlans)
+
 	// Public gateway webhook (system-scoped; authenticated by signature).
 	e.POST("/webhooks/stripe", h.StripeWebhook)
 }
