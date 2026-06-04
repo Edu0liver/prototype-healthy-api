@@ -13,5 +13,5 @@ CRUD de agentes de IA (persona: prompt de sistema, modelo, parâmetros, handover
 
 ## Notas
 - `handover_keywords` persistido como `jsonb` via `database.JSONStringArray` (evita quirks de `text[]`).
-- `temperature` numeric(3,2); defaults: model `gpt-4o-mini`, temp 0.7, max_tokens 1024, handover_enabled true, status `draft`.
+- `temperature` numeric(3,2); defaults: model `gpt-4.1-mini` (RAG cost-benefit: 1M context, strong multi-doc synthesis), temp 0.7, max_tokens 1024, handover_enabled true, status `draft`.
 - Associação N:M com bases RAG vive no módulo `knowledge` (M3).

@@ -9,9 +9,10 @@ import (
 // Errors. ErrQuotaExceeded maps to HTTP 402 Payment Required and is returned by
 // the hard-limit checks used in the create_* flows.
 var (
-	ErrQuotaExceeded     = httputil.PaymentRequired("plan limit reached for this resource")
-	ErrNoSubscription    = httputil.PaymentRequired("no active subscription for this company")
-	ErrSubscriptionNotFn = httputil.NotFound("subscription not found")
+	ErrQuotaExceeded        = httputil.PaymentRequired("plan limit reached for this resource")
+	ErrNoSubscription       = httputil.PaymentRequired("no active subscription for this company")
+	ErrSubscriptionInactive = httputil.PaymentRequired("subscription inactive (payment due, canceled or expired)")
+	ErrSubscriptionNotFn    = httputil.NotFound("subscription not found")
 
 	// Stripe gateway errors.
 	ErrStripeDisabled     = httputil.NewDomainError(http.StatusServiceUnavailable, "stripe_disabled", "billing gateway is not configured")

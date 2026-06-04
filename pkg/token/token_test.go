@@ -1,6 +1,7 @@
 package token
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -107,13 +108,18 @@ func TestParseRejectsTamperedToken(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GenerateAccess: %v", err)
 	}
-	// Flip the last character of the signature.
-	tampered := tok[:len(tok)-1]
-	if tok[len(tok)-1] == 'a' {
-		tampered += "b"
-	} else {
-		tampered += "a"
+	// Corrupt the payload segment. Flipping the signature's last base64 char can
+	// be a no-op (it may only touch padding bits), so mutate the payload instead:
+	// any change there breaks the HMAC deterministically.
+	parts := strings.Split(tok, ".")
+	if len(parts) != 3 {
+		t.Fatalf("expected a 3-part JWT, got %d parts", len(parts))
 	}
+	swap := byte('A')
+	if parts[1][0] == 'A' {
+		swap = 'B'
+	}
+	tampered := parts[0] + "." + string(swap) + parts[1][1:] + "." + parts[2]
 	if _, err := m.Parse(tampered); err == nil {
 		t.Fatal("Parse accepted a tampered token, want error")
 	}

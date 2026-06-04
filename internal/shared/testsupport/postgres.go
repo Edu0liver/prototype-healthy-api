@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
 	"github.com/testcontainers/testcontainers-go"
@@ -20,6 +21,27 @@ import (
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/database"
 )
+
+// SeedActiveSubscription gives a company an active subscription on the starter
+// plan so the subscription gate (middleware.RequireActiveSubscription) lets the
+// operational modules through in integration tests.
+func SeedActiveSubscription(t *testing.T, db *database.DB, companyID uuid.UUID) {
+	t.Helper()
+	err := db.System(context.Background(), func(ctx context.Context) error {
+		return database.MustTx(ctx).Exec(
+			`INSERT INTO subscriptions
+			   (id, company_id, plan_id, status, current_period_start, current_period_end)
+			 SELECT gen_random_uuid(), ?, id, 'active', now(), now() + interval '1 month'
+			   FROM plans WHERE code = 'starter'
+			 ON CONFLICT (company_id) DO UPDATE SET
+			   status = 'active', current_period_end = now() + interval '1 month'`,
+			companyID,
+		).Error
+	})
+	if err != nil {
+		t.Fatalf("seed active subscription: %v", err)
+	}
+}
 
 // repoRoot returns the repository root relative to this source file.
 func repoRoot() string {

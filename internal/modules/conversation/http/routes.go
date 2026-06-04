@@ -7,7 +7,7 @@ import (
 
 // RegisterRoutes mounts /conversations (admin + operator) within a tenant tx.
 func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
-	g := e.Group("/conversations", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin, middleware.RoleOperator))
+	g := e.Group("/conversations", mw.Auth(), mw.Tenant(), mw.RequireActiveSubscription(), mw.RBAC(middleware.RoleAdmin, middleware.RoleOperator))
 	g.GET("", h.List)
 	g.GET("/:id", h.Get)
 	g.GET("/:id/messages", h.Messages)

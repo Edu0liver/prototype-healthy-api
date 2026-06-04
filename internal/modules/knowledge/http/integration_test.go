@@ -82,6 +82,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string, uuid.UUID) {
 
 	slug := "kn-" + uuid.New().String()[:8]
 	companyID := seedCompany(t, db, slug)
+	testsupport.SeedActiveSubscription(t, db, companyID)
 
 	ctx := context.Background()
 	iamSvc := iamservice.New(iamrepo.New(), db, tok, noopMailer{}, cfg, nil)

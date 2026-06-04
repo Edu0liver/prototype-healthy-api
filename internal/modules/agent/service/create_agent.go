@@ -20,7 +20,7 @@ func (s *Service) Create(ctx context.Context, in dto.CreateAgentRequest) (*model
 		CompanyID:        companyID,
 		Name:             in.Name,
 		SystemPrompt:     in.SystemPrompt,
-		Model:            orDefault(in.Model, "gpt-4o-mini"),
+		Model:            orDefault(in.Model, "gpt-4.1-mini"),
 		Temperature:      derefFloat(in.Temperature, 0.7),
 		MaxOutputTokens:  derefInt(in.MaxOutputTokens, 1024),
 		HandoverEnabled:  derefBool(in.HandoverEnabled, true),

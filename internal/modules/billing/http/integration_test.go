@@ -51,13 +51,13 @@ func seedCompany(t *testing.T, db *database.DB, slug string) uuid.UUID {
 	return id
 }
 
-// seedSubscription links a company to the seeded `free` plan.
+// seedSubscription links a company to an active starter subscription.
 func seedSubscription(t *testing.T, db *database.DB, companyID uuid.UUID) {
 	t.Helper()
 	err := db.System(context.Background(), func(ctx context.Context) error {
 		return database.MustTx(ctx).Exec(
-			"INSERT INTO subscriptions (id, company_id, plan_id, status) "+
-				"SELECT gen_random_uuid(), ?, id, 'active' FROM plans WHERE code = 'free'",
+			"INSERT INTO subscriptions (id, company_id, plan_id, status, current_period_start, current_period_end) "+
+				"SELECT gen_random_uuid(), ?, id, 'active', now(), now() + interval '1 month' FROM plans WHERE code = 'starter'",
 			companyID,
 		).Error
 	})
@@ -129,7 +129,7 @@ func TestBillingRoutes(t *testing.T) {
 	w := do(t, r, http.MethodGet, "/billing/subscription", nil, "")
 	require.Equal(t, http.StatusUnauthorized, w.Code, "sub-noauth: %s", w.Body.String())
 
-	// GET /billing/subscription — happy path → free plan.
+	// GET /billing/subscription — happy path → starter plan.
 	w = do(t, r, http.MethodGet, "/billing/subscription", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code, "sub: %s", w.Body.String())
 	var sub struct {
@@ -137,7 +137,7 @@ func TestBillingRoutes(t *testing.T) {
 		Status   string `json:"status"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &sub))
-	require.Equal(t, "free", sub.PlanCode)
+	require.Equal(t, "starter", sub.PlanCode)
 	require.Equal(t, "active", sub.Status)
 
 	// GET /billing/usage — returns the gated dimensions with quotas.
@@ -156,9 +156,9 @@ func TestBillingRoutes(t *testing.T) {
 	for _, it := range usage.Items {
 		kinds[it.Kind] = it.Quota
 	}
-	require.Equal(t, int64(100), kinds["ai_message"], "free plan ai_message quota")
+	require.Equal(t, int64(1000), kinds["ai_message"], "starter plan ai_message quota")
 
-	// GET /billing/plans — catalogue with the four seeded tiers.
+	// GET /billing/plans — catalogue (no Free tier anymore).
 	w = do(t, r, http.MethodGet, "/billing/plans", nil, adminTok)
 	require.Equal(t, http.StatusOK, w.Code, "plans: %s", w.Body.String())
 	var plans struct {
@@ -169,34 +169,40 @@ func TestBillingRoutes(t *testing.T) {
 		} `json:"plans"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &plans))
-	require.GreaterOrEqual(t, len(plans.Plans), 4)
-	codes := map[string]bool{}
+	require.GreaterOrEqual(t, len(plans.Plans), 3)
+	codes := map[string]int{}
 	for _, p := range plans.Plans {
-		codes[p.Code] = true
+		codes[p.Code] = p.PriceCents
 	}
-	require.True(t, codes["free"] && codes["pro"], "catalogue must include free + pro")
+	_, hasFree := codes["free"]
+	require.False(t, hasFree, "Free tier must be gone")
+	require.Equal(t, 1499, codes["starter"], "starter is the R$14,99 minimum")
+	require.Contains(t, codes, "pro")
 }
 
-// TestBillingQuotaHardStop verifies the free plan's max_agents=1 cap yields a
-// 402 on the second agent create (EnsureResource end-to-end).
+// TestBillingQuotaHardStop verifies the starter plan's max_agents=2 cap yields a
+// 402 on the third agent create (EnsureResource end-to-end).
 func TestBillingQuotaHardStop(t *testing.T) {
 	db := testsupport.NewPostgres(t)
 	r, adminTok := newRouter(t, db, true)
 
-	body := gin.H{"name": "Bot", "system_prompt": "hi", "status": "active"}
-
-	// First agent — within the cap.
-	w := do(t, r, http.MethodPost, "/agents", body, adminTok)
-	require.Equal(t, http.StatusCreated, w.Code, "agent1: %s", w.Body.String())
-
-	// Second agent — over the free plan cap (max_agents=1) → 402.
-	w = do(t, r, http.MethodPost, "/agents", body, adminTok)
-	require.Equal(t, http.StatusPaymentRequired, w.Code, "agent2 should hit quota: %s", w.Body.String())
+	mk := func(n int) gin.H {
+		return gin.H{"name": fmt.Sprintf("Bot %d", n), "system_prompt": "hi", "status": "active"}
+	}
+	// First two agents — within the starter cap (2). Unique names (agents have a
+	// UNIQUE (company_id, name) constraint).
+	for i := 1; i <= 2; i++ {
+		w := do(t, r, http.MethodPost, "/agents", mk(i), adminTok)
+		require.Equal(t, http.StatusCreated, w.Code, "agent%d: %s", i, w.Body.String())
+	}
+	// Third — over the cap → 402.
+	w := do(t, r, http.MethodPost, "/agents", mk(3), adminTok)
+	require.Equal(t, http.StatusPaymentRequired, w.Code, "agent3 should hit quota: %s", w.Body.String())
 }
 
-// TestBillingFailOpenNoSubscription ensures a company without a subscription is
-// not blocked (fail-open) and its subscription read returns 404.
-func TestBillingFailOpenNoSubscription(t *testing.T) {
+// TestBillingBlocksWithoutSubscription ensures a company with no valid plan is
+// blocked: operational routes return 402 and the subscription read is 404.
+func TestBillingBlocksWithoutSubscription(t *testing.T) {
 	db := testsupport.NewPostgres(t)
 	r, adminTok := newRouter(t, db, false)
 
@@ -204,18 +210,18 @@ func TestBillingFailOpenNoSubscription(t *testing.T) {
 	w := do(t, r, http.MethodGet, "/billing/subscription", nil, adminTok)
 	require.Equal(t, http.StatusNotFound, w.Code, "sub-missing: %s", w.Body.String())
 
-	// Create still works (quota fail-open).
+	// Operational route blocked (subscription gate / fail-closed) → 402.
 	w = do(t, r, http.MethodPost, "/agents", gin.H{"name": "Bot", "system_prompt": "hi", "status": "active"}, adminTok)
-	require.Equal(t, http.StatusCreated, w.Code, "create-failopen: %s", w.Body.String())
+	require.Equal(t, http.StatusPaymentRequired, w.Code, "create must be blocked without a plan: %s", w.Body.String())
 }
 
 const testWebhookSecret = "whsec_integration_test"
 
-func freePlanID(t *testing.T, db *database.DB) string {
+func starterPlanID(t *testing.T, db *database.DB) string {
 	t.Helper()
 	var id string
 	err := db.System(context.Background(), func(ctx context.Context) error {
-		return database.MustTx(ctx).Raw("SELECT id::text FROM plans WHERE code = 'free'").Scan(&id).Error
+		return database.MustTx(ctx).Raw("SELECT id::text FROM plans WHERE code = 'starter'").Scan(&id).Error
 	})
 	require.NoError(t, err)
 	require.NotEmpty(t, id)
@@ -262,7 +268,7 @@ func TestStripeWebhookActivatesSubscription(t *testing.T) {
 	w := do(t, r, http.MethodGet, "/billing/subscription", nil, tokens.Access)
 	require.Equal(t, http.StatusNotFound, w.Code, "pre: %s", w.Body.String())
 
-	// Signed checkout.session.completed → activates the free plan.
+	// Signed checkout.session.completed → activates the starter plan.
 	event := map[string]any{
 		"id":   "evt_" + uuid.New().String(),
 		"type": "checkout.session.completed",
@@ -272,7 +278,7 @@ func TestStripeWebhookActivatesSubscription(t *testing.T) {
 			"subscription":        "sub_test",
 			"metadata": map[string]string{
 				"company_id": companyID.String(),
-				"plan_id":    freePlanID(t, db),
+				"plan_id":    starterPlanID(t, db),
 			},
 		}},
 	}
@@ -291,7 +297,7 @@ func TestStripeWebhookActivatesSubscription(t *testing.T) {
 		Status   string `json:"status"`
 	}
 	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &sub))
-	require.Equal(t, "free", sub.PlanCode)
+	require.Equal(t, "starter", sub.PlanCode)
 	require.Equal(t, "active", sub.Status)
 
 	// Bad signature → 400.

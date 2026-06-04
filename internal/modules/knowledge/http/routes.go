@@ -8,7 +8,7 @@ import (
 // RegisterRoutes mounts knowledge endpoints. Admins and knowledge managers may
 // manage RAG (RF-USR-02); all run within a tenant transaction.
 func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
-	rag := []gin.HandlerFunc{mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin, middleware.RoleKnowledgeManager)}
+	rag := []gin.HandlerFunc{mw.Auth(), mw.Tenant(), mw.RequireActiveSubscription(), mw.RBAC(middleware.RoleAdmin, middleware.RoleKnowledgeManager)}
 
 	kb := e.Group("/knowledge-bases", rag...)
 	kb.POST("", h.CreateKB)

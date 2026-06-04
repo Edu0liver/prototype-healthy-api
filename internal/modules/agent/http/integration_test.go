@@ -58,6 +58,7 @@ func newRouter(t *testing.T, db *database.DB) (*gin.Engine, string) {
 
 	slug := "ag-" + uuid.New().String()[:8]
 	companyID := seedCompany(t, db, slug)
+	testsupport.SeedActiveSubscription(t, db, companyID)
 	email := "admin+" + slug + "@agent.test"
 
 	ctx := context.Background()

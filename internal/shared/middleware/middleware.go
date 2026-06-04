@@ -3,6 +3,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strings"
 	"time"
@@ -208,4 +209,50 @@ func (m *Middleware) AuthRateLimit() gin.HandlerFunc {
 		}
 		c.Next()
 	}
+}
+
+// RequireActiveSubscription gates the operational modules: a tenant whose
+// subscription is missing, expired, past_due, canceled or suspended gets a 402
+// and cannot use the app. Billing, auth and account/settings routes are left
+// ungated so the tenant can still see status and pay. Must run after Tenant().
+// The billing module remains the authority for the same rule; this is a
+// lightweight read (subscriptions is not under RLS) cached in Redis (60s).
+func (m *Middleware) RequireActiveSubscription() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		companyID := appctx.CompanyID(c.Request.Context())
+		if !m.hasActiveSubscription(c.Request.Context(), companyID) {
+			httputil.Fail(c, httputil.NewDomainError(http.StatusPaymentRequired,
+				"subscription_inactive", "active subscription required"))
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+func (m *Middleware) hasActiveSubscription(ctx context.Context, companyID uuid.UUID) bool {
+	key := "billing:active:" + companyID.String()
+	if m.rdb != nil {
+		if v, err := m.rdb.Get(ctx, key).Result(); err == nil {
+			return v == "1"
+		}
+	}
+	var row struct {
+		Status           string
+		CurrentPeriodEnd time.Time
+	}
+	err := database.MustTx(ctx).Table("subscriptions").
+		Select("status, current_period_end").
+		Where("company_id = ?", companyID).Take(&row).Error
+	active := err == nil &&
+		(row.Status == "active" || row.Status == "trialing") &&
+		(row.CurrentPeriodEnd.IsZero() || row.CurrentPeriodEnd.After(time.Now()))
+	if m.rdb != nil {
+		val := "0"
+		if active {
+			val = "1"
+		}
+		_ = m.rdb.Set(ctx, key, val, 60*time.Second).Err()
+	}
+	return active
 }

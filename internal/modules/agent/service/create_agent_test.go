@@ -28,7 +28,7 @@ func TestCreate_DefaultsAndTenant(t *testing.T) {
 	require.Equal(t, company, out.CompanyID, "company must come from ctx identity")
 	require.NotEqual(t, uuid.Nil, out.ID, "id must be generated")
 	// Defaults applied when request omits optional fields.
-	require.Equal(t, "gpt-4o-mini", out.Model)
+	require.Equal(t, "gpt-4.1-mini", out.Model)
 	require.Equal(t, 0.7, out.Temperature)
 	require.Equal(t, 1024, out.MaxOutputTokens)
 	require.True(t, out.HandoverEnabled)

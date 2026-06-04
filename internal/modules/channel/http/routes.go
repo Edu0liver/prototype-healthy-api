@@ -7,7 +7,7 @@ import (
 
 // RegisterRoutes mounts /channels (admin only) within a tenant transaction.
 func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
-	g := e.Group("/channels", mw.Auth(), mw.Tenant(), mw.RBAC(middleware.RoleAdmin))
+	g := e.Group("/channels", mw.Auth(), mw.Tenant(), mw.RequireActiveSubscription(), mw.RBAC(middleware.RoleAdmin))
 	g.POST("", h.Create)
 	g.GET("", h.List)
 	g.GET("/:id", h.Get)

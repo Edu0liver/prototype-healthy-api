@@ -54,7 +54,9 @@ func (s *Service) InvalidateLimits(ctx context.Context, companyID uuid.UUID) {
 	if s.rdb == nil {
 		return
 	}
-	_ = s.rdb.Del(ctx, "billing:limits:"+companyID.String()).Err()
+	// Drop both the limits cache and the middleware's active-subscription cache.
+	_ = s.rdb.Del(ctx, "billing:limits:"+companyID.String(),
+		"billing:active:"+companyID.String()).Err()
 }
 
 // EnsureResource enforces a hard resource cap (channels/agents/knowledge_bases/
@@ -63,10 +65,13 @@ func (s *Service) InvalidateLimits(ctx context.Context, companyID uuid.UUID) {
 func (s *Service) EnsureResource(ctx context.Context, companyID uuid.UUID, resource string) error {
 	limits, err := s.Limits(ctx, companyID)
 	if errors.Is(err, repository.ErrNotFound) {
-		return nil // no subscription yet → fail open (do not block creates)
+		return ErrNoSubscription // no plan → blocked (fail closed)
 	}
 	if err != nil {
 		return err
+	}
+	if !limits.Active(time.Now()) {
+		return ErrSubscriptionInactive
 	}
 	table, max := resourceCap(limits, resource)
 	if max <= 0 { // 0 = unlimited, or unknown resource → no cap
@@ -88,9 +93,14 @@ func (s *Service) EnsureResource(ctx context.Context, companyID uuid.UUID, resou
 func (s *Service) CheckUsage(ctx context.Context, companyID uuid.UUID, kind string) (UsageDecision, error) {
 	limits, err := s.Limits(ctx, companyID)
 	if err != nil {
-		// No subscription / transient read error → fail open so the AI keeps
-		// answering rather than going silent on a billing hiccup.
+		if errors.Is(err, repository.ErrNotFound) {
+			return UsageDecision{Allowed: false}, nil // no plan → AI stays silent
+		}
+		// Transient read error → fail open so a billing hiccup doesn't mute the AI.
 		return UsageDecision{Allowed: true}, nil
+	}
+	if !limits.Active(time.Now()) {
+		return UsageDecision{Allowed: false}, nil // expired/canceled/suspended → block
 	}
 	quota := quotaFor(limits, kind)
 	if quota <= 0 { // unlimited / not gated

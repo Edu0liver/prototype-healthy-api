@@ -27,6 +27,7 @@ func New() *Repository { return &Repository{} }
 // of 0 means unlimited; overage cents of 0 means overage is disabled.
 type Limits struct {
 	PlanCode string `gorm:"column:code"`
+	Status   string `gorm:"column:status"`
 
 	QuotaAIMessages   int   `gorm:"column:quota_ai_messages"`
 	QuotaTokens       int64 `gorm:"column:quota_tokens"`
@@ -45,6 +46,15 @@ type Limits struct {
 	PeriodEnd   time.Time `gorm:"column:current_period_end"`
 }
 
+// Active reports whether the subscription entitles the tenant to use the app:
+// status trialing/active and the current period has not lapsed.
+func (l Limits) Active(now time.Time) bool {
+	if l.Status != "trialing" && l.Status != "active" {
+		return false
+	}
+	return l.PeriodEnd.IsZero() || l.PeriodEnd.After(now)
+}
+
 // LoadLimits joins subscriptions→plans for a company. plans/subscriptions are
 // not under RLS, so the company_id filter is explicit. Runs in whatever
 // tenant/system tx is already in context.
@@ -52,7 +62,7 @@ func (r *Repository) LoadLimits(ctx context.Context, companyID uuid.UUID) (*Limi
 	var l Limits
 	err := database.MustTx(ctx).
 		Table("subscriptions AS s").
-		Select("p.code, p.quota_ai_messages, p.quota_tokens, p.quota_audio_minutes, p.quota_storage_mb, "+
+		Select("p.code, s.status, p.quota_ai_messages, p.quota_tokens, p.quota_audio_minutes, p.quota_storage_mb, "+
 			"p.max_channels, p.max_agents, p.max_kb, p.max_seats, "+
 			"p.overage_per_msg_cents, p.overage_per_1k_tokens_cents, "+
 			"s.current_period_start, s.current_period_end").

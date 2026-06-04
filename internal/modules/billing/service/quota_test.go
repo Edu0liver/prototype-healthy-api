@@ -8,6 +8,31 @@ import (
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/infra/repository"
 )
 
+func TestLimitsActive(t *testing.T) {
+	future := time.Now().Add(24 * time.Hour)
+	past := time.Now().Add(-24 * time.Hour)
+	cases := []struct {
+		status string
+		end    time.Time
+		want   bool
+	}{
+		{"active", future, true},
+		{"trialing", future, true},
+		{"active", past, false},   // expired
+		{"past_due", future, false},
+		{"canceled", future, false},
+		{"suspended", future, false},
+		{"", future, false},
+		{"active", time.Time{}, true}, // zero period end = no expiry
+	}
+	for _, c := range cases {
+		l := repository.Limits{Status: c.status, PeriodEnd: c.end}
+		if got := l.Active(time.Now()); got != c.want {
+			t.Errorf("Active(status=%q expired=%v) = %v, want %v", c.status, c.end.Before(time.Now()), got, c.want)
+		}
+	}
+}
+
 func testLimits() *repository.Limits {
 	return &repository.Limits{
 		QuotaAIMessages:         100,
