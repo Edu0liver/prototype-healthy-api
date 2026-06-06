@@ -31,5 +31,6 @@ type Repository interface {
 // StripeGateway is the billing gateway contract (satisfied by pkg/stripe.Client).
 type StripeGateway interface {
 	CreateCheckoutSession(ctx context.Context, p stripe.CheckoutParams) (*stripe.CheckoutSession, error)
+	CreatePortalSession(ctx context.Context, customerID string) (*stripe.PortalSession, error)
 	VerifyWebhook(payload []byte, sigHeader string) (*stripe.Event, error)
 }

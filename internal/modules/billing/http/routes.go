@@ -15,6 +15,7 @@ func RegisterRoutes(e *gin.RouterGroup, h *Handler, mw *middleware.Middleware) {
 	g.GET("/subscription", h.GetSubscription)
 	g.GET("/usage", h.GetUsage)
 	g.POST("/checkout", mw.RBAC(middleware.RoleAdmin), h.CreateCheckout)
+	g.POST("/portal", mw.RBAC(middleware.RoleAdmin), h.CreatePortal)
 
 	// Public plan catalogue (no auth) — powers the marketing/landing pricing.
 	e.GET("/plans", h.GetPlans)

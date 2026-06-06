@@ -89,10 +89,11 @@ func provideEvolution(cfg *config.Config) *evolution.HTTPClient {
 
 func provideStripe(cfg *config.Config) *stripe.HTTPClient {
 	return stripe.New(stripe.Config{
-		SecretKey:     cfg.Stripe.SecretKey,
-		WebhookSecret: cfg.Stripe.WebhookSecret,
-		SuccessURL:    cfg.Stripe.SuccessURL,
-		CancelURL:     cfg.Stripe.CancelURL,
-		Timeout:       cfg.Stripe.Timeout,
+		SecretKey:       cfg.Stripe.SecretKey,
+		WebhookSecret:   cfg.Stripe.WebhookSecret,
+		SuccessURL:      cfg.Stripe.SuccessURL,
+		CancelURL:       cfg.Stripe.CancelURL,
+		PortalReturnURL: cfg.Stripe.PortalReturnURL,
+		Timeout:         cfg.Stripe.Timeout,
 	})
 }

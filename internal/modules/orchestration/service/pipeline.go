@@ -112,6 +112,12 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 	// Audio transcription (PROMPT 5): fetch base64 → Whisper → use transcript.
 	content := job.Content
 	if job.MessageType == "audioMessage" {
+		if dec, qerr := s.bill.CheckUsage(ctx, companyID, billingmodels.KindAudioMinutes); qerr == nil && !dec.Allowed {
+			s.log.Warn("pipeline: audio_minutes quota exceeded, dropping voice message")
+			s.sendFallback(ctx, creds, apiKey, job, orStr(agentCfg.FallbackMessage, quotaLimitMessage))
+			s.markRead(ctx, creds, apiKey, job)
+			return nil
+		}
 		if t, mins := s.transcribe(ctx, creds.InstanceName, apiKey, job.ExternalID); t != "" {
 			content = t
 			agentID := agentCfg.AgentID
@@ -206,6 +212,12 @@ func (s *Service) Process(ctx context.Context, job jobs.InboundJob) error {
 	// overage. Checked before the LLM call so cost is never incurred past quota.
 	if dec, qerr := s.bill.CheckUsage(ctx, companyID, billingmodels.KindAIMessage); qerr == nil && !dec.Allowed {
 		s.log.Warn("pipeline: AI message quota exceeded, not engaging")
+		s.sendFallback(ctx, creds, apiKey, job, orStr(agentCfg.FallbackMessage, quotaLimitMessage))
+		s.markRead(ctx, creds, apiKey, job)
+		return nil
+	}
+	if dec, qerr := s.bill.CheckUsage(ctx, companyID, billingmodels.KindLLMTokens); qerr == nil && !dec.Allowed {
+		s.log.Warn("pipeline: llm_tokens quota exceeded, not engaging")
 		s.sendFallback(ctx, creds, apiKey, job, orStr(agentCfg.FallbackMessage, quotaLimitMessage))
 		s.markRead(ctx, creds, apiKey, job)
 		return nil

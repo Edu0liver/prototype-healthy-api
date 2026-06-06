@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/infra/repository"
@@ -20,6 +21,15 @@ type UsageSummary struct {
 func (s *Service) GetUsage(ctx context.Context, companyID uuid.UUID) (*UsageSummary, error) {
 	limits, err := s.Limits(ctx, companyID)
 	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			now := time.Now().UTC()
+			return &UsageSummary{
+				Limits:      &repository.Limits{},
+				Totals:      map[string]int64{},
+				PeriodStart: now,
+				PeriodEnd:   now,
+			}, nil
+		}
 		return nil, err
 	}
 	since := limits.PeriodStart

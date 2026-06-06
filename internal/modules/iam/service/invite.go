@@ -21,6 +21,10 @@ func (s *Service) Invite(ctx context.Context, email, name, roleName string) (*mo
 	companyID := appctx.CompanyID(ctx)
 	email = strings.ToLower(email)
 
+	if err := s.bill.EnsureResource(ctx, companyID, "seats"); err != nil {
+		return nil, err
+	}
+
 	if _, err := s.repo.FindByEmail(ctx, email); err == nil {
 		return nil, ErrEmailTaken
 	} else if !errors.Is(err, repository.ErrNotFound) {

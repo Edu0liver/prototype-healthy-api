@@ -2,7 +2,9 @@
 package dto
 
 // SubscriptionResponse is the tenant-facing view of its subscription + plan.
+// Active=false means no subscription exists yet; all other fields are zero.
 type SubscriptionResponse struct {
+	Active             bool   `json:"active"`
 	PlanCode           string `json:"plan_code"`
 	PlanName           string `json:"plan_name"`
 	Status             string `json:"status"`

@@ -18,12 +18,16 @@ type Service struct {
 	mailer Mailer
 	cfg    *config.Config
 	rdb    *redisx.Client
+	bill   QuotaGuard
 }
 
-// New builds the iam service.
+// New builds the iam service. Billing defaults to no-op; wire real guard via WithBilling.
 func New(repo Repository, db *database.DB, tokens *token.Manager, mailer Mailer, cfg *config.Config, rdb *redisx.Client) *Service {
-	return &Service{repo: repo, db: db, tokens: tokens, mailer: mailer, cfg: cfg, rdb: rdb}
+	return &Service{repo: repo, db: db, tokens: tokens, mailer: mailer, cfg: cfg, rdb: rdb, bill: noopQuota{}}
 }
+
+// WithBilling installs the billing quota guard (production wiring).
+func (s *Service) WithBilling(b QuotaGuard) *Service { s.bill = b; return s }
 
 // Tokens is an issued access/refresh pair.
 type Tokens struct {

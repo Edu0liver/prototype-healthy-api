@@ -115,11 +115,12 @@ type Email struct {
 // Stripe configures the billing gateway. Empty keys disable checkout/webhooks
 // (billing then runs catalogue-only with manual subscription provisioning).
 type Stripe struct {
-	SecretKey     string
-	WebhookSecret string
-	SuccessURL    string
-	CancelURL     string
-	Timeout       time.Duration
+	SecretKey       string
+	WebhookSecret   string
+	SuccessURL      string
+	CancelURL       string
+	PortalReturnURL string
+	Timeout         time.Duration
 }
 
 // Load reads configuration from the environment, optionally seeding from a .env file.
@@ -188,11 +189,12 @@ func Load() (*Config, error) {
 			FromAddress:  env("EMAIL_FROM", "no-reply@example.com"),
 		},
 		Stripe: Stripe{
-			SecretKey:     env("STRIPE_SECRET_KEY", ""),
-			WebhookSecret: env("STRIPE_WEBHOOK_SECRET", ""),
-			SuccessURL:    env("STRIPE_SUCCESS_URL", ""),
-			CancelURL:     env("STRIPE_CANCEL_URL", ""),
-			Timeout:       durationEnv("STRIPE_TIMEOUT", 20*time.Second),
+			SecretKey:       env("STRIPE_SECRET_KEY", ""),
+			WebhookSecret:   env("STRIPE_WEBHOOK_SECRET", ""),
+			SuccessURL:      env("STRIPE_SUCCESS_URL", ""),
+			CancelURL:       env("STRIPE_CANCEL_URL", ""),
+			PortalReturnURL: env("STRIPE_PORTAL_RETURN_URL", ""),
+			Timeout:         durationEnv("STRIPE_TIMEOUT", 20*time.Second),
 		},
 	}
 

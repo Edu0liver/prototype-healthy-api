@@ -23,3 +23,13 @@ type Repository interface {
 type Mailer interface {
 	Send(to, subject, html string) error
 }
+
+// QuotaGuard enforces plan resource caps at create time (billing module).
+type QuotaGuard interface {
+	EnsureResource(ctx context.Context, companyID uuid.UUID, resource string) error
+}
+
+// noopQuota is the default guard (no enforcement) used until WithBilling runs.
+type noopQuota struct{}
+
+func (noopQuota) EnsureResource(context.Context, uuid.UUID, string) error { return nil }

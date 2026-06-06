@@ -23,11 +23,12 @@ const apiBase = "https://api.stripe.com"
 
 // Config configures the Stripe client.
 type Config struct {
-	SecretKey     string // sk_live_... / sk_test_...
-	WebhookSecret string // whsec_... used to verify webhook signatures
-	SuccessURL    string // checkout success redirect
-	CancelURL     string // checkout cancel redirect
-	Timeout       time.Duration
+	SecretKey       string // sk_live_... / sk_test_...
+	WebhookSecret   string // whsec_... used to verify webhook signatures
+	SuccessURL      string // checkout success redirect
+	CancelURL       string // checkout cancel redirect
+	PortalReturnURL string // billing portal return redirect
+	Timeout         time.Duration
 }
 
 // CheckoutParams describes a subscription Checkout Session to create.
@@ -46,9 +47,16 @@ type CheckoutSession struct {
 	CustomerID string `json:"customer"`
 }
 
+// PortalSession is the relevant slice of a created Billing Portal Session.
+type PortalSession struct {
+	ID  string `json:"id"`
+	URL string `json:"url"`
+}
+
 // Client is the Stripe API contract (interface for mocking).
 type Client interface {
 	CreateCheckoutSession(ctx context.Context, p CheckoutParams) (*CheckoutSession, error)
+	CreatePortalSession(ctx context.Context, customerID string) (*PortalSession, error)
 	VerifyWebhook(payload []byte, sigHeader string) (*Event, error)
 }
 
@@ -103,6 +111,39 @@ func (c *HTTPClient) CreateCheckoutSession(ctx context.Context, p CheckoutParams
 		return nil, fmt.Errorf("stripe: checkout session %s: %s", resp.Status, string(body))
 	}
 	var out CheckoutSession
+	if err := json.Unmarshal(body, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreatePortalSession creates a Billing Portal session for an existing Stripe
+// customer and returns the hosted portal URL.
+func (c *HTTPClient) CreatePortalSession(ctx context.Context, customerID string) (*PortalSession, error) {
+	if c.cfg.PortalReturnURL == "" {
+		return nil, fmt.Errorf("stripe: STRIPE_PORTAL_RETURN_URL not configured")
+	}
+	form := url.Values{}
+	form.Set("customer", customerID)
+	form.Set("return_url", c.cfg.PortalReturnURL)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, apiBase+"/v1/billing_portal/sessions", strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+c.cfg.SecretKey)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode >= 300 {
+		return nil, fmt.Errorf("stripe: portal session %s: %s", resp.Status, string(body))
+	}
+	var out PortalSession
 	if err := json.Unmarshal(body, &out); err != nil {
 		return nil, err
 	}

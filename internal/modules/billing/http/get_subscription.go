@@ -1,9 +1,11 @@
 package http
 
 import (
+	"errors"
 	"time"
 
 	"github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/dto"
+	"github.com/Edu0liver/prototype-healthy-api/internal/modules/billing/service"
 	"github.com/Edu0liver/prototype-healthy-api/internal/shared/appctx"
 	"github.com/Edu0liver/prototype-healthy-api/pkg/httputil"
 	"github.com/gin-gonic/gin"
@@ -17,16 +19,20 @@ import (
 // @Success  200 {object} dto.SubscriptionResponse
 // @Failure  401 {object} httputil.ErrorResponse "missing or invalid token"
 // @Failure  403 {object} httputil.ErrorResponse "insufficient role"
-// @Failure  404 {object} httputil.ErrorResponse "subscription not found"
 // @Router   /billing/subscription [get]
 func (h *Handler) GetSubscription(c *gin.Context) {
 	companyID := appctx.CompanyID(c.Request.Context())
 	sub, plan, err := h.svc.GetSubscription(c.Request.Context(), companyID)
 	if err != nil {
+		if errors.Is(err, service.ErrSubscriptionNotFn) {
+			httputil.OK(c, dto.SubscriptionResponse{Active: false})
+			return
+		}
 		httputil.Fail(c, err)
 		return
 	}
 	httputil.OK(c, dto.SubscriptionResponse{
+		Active:             true,
 		PlanCode:           plan.Code,
 		PlanName:           plan.Name,
 		Status:             sub.Status,

@@ -47,6 +47,7 @@ type Storage interface {
 // Billing enforces KB resource caps and meters RAG usage (billing module).
 type Billing interface {
 	EnsureResource(ctx context.Context, companyID uuid.UUID, resource string) error
+	CheckUsage(ctx context.Context, companyID uuid.UUID, kind string) (billingsvc.UsageDecision, error)
 	Record(ctx context.Context, e billingsvc.Event)
 }
 
@@ -54,4 +55,7 @@ type Billing interface {
 type noopBilling struct{}
 
 func (noopBilling) EnsureResource(context.Context, uuid.UUID, string) error { return nil }
-func (noopBilling) Record(context.Context, billingsvc.Event)                {}
+func (noopBilling) CheckUsage(context.Context, uuid.UUID, string) (billingsvc.UsageDecision, error) {
+	return billingsvc.UsageDecision{Allowed: true}, nil
+}
+func (noopBilling) Record(context.Context, billingsvc.Event) {}

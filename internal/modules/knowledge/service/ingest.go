@@ -34,6 +34,9 @@ func (s *Service) createAndIngest(ctx context.Context, kbID uuid.UUID, sourceTyp
 	if _, err := s.GetKB(ctx, kbID); err != nil {
 		return nil, err
 	}
+	if dec, qerr := s.bill.CheckUsage(ctx, companyID, billingmodels.KindStorageMB); qerr == nil && !dec.Allowed {
+		return nil, billingsvc.ErrQuotaExceeded
+	}
 	doc := &models.Document{
 		ID:              uuidV7(),
 		CompanyID:       companyID,
@@ -50,9 +53,11 @@ func (s *Service) createAndIngest(ctx context.Context, kbID uuid.UUID, sourceTyp
 
 	// Commit in its own transaction so the ingest goroutine can read the row
 	// immediately — the caller's HTTP transaction may not have committed yet.
+	// On failure, remove the already-uploaded file to avoid orphaning it in storage.
 	if err := s.db.Tenant(context.Background(), companyID, func(bgCtx context.Context) error {
 		return s.repo.CreateDocument(bgCtx, doc)
 	}); err != nil {
+		_ = s.store.Delete(ctx, path)
 		return nil, err
 	}
 
